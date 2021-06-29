@@ -21,10 +21,10 @@ namespace RoyalCode.Tasks
         /// </summary>
         /// <param name="task">Task.</param>
         /// <param name="continueOnCapturedContext">Aplicado no <see cref="Task.ConfigureAwait(bool)"/>.</param>
-        public static void RunSync(this Task task, bool continueOnCapturedContext = false)
+        public static void ExecuteSynchronously(this Task task, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
-
+            
             if (originalContext == null)
             {
                 task.GetAwaiter().GetResult();
@@ -43,7 +43,7 @@ namespace RoyalCode.Tasks
         /// </summary>
         /// <param name="task">Task.</param>
         /// <param name="continueOnCapturedContext">Aplicado no <see cref="Task.ConfigureAwait(bool)"/>.</param>
-        public static void RunSyncOnNewThread(this Task task, bool continueOnCapturedContext = false)
+        public static void ExecuteSynchronouslyOnNewThread(this Task task, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
 
@@ -74,7 +74,7 @@ namespace RoyalCode.Tasks
         /// <param name="task">Task.</param>
         /// <param name="continueOnCapturedContext">Aplicado no <see cref="Task.ConfigureAwait(bool)"/>.</param>
         /// <returns>O resultado da Task.</returns>
-        public static T RunSync<T>(this Task<T> task, bool continueOnCapturedContext = false)
+        public static T GetSynchronouslyResult<T>(this Task<T> task, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
 
@@ -99,7 +99,7 @@ namespace RoyalCode.Tasks
         /// <param name="task">Task.</param>
         /// <param name="continueOnCapturedContext">Aplicado no <see cref="Task.ConfigureAwait(bool)"/>.</param>
         /// <returns>O resultado da Task.</returns>
-        public static T RunSyncOnNewThread<T>(this Task<T> task, bool continueOnCapturedContext = false)
+        public static T GetSynchronouslyResultOnNewThread<T>(this Task<T> task, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
 
@@ -130,7 +130,7 @@ namespace RoyalCode.Tasks
         /// </summary>
         /// <param name="delegate">Function thats produces the Task.</param>
         /// <param name="continueOnCapturedContext">Aplicado no <see cref="Task.ConfigureAwait(bool)"/>.</param>
-        public static void RunSync(Func<Task> @delegate, bool continueOnCapturedContext = false)
+        public static void ExecuteSynchronously(Func<Task> @delegate, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
 
@@ -152,7 +152,7 @@ namespace RoyalCode.Tasks
         /// </summary>
         /// <param name="delegate">Function thats produces the Task.</param>
         /// <param name="continueOnCapturedContext">Aplicado no <see cref="Task.ConfigureAwait(bool)"/>.</param>
-        public static void RunSyncOnNewThread(Func<Task> @delegate, bool continueOnCapturedContext = false)
+        public static void ExecuteSynchronouslyOnNewThread(Func<Task> @delegate, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
 
@@ -183,7 +183,7 @@ namespace RoyalCode.Tasks
         /// <param name="delegate">Function thats produces the Task.</param>
         /// <param name="continueOnCapturedContext">Aplicado no <see cref="Task.ConfigureAwait(bool)"/>.</param>
         /// <returns>O resultado da Task.</returns>
-        public static T RunSync<T>(Func<Task<T>> @delegate, bool continueOnCapturedContext = false)
+        public static T GetSynchronouslyResult<T>(Func<Task<T>> @delegate, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
 
@@ -208,7 +208,7 @@ namespace RoyalCode.Tasks
         /// <param name="delegate">Function thats produces the Task.</param>
         /// <param name="continueOnCapturedContext">Aplicado no <see cref="Task.ConfigureAwait(bool)"/>.</param>
         /// <returns>O resultado da Task.</returns>
-        public static T RunSyncOnNewThread<T>(Func<Task<T>> @delegate, bool continueOnCapturedContext = false)
+        public static T GetSynchronouslyResultOnNewThread<T>(Func<Task<T>> @delegate, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
 
@@ -443,7 +443,7 @@ namespace RoyalCode.Tasks
 
         private static TimeoutException CreateTimeoutException(TimeSpan elapsed, Exception innerException)
         {
-            return new TimeoutException("Timeout after: " + elapsed, innerException);
+            return new TimeoutException($"Synchronously task execution canceled after: {elapsed}.", innerException);
         }
     }
 }

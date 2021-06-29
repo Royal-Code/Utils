@@ -29,7 +29,7 @@ namespace RoyalCode.Tasks.Tests
                 Task.Run(() =>
                 {
                     SimpleExecutionContext.WithoutResultSyncExecutionCount++;
-                }).RunSync();
+                }).ExecuteSynchronously();
             }
 
             Assert.Equal(SimpleExecutionContext.ExecutionCount, SimpleExecutionContext.WithoutResultSyncExecutionCount);
@@ -43,7 +43,7 @@ namespace RoyalCode.Tasks.Tests
                 Task.Run(() =>
                 {
                     SimpleExecutionContext.WithoutResultSyncExecutionOnNewThreadCount++;
-                }).RunSyncOnNewThread();
+                }).ExecuteSynchronouslyOnNewThread();
             }
 
             Assert.Equal(SimpleExecutionContext.ExecutionCount, SimpleExecutionContext.WithoutResultSyncExecutionOnNewThreadCount);
@@ -72,7 +72,7 @@ namespace RoyalCode.Tasks.Tests
                 max = Math.Max(max, Task.Run(() =>
                 {
                     return ++SimpleExecutionContext.WithResultSyncExecutionCount;
-                }).RunSync());
+                }).GetSynchronouslyResult());
             }
 
             Assert.Equal(SimpleExecutionContext.ExecutionCount, SimpleExecutionContext.WithResultSyncExecutionCount);
@@ -88,7 +88,7 @@ namespace RoyalCode.Tasks.Tests
                 max = Math.Max(max, Task.Run(() =>
                 {
                     return ++SimpleExecutionContext.WithResultSyncExecutionOnNewThreadCount;
-                }).RunSyncOnNewThread());
+                }).GetSynchronouslyResultOnNewThread());
             }
 
             Assert.Equal(SimpleExecutionContext.ExecutionCount, SimpleExecutionContext.WithResultSyncExecutionOnNewThreadCount);
