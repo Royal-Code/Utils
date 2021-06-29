@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>1.0.0-preview3</Version>
+    <Version>1.0.0-preview4</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
     <Description>
-      Utilities to run `Task` and `Task{TResult}` synchronously.
+      Utilities to run `Task` and `Task{TResult}` synchronously and more.
+      Beware, synchronization does not prevent ThreadPool Starvation, nor does it prevent Tasks Deadlocks.
     </Description>
     <PackageTags>RoyalCode Task Synchronously</PackageTags>
   </PropertyGroup>
