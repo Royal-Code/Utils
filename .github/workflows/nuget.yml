@@ -17,13 +17,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Set path
-      run: cd ./
     - name: Restore dependencies
-      run: dotnet restore ./**/*.sln
+      run: dotnet restore ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj
     - name: Build
-      run: dotnet build --no-restore -c Release
-    - name: Test
-      run: dotnet test ./**/*Tests.csproj --no-build --verbosity normal
+      run: dotnet build ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj --no-restore -c Release
     - name: Publish
-      run: dotnet push ./**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: dotnet push ./RoyalCode.Utils/RoyalCode.Tasks/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
