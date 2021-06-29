@@ -14,19 +14,25 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
             Console.WriteLine("Hello Tests!");
 
             Console.WriteLine("1: Google do not block");
-            Console.WriteLine("2: local deadlock");
-            Console.WriteLine("3: local task runner");
-            Console.WriteLine("4: local async do not block");
+            Console.WriteLine("2: Google deadlock");
+            Console.WriteLine("3: Google run sync locks");
+            Console.WriteLine("4: local api deadlock");
+            Console.WriteLine("5: local api task runner");
+            Console.WriteLine("6: local api async do not block");
             Console.Write("Your choise: ");
             var choise = Console.ReadLine();
 
             if (choise == "1")
                 ThreadPoolStarvation_Google_Do_Not_Block();
             else if (choise == "2")
-                ThreadPoolStarvation_Deadlock();
+                ThreadPoolStarvation_Google_Deadlock();
             else if (choise == "3")
-                ThreadPoolStarvation_TaskRunner();
+                ThreadPoolStarvation_Google_RunSyncLocks();
             else if (choise == "4")
+                ThreadPoolStarvation_Deadlock();
+            else if (choise == "5")
+                ThreadPoolStarvation_TaskRunner();
+            else if (choise == "6")
                 ThreadPoolStarvation_Async_Do_Not_Block();
             else
                 Console.WriteLine("Value not accepted");
@@ -78,7 +84,72 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
 
             foreach (var task in tasks)
             {
+                var value = task.RunSync();
+            }
+
+            Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");
+        }
+
+        static void ThreadPoolStarvation_Google_Deadlock()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            List<Task<int>> tasks = new(ThreadsExecutionContext.MultiThreadExecutionCount);
+
+            for (int j = 0; j < ThreadsExecutionContext.MultiThreadExecutionCount; j++)
+            {
+                var task = Task.Run(async () => await Task.Run(() =>
+                {
+                    using var client = new HttpClient();
+
+                    var responseTask = client.GetAsync($"https://www.google.com/search?q=starvation+number+{ThreadsExecutionContext.MultiThreadExecutionCount}");
+                    var response = responseTask.GetAwaiter().GetResult();
+
+                    var contentTask = response.Content.ReadAsStringAsync();
+                    _ = contentTask.GetAwaiter().GetResult();
+
+                    Console.WriteLine($"Executed {ThreadsExecutionContext.MultiThreadExecutionCount}");
+
+                    return Interlocked.Increment(ref ThreadsExecutionContext.MultiThreadExecutionCounter);
+                }));
+
+                tasks.Add(task);
+            }
+
+            foreach (var task in tasks)
+            {
                 var value = task.GetAwaiter().GetResult();
+            }
+
+            Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");
+        }
+
+        static void ThreadPoolStarvation_Google_RunSyncLocks()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            List<Task<int>> tasks = new(ThreadsExecutionContext.MultiThreadExecutionCount);
+
+            for (int j = 0; j < ThreadsExecutionContext.MultiThreadExecutionCount; j++)
+            {
+                var task = Task.Run(() =>
+                {
+                    using var client = new HttpClient();
+
+                    var response = client.GetAsync($"https://www.google.com/search?q=starvation+number+{ThreadsExecutionContext.MultiThreadExecutionCount}").RunSyncOnNewThread(true);
+                    _ = response.Content.ReadAsStringAsync().RunSyncOnNewThread(true);
+
+                    return Interlocked.Increment(ref ThreadsExecutionContext.MultiThreadExecutionCounter);
+                });
+
+                tasks.Add(task);
+            }
+
+            foreach (var task in tasks)
+            {
+                var value = task.RunSyncOnNewThread(true);
             }
 
             Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");

@@ -14,7 +14,7 @@ namespace RoyalCode.Tasks
     public static class TaskRunner
     {
         private static readonly ObjectPool<InternalSynchronizationContext> synchrorizationContextPool
-            = new DefaultObjectPool<InternalSynchronizationContext>(new InternalPooledObjectPolicy(), 10);
+            = new DefaultObjectPool<InternalSynchronizationContext>(new InternalPooledObjectPolicy(), 100);
 
         /// <summary>
         /// Executa sincronamente a Task.
