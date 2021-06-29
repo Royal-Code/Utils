@@ -22,7 +22,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./**/*.sln
     - name: Build
-      run: dotnet build ./**/*.sln --no-restore -c Release
+      run: dotnet build ./**/*.csproj --no-restore -c Release
     - name: Test
       run: dotnet test ./**/*Tests.csproj --no-build --verbosity normal
     - name: Publish
