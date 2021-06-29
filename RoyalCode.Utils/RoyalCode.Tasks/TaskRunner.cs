@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace RoyalCode.Tasks
         /// </summary>
         /// <param name="task">Task.</param>
         /// <param name="continueOnCapturedContext">Applied on <see cref="Task.ConfigureAwait(bool)"/>.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ExecuteSynchronously(this Task task, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
@@ -45,7 +47,8 @@ namespace RoyalCode.Tasks
         /// <param name="task">Task.</param>
         /// <param name="continueOnCapturedContext">Applied on <see cref="Task.ConfigureAwait(bool)"/>.</param>
         /// <returns>O resultado da Task.</returns>
-        public static T GetSynchronouslyResult<T>(this Task<T> task, bool continueOnCapturedContext = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetResultSynchronously<T>(this Task<T> task, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
 
@@ -68,6 +71,7 @@ namespace RoyalCode.Tasks
         /// </summary>
         /// <param name="delegate">Function thats produces the Task.</param>
         /// <param name="continueOnCapturedContext">Applied on <see cref="Task.ConfigureAwait(bool)"/>.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Synchronously(Func<Task> @delegate, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
@@ -92,6 +96,7 @@ namespace RoyalCode.Tasks
         /// <param name="delegate">Function thats produces the Task.</param>
         /// <param name="continueOnCapturedContext">Applied on <see cref="Task.ConfigureAwait(bool)"/>.</param>
         /// <returns>O resultado da Task.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Synchronously<T>(Func<Task<T>> @delegate, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
@@ -110,6 +115,7 @@ namespace RoyalCode.Tasks
             return state.Result;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void RunSync(
             InternalSynchronizationContext internalContext,
             SynchronizationContext originalContext,
@@ -153,6 +159,7 @@ namespace RoyalCode.Tasks
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void RunSync<T>(
             InternalSynchronizationContext internalContext,
             SynchronizationContext originalContext,

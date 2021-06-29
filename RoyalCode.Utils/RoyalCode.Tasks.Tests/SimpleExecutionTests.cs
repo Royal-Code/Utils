@@ -58,7 +58,7 @@ namespace RoyalCode.Tasks.Tests
                 max = Math.Max(max, Task.Run(() =>
                 {
                     return ++SimpleExecutionContext.WithResultSyncExecutionCount;
-                }).GetSynchronouslyResult());
+                }).GetResultSynchronously());
             }
 
             Assert.Equal(SimpleExecutionContext.ExecutionCount, SimpleExecutionContext.WithResultSyncExecutionCount);

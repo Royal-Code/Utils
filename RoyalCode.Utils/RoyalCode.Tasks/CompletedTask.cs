@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace RoyalCode.Tasks
@@ -18,6 +19,7 @@ namespace RoyalCode.Tasks
         /// </summary>
         /// <param name="action">Action to be executed.</param>
         /// <returns><see cref="Task.CompletedTask"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task After(Action action)
         {
             try
@@ -43,7 +45,8 @@ namespace RoyalCode.Tasks
         /// <typeparam name="T">The result type.</typeparam>
         /// <param name="function">Func to be executed.</param>
         /// <returns><see cref="Task.FromResult{TResult}(TResult)"/>.</returns>
-        public static Task<T> After<T>(Func<T> function)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T> From<T>(Func<T> function)
         {
             function();
 

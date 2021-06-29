@@ -84,7 +84,7 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
 
             foreach (var task in tasks)
             {
-                var value = task.GetSynchronouslyResult();
+                var value = task.GetResultSynchronously();
             }
 
             Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");
@@ -149,7 +149,7 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
 
             foreach (var task in tasks)
             {
-                _ = Task.Run(() => task.GetSynchronouslyResult(true)).GetSynchronouslyResult();
+                _ = Task.Run(() => task.GetResultSynchronously(true)).GetResultSynchronously();
             }
 
             Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");
