@@ -134,12 +134,12 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
 
             for (int j = 0; j < ThreadsExecutionContext.MultiThreadExecutionCount; j++)
             {
-                var task = Task.Run(() =>
+                var task = Task.Run(async () =>
                 {
                     using var client = new HttpClient();
 
-                    var response = client.GetAsync($"https://www.google.com/search?q=starvation+number+{ThreadsExecutionContext.MultiThreadExecutionCount}").GetSynchronouslyResultOnNewThread(true);
-                    _ = response.Content.ReadAsStringAsync().GetSynchronouslyResultOnNewThread(true);
+                    var response = await client.GetAsync($"https://www.google.com/search?q=starvation+number+{ThreadsExecutionContext.MultiThreadExecutionCount}");
+                    _ = await response.Content.ReadAsStringAsync();
 
                     return Interlocked.Increment(ref ThreadsExecutionContext.MultiThreadExecutionCounter);
                 });
@@ -149,7 +149,7 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
 
             foreach (var task in tasks)
             {
-                var value = task.GetSynchronouslyResultOnNewThread(true);
+                _ = Task.Run(() => task.GetSynchronouslyResult(true)).GetSynchronouslyResult();
             }
 
             Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");

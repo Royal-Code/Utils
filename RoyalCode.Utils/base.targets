@@ -8,5 +8,9 @@
     <RepositoryUrl>https://github.com/Royal-Code/Utils</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <Configurations>Debug;Release</Configurations>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="../icon.png" Pack="true" PackagePath="/"/>
+  </ItemGroup>
 </Project>

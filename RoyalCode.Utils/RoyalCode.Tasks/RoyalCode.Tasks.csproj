@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>1.0.0-preview2</Version>
+    <Version>1.0.0-preview3</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
+    <Description>
+      Utilities to run `Task` and `Task{TResult}` synchronously.
+    </Description>
+    <PackageTags>RoyalCode Task Synchronously</PackageTags>
   </PropertyGroup>
   
   <ItemGroup>
