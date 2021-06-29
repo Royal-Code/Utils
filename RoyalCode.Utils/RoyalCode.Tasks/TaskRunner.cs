@@ -117,7 +117,7 @@ namespace RoyalCode.Tasks
                 RunSync(internalContext, originalContext, task, continueOnCapturedContext, threadState, mre);
             });
 
-            executionThread.Start();
+            executionThread.Start(state);
             mre.WaitOne();
 
             synchrorizationContextPool.Return(internalContext);
@@ -226,7 +226,7 @@ namespace RoyalCode.Tasks
                 RunSync(internalContext, originalContext, @delegate(), continueOnCapturedContext, threadState, mre);
             });
 
-            executionThread.Start();
+            executionThread.Start(state);
             mre.WaitOne();
 
             synchrorizationContextPool.Return(internalContext);
@@ -289,7 +289,6 @@ namespace RoyalCode.Tasks
             TaskResultState<T> threadState,
             ManualResetEvent mre = null)
         {
-            RunSync(internalContext, originalContext, task, continueOnCapturedContext);
             SynchronizationContext.SetSynchronizationContext(internalContext);
             try
             {
@@ -309,8 +308,9 @@ namespace RoyalCode.Tasks
                         internalContext.CompleteExecution();
                     }
                 }, null);
-
-                internalContext.Post(_ => mre.Set(), null);
+                 
+                if (mre is not null)
+                    internalContext.Post(_ => mre.Set(), null);
 
                 internalContext.WaitForCompletion();
             }
