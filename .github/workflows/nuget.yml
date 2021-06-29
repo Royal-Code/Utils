@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Set path
-    - run: cd ./
+      run: cd ./
     - name: Restore dependencies
       run: dotnet restore ./**/*.sln
     - name: Build
