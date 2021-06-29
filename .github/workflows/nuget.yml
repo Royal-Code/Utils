@@ -18,10 +18,10 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore ./**/*.csproj
+      run: dotnet restore ./**/*.sln
     - name: Build
-      run: dotnet build ./**/*.csproj --no-restore -c Release
+      run: dotnet build ./**/*.sln --no-restore -c Release
     - name: Test
       run: dotnet test ./**/*Tests.csproj --no-build --verbosity normal
     - name: Publish
-      run: dotnet nuget push ./**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: dotnet push ./**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
