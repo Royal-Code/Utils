@@ -20,6 +20,6 @@ jobs:
     - name: Restore dependencies
       run: sudo dotnet restore ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj
     - name: Build and pack
-      run: sudo dotnet build ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj --no-restore -c Release -o out
+      run: sudo dotnet build ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj --no-restore -c Release
     - name: Publish
-      run: sudo dotnet push ./RoyalCode.Utils/RoyalCode.Tasks/out/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: sudo dotnet nuget push ./RoyalCode.Utils/RoyalCode.Tasks/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
