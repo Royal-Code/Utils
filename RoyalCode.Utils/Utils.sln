@@ -12,11 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".items", ".items", "{BEF360
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Tasks.Tests", "RoyalCode.Tasks.Tests\RoyalCode.Tasks.Tests.csproj", "{93AE4448-E4C0-4AEA-A288-48E5B1C77689}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.Tasks.Tests.ConsoleApp", "RoyalCode.Tasks.Tests.ConsoleApp\RoyalCode.Tasks.Tests.ConsoleApp.csproj", "{6E4A90AD-01A8-4700-8B75-AE5E68160481}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Tasks.Tests.ConsoleApp", "RoyalCode.Tasks.Tests.ConsoleApp\RoyalCode.Tasks.Tests.ConsoleApp.csproj", "{6E4A90AD-01A8-4700-8B75-AE5E68160481}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.Tasks.Tests.StarvationApi1", "RoyalCode.Tasks.Tests.StarvationApi1\RoyalCode.Tasks.Tests.StarvationApi1.csproj", "{E3004890-ECA9-445E-89CB-41BE09F2DF07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Tasks.Tests.StarvationApi1", "RoyalCode.Tasks.Tests.StarvationApi1\RoyalCode.Tasks.Tests.StarvationApi1.csproj", "{E3004890-ECA9-445E-89CB-41BE09F2DF07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.Tasks.Tests.StarvationApi2", "RoyalCode.Tasks.Tests.StarvationApi2\RoyalCode.Tasks.Tests.StarvationApi2.csproj", "{C85425CA-473D-46F0-8F9B-0ABBCC9A61EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Tasks.Tests.StarvationApi2", "RoyalCode.Tasks.Tests.StarvationApi2\RoyalCode.Tasks.Tests.StarvationApi2.csproj", "{C85425CA-473D-46F0-8F9B-0ABBCC9A61EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
