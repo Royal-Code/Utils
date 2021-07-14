@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
     <DocumentationFile>$(BaseOutputPath)\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Royal Code</Authors>
