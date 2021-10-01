@@ -9,6 +9,8 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
 {
     class Program
     {
+        private static int executions = 0;
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello Tests!");
@@ -20,8 +22,15 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
             Console.WriteLine("5: local api task runner");
             Console.WriteLine("6: local api async do not block");
             Console.WriteLine("7: Google run sync locks 2");
+            Console.WriteLine("8: Bad Context");
             Console.Write("Your choise: ");
             var choise = Console.ReadLine();
+
+            var timer = new System.Threading.Timer(s =>
+            {
+                Console.WriteLine($"Executing {executions}");
+            }, null, 5000, 5000);
+            
 
             if (choise == "1")
                 ThreadPoolStarvation_Google_Do_Not_Block();
@@ -37,11 +46,14 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
                 ThreadPoolStarvation_Async_Do_Not_Block();
             else if (choise == "7")
                 ThreadPoolStarvation_Google_RunSyncLocks2();
+            else if (choise == "8")
+                ThreadPoolStarvation_BadContext();
             else
                 Console.WriteLine("Value not accepted");
 
+            timer.Dispose();
             Console.WriteLine("ThreadPoolStarvation finished!");
-
+            
             //Console.ReadKey();
         }
 
@@ -88,6 +100,7 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
             foreach (var task in tasks)
             {
                 var value = task.GetResultSynchronously();
+                executions++;
             }
 
             Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");
@@ -123,6 +136,7 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
             foreach (var task in tasks)
             {
                 var value = task.GetAwaiter().GetResult();
+                executions++;
             }
 
             Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");
@@ -153,6 +167,7 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
             foreach (var task in tasks)
             {
                 _ = task.GetResultSynchronously();
+                executions++;
             }
 
             Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");
@@ -191,6 +206,31 @@ namespace RoyalCode.Tasks.Tests.ConsoleApp
             {
                 task.ConfigureAwait(false);
                 var value = task.GetResultSafe();
+                executions++;
+            }
+
+            Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");
+        }
+
+        static void ThreadPoolStarvation_BadContext()
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            List<Task<bool>> tasks = new(ThreadsExecutionContext.MultiThreadExecutionCount);
+            var service = new BadContextService();
+
+            for (int j = 0; j < ThreadsExecutionContext.MultiThreadExecutionCount; j++)
+            {
+                var task = service.Something($"MultiThreadExecutionCounter {ThreadsExecutionContext.MultiThreadExecutionCounter}");
+
+                tasks.Add(task);
+            }
+
+            foreach (var task in tasks)
+            {
+                _ = task.GetResultSynchronously();
+                executions++;
             }
 
             Console.WriteLine($"Total executions: {ThreadsExecutionContext.MultiThreadExecutionCounter}, in: {watch.Elapsed}.");

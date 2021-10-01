@@ -167,27 +167,13 @@ namespace RoyalCode.Tasks
             bool continueOnCapturedContext,
             TaskResultState<T> resultState)
         {
-            SynchronizationContext.SetSynchronizationContext(internalContext);
+            SynchronizationContext.SetSynchronizationContext(null);
+
             try
             {
-                internalContext.Post(async _ =>
-                {
-                    try
-                    {
-                        resultState.Result = await task.ConfigureAwait(continueOnCapturedContext);
-                    }
-                    catch (Exception ex)
-                    {
-                        internalContext.InnerException = ex;
-                        throw;
-                    }
-                    finally
-                    {
-                        internalContext.CompleteExecution();
-                    }
-                }, null);
-
-                internalContext.WaitForCompletion();
+                Task.Run(async () => await task)
+                    .ContinueWith(t => resultState.Result = t.Result)
+                    .Wait();
             }
             catch (AggregateException ex)
             {
@@ -202,6 +188,41 @@ namespace RoyalCode.Tasks
             {
                 SynchronizationContext.SetSynchronizationContext(originalContext);
             }
+
+            //try
+            //{
+            //    internalContext.Post(async _ =>
+            //    {
+            //        try
+            //        {
+            //            resultState.Result = await task.ConfigureAwait(continueOnCapturedContext);
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            internalContext.InnerException = ex;
+            //            throw;
+            //        }
+            //        finally
+            //        {
+            //            internalContext.CompleteExecution();
+            //        }
+            //    }, null);
+
+            //    internalContext.WaitForCompletion();
+            //}
+            //catch (AggregateException ex)
+            //{
+            //    var exception = ex.TryGetSingleInnerException();
+
+            //    if (exception is OperationCanceledException)
+            //        throw CreateTimeoutException(internalContext.Stopwatch.Elapsed, ex);
+
+            //    ExceptionDispatchInfo.Capture(exception).Throw();
+            //}
+            //finally
+            //{
+            //    SynchronizationContext.SetSynchronizationContext(originalContext);
+            //}
         }
 
         private class InternalPooledObjectPolicy : IPooledObjectPolicy<InternalSynchronizationContext>
