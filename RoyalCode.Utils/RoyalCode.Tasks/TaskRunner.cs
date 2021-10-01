@@ -26,7 +26,7 @@ namespace RoyalCode.Tasks
         public static void ExecuteSynchronously(this Task task, bool continueOnCapturedContext = false)
         {
             var originalContext = SynchronizationContext.Current;
-            
+
             if (originalContext == null)
             {
                 task.GetAwaiter().GetResult();
@@ -119,7 +119,7 @@ namespace RoyalCode.Tasks
         private static void RunSync(
             InternalSynchronizationContext internalContext,
             SynchronizationContext originalContext,
-            Task task, 
+            Task task,
             bool continueOnCapturedContext)
         {
             SynchronizationContext.SetSynchronizationContext(internalContext);
