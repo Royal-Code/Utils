@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Tasks", "RoyalCode.Tasks\RoyalCode.Tasks.csproj", "{FBD60F7E-BD59-4B5E-8451-125EC1A07C1F}"
 EndProject
@@ -12,11 +12,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".items", ".items", "{BEF360
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Tasks.Tests", "RoyalCode.Tasks.Tests\RoyalCode.Tasks.Tests.csproj", "{93AE4448-E4C0-4AEA-A288-48E5B1C77689}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.Tasks.Tests.ConsoleApp", "RoyalCode.Tasks.Tests.ConsoleApp\RoyalCode.Tasks.Tests.ConsoleApp.csproj", "{6E4A90AD-01A8-4700-8B75-AE5E68160481}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Tasks.Tests.ConsoleApp", "RoyalCode.Tasks.Tests.ConsoleApp\RoyalCode.Tasks.Tests.ConsoleApp.csproj", "{6E4A90AD-01A8-4700-8B75-AE5E68160481}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.Tasks.Tests.StarvationApi1", "RoyalCode.Tasks.Tests.StarvationApi1\RoyalCode.Tasks.Tests.StarvationApi1.csproj", "{E3004890-ECA9-445E-89CB-41BE09F2DF07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Tasks.Tests.StarvationApi1", "RoyalCode.Tasks.Tests.StarvationApi1\RoyalCode.Tasks.Tests.StarvationApi1.csproj", "{E3004890-ECA9-445E-89CB-41BE09F2DF07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.Tasks.Tests.StarvationApi2", "RoyalCode.Tasks.Tests.StarvationApi2\RoyalCode.Tasks.Tests.StarvationApi2.csproj", "{C85425CA-473D-46F0-8F9B-0ABBCC9A61EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Tasks.Tests.StarvationApi2", "RoyalCode.Tasks.Tests.StarvationApi2\RoyalCode.Tasks.Tests.StarvationApi2.csproj", "{C85425CA-473D-46F0-8F9B-0ABBCC9A61EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{919DC7E0-FFB6-445E-8D2F-7E43695C8B84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DependencyInjection", "DependencyInjection", "{524448A6-38A1-4642-8DBB-D21924B44F0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.DependencyInjection.Subscribers", "RoyalCode.DependencyInjection.Subscribers\RoyalCode.DependencyInjection.Subscribers.csproj", "{8DC86676-CDDB-4D97-BEEC-83618B865943}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,9 +50,21 @@ Global
 		{C85425CA-473D-46F0-8F9B-0ABBCC9A61EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C85425CA-473D-46F0-8F9B-0ABBCC9A61EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C85425CA-473D-46F0-8F9B-0ABBCC9A61EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DC86676-CDDB-4D97-BEEC-83618B865943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DC86676-CDDB-4D97-BEEC-83618B865943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DC86676-CDDB-4D97-BEEC-83618B865943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DC86676-CDDB-4D97-BEEC-83618B865943}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FBD60F7E-BD59-4B5E-8451-125EC1A07C1F} = {919DC7E0-FFB6-445E-8D2F-7E43695C8B84}
+		{93AE4448-E4C0-4AEA-A288-48E5B1C77689} = {919DC7E0-FFB6-445E-8D2F-7E43695C8B84}
+		{6E4A90AD-01A8-4700-8B75-AE5E68160481} = {919DC7E0-FFB6-445E-8D2F-7E43695C8B84}
+		{E3004890-ECA9-445E-89CB-41BE09F2DF07} = {919DC7E0-FFB6-445E-8D2F-7E43695C8B84}
+		{C85425CA-473D-46F0-8F9B-0ABBCC9A61EA} = {919DC7E0-FFB6-445E-8D2F-7E43695C8B84}
+		{8DC86676-CDDB-4D97-BEEC-83618B865943} = {524448A6-38A1-4642-8DBB-D21924B44F0C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {75616174-F0B2-4678-A9C4-6B497C17A98D}
