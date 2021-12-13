@@ -23,9 +23,9 @@ namespace RoyalCode.Diagnostics
     {
         private readonly Action<TArgument1, TArgument2, TArgument3> handle;
         private readonly string[] propertyNames;
-        private EventArgumentGetter<TArgument1> getter1;
-        private EventArgumentGetter<TArgument2> getter2;
-        private EventArgumentGetter<TArgument3> getter3;
+        private EventArgumentGetter<TArgument1>? getter1;
+        private EventArgumentGetter<TArgument2>? getter2;
+        private EventArgumentGetter<TArgument3>? getter3;
 
         /// <summary>
         /// Nome do evento manipulado.

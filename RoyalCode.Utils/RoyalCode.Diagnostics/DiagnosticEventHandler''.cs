@@ -21,9 +21,9 @@ namespace RoyalCode.Diagnostics
     public class DiagnosticEventHandler<TArgument1, TArgument2> : IDiagnosticEventHandler
     {
         private readonly Action<TArgument1, TArgument2> handle;
-        private readonly string[] propertyNames;
-        private EventArgumentGetter<TArgument1> getter1;
-        private EventArgumentGetter<TArgument2> getter2;
+        private readonly string?[] propertyNames;
+        private EventArgumentGetter<TArgument1>? getter1;
+        private EventArgumentGetter<TArgument2>? getter2;
 
         /// <summary>
         /// Nome do evento manipulado.
@@ -39,10 +39,10 @@ namespace RoyalCode.Diagnostics
             if (eventArgs is null)
                 throw new ArgumentNullException(nameof(eventArgs));
 
-            if (getter1 == null)
+            if (getter1 is null)
                 getter1 = EventArgumentGetterFactory.Get<TArgument1>(eventArgs.GetType(), propertyNames[0]);
 
-            if (getter2 == null)
+            if (getter2 is null)
                 getter2 = EventArgumentGetterFactory.Get<TArgument2>(eventArgs.GetType(), propertyNames[1]);
 
             var argument1 = getter1(eventArgs);
@@ -71,11 +71,11 @@ namespace RoyalCode.Diagnostics
         /// <param name="propertyName1">O nome da propriedade do argumento 1.</param>
         /// <param name="propertyName2">O nome da propriedade do argumento 2.</param>
         public DiagnosticEventHandler(string eventName, Action<TArgument1, TArgument2> handle,
-            string propertyName1, string propertyName2)
+            string? propertyName1, string? propertyName2)
         {
             this.handle = handle ?? throw new ArgumentNullException(nameof(handle));
             EventName = eventName ?? throw new ArgumentNullException(nameof(eventName));
-            propertyNames = new string[] { propertyName1, propertyName2 };
+            propertyNames = new string?[] { propertyName1, propertyName2 };
         }
     }
 }

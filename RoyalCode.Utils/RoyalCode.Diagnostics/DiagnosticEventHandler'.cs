@@ -21,8 +21,8 @@ namespace RoyalCode.Diagnostics
     public class DiagnosticEventHandler<TArgument> : IDiagnosticEventHandler
     {
         private readonly Action<TArgument> handle;
-        private readonly string propertyName;
-        private EventArgumentGetter<TArgument> getter;
+        private readonly string? propertyName;
+        private EventArgumentGetter<TArgument>? getter;
 
         /// <summary>
         /// Nome do evento manipulado.
@@ -39,7 +39,7 @@ namespace RoyalCode.Diagnostics
                 throw new ArgumentNullException(nameof(eventArgs));
             
             if (getter == null)
-                getter = EventArgumentGetterFactory.Get<TArgument>(eventArgs.GetType(), propertyName);
+                getter = EventArgumentGetterFactory.Get<TArgument>(eventArgs.GetType(), propertyName!);
 
             var argument = getter(eventArgs);
             if (argument != null)
