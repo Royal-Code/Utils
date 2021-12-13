@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ main ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -18,10 +18,8 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore -c Release
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: sudo dotnet restore ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj
+    - name: Build and pack
+      run: sudo dotnet build ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj --no-restore -c Release
     - name: Publish
-      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: sudo dotnet nuget push ./RoyalCode.Utils/RoyalCode.Tasks/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

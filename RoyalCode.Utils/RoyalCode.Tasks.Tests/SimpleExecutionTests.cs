@@ -29,28 +29,14 @@ namespace RoyalCode.Tasks.Tests
                 Task.Run(() =>
                 {
                     SimpleExecutionContext.WithoutResultSyncExecutionCount++;
-                }).RunSync();
+                }).ExecuteSynchronously();
             }
 
             Assert.Equal(SimpleExecutionContext.ExecutionCount, SimpleExecutionContext.WithoutResultSyncExecutionCount);
         }
 
         [Fact]
-        public void Test_03_SyncExecution_Without_Result_OnNewThread()
-        {
-            for (int i = 0; i < SimpleExecutionContext.ExecutionCount; i++)
-            {
-                Task.Run(() =>
-                {
-                    SimpleExecutionContext.WithoutResultSyncExecutionOnNewThreadCount++;
-                }).RunSyncOnNewThread();
-            }
-
-            Assert.Equal(SimpleExecutionContext.ExecutionCount, SimpleExecutionContext.WithoutResultSyncExecutionOnNewThreadCount);
-        }
-
-        [Fact]
-        public void Test_04_AsyncExecution_With_Result()
+        public void Test_03_AsyncExecution_With_Result()
         {
             for (int i = 0; i < SimpleExecutionContext.ExecutionCount; i++)
             {
@@ -64,7 +50,7 @@ namespace RoyalCode.Tasks.Tests
         }
 
         [Fact]
-        public void Test_05_SyncExecution_With_Result()
+        public void Test_04_SyncExecution_With_Result()
         {
             var max = 0;
             for (int i = 0; i < SimpleExecutionContext.ExecutionCount; i++)
@@ -72,27 +58,11 @@ namespace RoyalCode.Tasks.Tests
                 max = Math.Max(max, Task.Run(() =>
                 {
                     return ++SimpleExecutionContext.WithResultSyncExecutionCount;
-                }).RunSync());
+                }).GetResultSynchronously());
             }
 
             Assert.Equal(SimpleExecutionContext.ExecutionCount, SimpleExecutionContext.WithResultSyncExecutionCount);
             Assert.Equal(SimpleExecutionContext.WithResultSyncExecutionCount, max);
-        }
-
-        [Fact]
-        public void Test_06_SyncExecution_With_Result_OnNewThread()
-        {
-            var max = 0;
-            for (int i = 0; i < SimpleExecutionContext.ExecutionCount; i++)
-            {
-                max = Math.Max(max, Task.Run(() =>
-                {
-                    return ++SimpleExecutionContext.WithResultSyncExecutionOnNewThreadCount;
-                }).RunSyncOnNewThread());
-            }
-
-            Assert.Equal(SimpleExecutionContext.ExecutionCount, SimpleExecutionContext.WithResultSyncExecutionOnNewThreadCount);
-            Assert.Equal(SimpleExecutionContext.WithResultSyncExecutionOnNewThreadCount, max);
         }
     }
 }

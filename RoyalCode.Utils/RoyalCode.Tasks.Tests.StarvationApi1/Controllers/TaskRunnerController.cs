@@ -18,8 +18,7 @@ namespace RoyalCode.Tasks.Tests.StarvationApi1.Controllers
         [HttpGet]
         public int Get()
         {
-            //return service.GetNextValue().RunSync();
-            return TaskRunner.RunSyncOnNewThread(service.GetNextValue);
+            return TaskRunner.Synchronously(service.GetNextValue);
         }
     }
 }
