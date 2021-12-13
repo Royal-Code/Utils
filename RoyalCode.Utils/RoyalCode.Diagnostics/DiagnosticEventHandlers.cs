@@ -46,7 +46,7 @@ namespace RoyalCode.Diagnostics
         public static DiagnosticEventHandler<TArgument> For<TArgument>(
             string eventName,
             Action<TArgument> handler, 
-            string propertyName = null)
+            string? propertyName = null)
         {
             return propertyName == null
                 ? new DiagnosticEventHandler<TArgument>(eventName, handler)
@@ -77,8 +77,8 @@ namespace RoyalCode.Diagnostics
         public static DiagnosticEventHandler<TArgument1, TArgument2> For<TArgument1, TArgument2>(
             string eventName,
             Action<TArgument1, TArgument2> handler,
-            string propertyName1 = null,
-            string propertyName2 = null)
+            string? propertyName1 = null,
+            string? propertyName2 = null)
         {
             return new DiagnosticEventHandler<TArgument1, TArgument2>(eventName, handler, propertyName1, propertyName2);
         }
@@ -110,9 +110,9 @@ namespace RoyalCode.Diagnostics
         public static DiagnosticEventHandler<TArgument1, TArgument2, TArgument3> For<TArgument1, TArgument2, TArgument3>(
             string eventName,
             Action<TArgument1, TArgument2, TArgument3> handler,
-            string propertyName1 = null,
-            string propertyName2 = null,
-            string propertyName3 = null)
+            string? propertyName1 = null,
+            string? propertyName2 = null,
+            string? propertyName3 = null)
         {
             return new DiagnosticEventHandler<TArgument1, TArgument2, TArgument3>(
                 eventName, handler, propertyName1, propertyName2, propertyName3);

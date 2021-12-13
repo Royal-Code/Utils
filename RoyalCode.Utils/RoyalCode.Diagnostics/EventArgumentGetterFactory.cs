@@ -29,9 +29,9 @@ namespace RoyalCode.Diagnostics
         /// <exception cref="InvalidOperationException">
         ///     Caso não seja possível encontrar uma propriedade par ao argumento requerido.
         /// </exception>
-        public static EventArgumentGetter<TArgument> Get<TArgument>(Type eventArgsType, string property = null)
+        public static EventArgumentGetter<TArgument> Get<TArgument>(Type eventArgsType, string? property = null)
         {
-            if (property == null)
+            if (property is null)
             {
                 var key = new Tuple<Type, Type>(eventArgsType, typeof(TArgument));
                 return (EventArgumentGetter<TArgument>)typeFunctions.GetOrAdd(key, k => Create<TArgument>(k));
