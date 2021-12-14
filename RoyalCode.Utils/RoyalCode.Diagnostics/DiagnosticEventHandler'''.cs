@@ -22,7 +22,7 @@ namespace RoyalCode.Diagnostics
     public class DiagnosticEventHandler<TArgument1, TArgument2, TArgument3> : IDiagnosticEventHandler
     {
         private readonly Action<TArgument1, TArgument2, TArgument3> handle;
-        private readonly string[] propertyNames;
+        private readonly string?[] propertyNames;
         private EventArgumentGetter<TArgument1>? getter1;
         private EventArgumentGetter<TArgument2>? getter2;
         private EventArgumentGetter<TArgument3>? getter3;
@@ -78,11 +78,11 @@ namespace RoyalCode.Diagnostics
         /// <param name="propertyName2">O nome da propriedade do argumento 2.</param>
         /// <param name="propertyName3">O nome da propriedade do argumento 3.</param>
         public DiagnosticEventHandler(string eventName, Action<TArgument1, TArgument2, TArgument3> handle,
-            string propertyName1, string propertyName2, string propertyName3)
+            string? propertyName1, string? propertyName2, string? propertyName3)
         {
             this.handle = handle ?? throw new ArgumentNullException(nameof(handle));
             EventName = eventName ?? throw new ArgumentNullException(nameof(eventName));
-            propertyNames = new string[] { propertyName1, propertyName2, propertyName3 };
+            propertyNames = new string?[] { propertyName1, propertyName2, propertyName3 };
         }
     }
 }

@@ -18,7 +18,7 @@ namespace RoyalCode.Diagnostics
     ///     Implemente e registre <see cref="IDiagnosticEventObserver"/> para escutar os eventos.
     /// </para>
     /// <para>
-    ///     A inicialização é feita pelo <see cref="DiagnosticListenerObserverBackgroundProcessStartup"/>.
+    ///     É requerida a inicialização do componente na inicialização do sistema.
     /// </para>
     /// </summary>
     public class DiagnosticListenerObserver : IObserver<DiagnosticListener>

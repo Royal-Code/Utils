@@ -14,7 +14,7 @@ namespace RoyalCode.Diagnostics
     ///     Veja também a implementação abstrata <see cref="DiagnosticEventObserverBase"/>.
     /// </para>
     /// </summary>
-    public interface IDiagnosticEventObserver : IObserver<KeyValuePair<string, object>>
+    public interface IDiagnosticEventObserver : IObserver<KeyValuePair<string, object?>>
     {
         /// <summary>
         /// <para>

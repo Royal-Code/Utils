@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagnostics", "Diagnostics"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Diagnostics", "RoyalCode.Diagnostics\RoyalCode.Diagnostics.csproj", "{90B23177-52BD-498C-965E-E638A6ED0715}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCodeDiagnostics.AspNetCore", "RoyalCodeDiagnostics.AspNetCore\RoyalCodeDiagnostics.AspNetCore.csproj", "{023F9C8C-81E0-42D9-9B8D-3C361A94A5FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{90B23177-52BD-498C-965E-E638A6ED0715}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90B23177-52BD-498C-965E-E638A6ED0715}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90B23177-52BD-498C-965E-E638A6ED0715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{023F9C8C-81E0-42D9-9B8D-3C361A94A5FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{023F9C8C-81E0-42D9-9B8D-3C361A94A5FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{023F9C8C-81E0-42D9-9B8D-3C361A94A5FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{023F9C8C-81E0-42D9-9B8D-3C361A94A5FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +80,7 @@ Global
 		{C85425CA-473D-46F0-8F9B-0ABBCC9A61EA} = {919DC7E0-FFB6-445E-8D2F-7E43695C8B84}
 		{8DC86676-CDDB-4D97-BEEC-83618B865943} = {524448A6-38A1-4642-8DBB-D21924B44F0C}
 		{90B23177-52BD-498C-965E-E638A6ED0715} = {5D72EE16-1C05-4394-8BC2-44D086BCAFB2}
+		{023F9C8C-81E0-42D9-9B8D-3C361A94A5FD} = {5D72EE16-1C05-4394-8BC2-44D086BCAFB2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {75616174-F0B2-4678-A9C4-6B497C17A98D}

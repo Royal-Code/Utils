@@ -26,6 +26,6 @@ namespace RoyalCode.Diagnostics
         ///     Opcional.
         /// </para>
         /// </summary>
-        public string[] GetFromTypes { get; set; }
+        public string[]? GetFromTypes { get; set; }
     }
 }

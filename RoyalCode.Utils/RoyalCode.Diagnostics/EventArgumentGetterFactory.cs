@@ -62,7 +62,7 @@ namespace RoyalCode.Diagnostics
                 : Create<TArgument>(key.Item1, member);
         }
 
-        private static EventArgumentGetter<TArgument> Create<TArgument>(Tuple<Type, Type> key)
+        private static EventArgumentGetter<TArgument?> Create<TArgument>(Tuple<Type, Type> key)
         {
             var type = key.Item1;
             if (typeof(TArgument).IsAssignableFrom(type))
@@ -77,7 +77,7 @@ namespace RoyalCode.Diagnostics
 
             if (typeof(TArgument).IsDefined(typeof(ArgumentAdapterAttribute)))
             {
-                return CreateAdapter<TArgument>(type);
+                return CreateAdapter<TArgument?>(type);
             }
 
             var member = type.GetTypeInfo()
@@ -89,7 +89,7 @@ namespace RoyalCode.Diagnostics
                 throw new InvalidOperationException(
                     $"The event arguments of type '{type.FullName}' do not have an property of type '{typeof(TArgument).FullName}'");
 
-            return Create<TArgument>(type, member);
+            return Create<TArgument?>(type, member);
         }
 
         private static EventArgumentGetter<TArgument> Create<TArgument>(Type type, PropertyInfo member)
