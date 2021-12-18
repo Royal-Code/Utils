@@ -73,7 +73,7 @@ namespace RoyalCode.Extensions.PropertySelection
         /// </para>
         /// <para>
         /// O código em c# para acessar a propriedade mensionada acima seria assim:
-        /// <code>filal.Empresa.Id</code>
+        /// <code>filial.Empresa.Id</code>
         /// </para>
         /// </example>
         /// <param name="type">Tipo de dado que contém a propriedade.</param>
