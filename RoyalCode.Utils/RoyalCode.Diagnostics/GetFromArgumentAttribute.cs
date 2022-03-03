@@ -25,7 +25,7 @@ namespace RoyalCode.Diagnostics
         ///     será usado o mesmo nome da propriedade decorada com este atributo.
         /// </para>
         /// </summary>
-        public string PropertyName { get; set; }
+        public string? PropertyName { get; set; }
 
         /// <summary>
         /// <para>

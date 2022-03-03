@@ -1,8 +1,7 @@
-﻿using RoyalCode.Core.Inject.Components;
-using RoyalCode.Diagnostics;
+﻿using RoyalCode.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Linq;
+using Microsoft.AspNetCore.Hosting;
+using RoyalCode.Diagnostics.AspNetCore.Filters;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -21,7 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (!services.Any(d => d.ServiceType == typeof(DiagnosticListenerObserver)))
             {
                 services.AddSingleton<DiagnosticListenerObserver>();
-                services.AddSingleton<IBackgroundProcess, DiagnosticListenerObserverBackgroundProcessStartup>();
+                services.AddSingleton<IStartupFilter, DiagnosticListenerObserverStartup>();
             }
 
             return new DefaultDiagnosticEventListenerBuilder(services);

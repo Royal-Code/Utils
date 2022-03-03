@@ -99,15 +99,17 @@ namespace RoyalCode.Diagnostics
         /// Executa <see cref="OnNext(string, object)"/>.
         /// </summary>
         /// <param name="value">Valores do evento de diagnóstico ocorrido.</param>
-        public virtual void OnNext(KeyValuePair<string, object> value) => OnNext(value.Key, value.Value);
+        public virtual void OnNext(KeyValuePair<string, object?> value) => OnNext(value.Key, value.Value);
 
         /// <summary>
         /// Percorre os handlers e delega o evento ao qual o nome atenda.
         /// </summary>
         /// <param name="eventName">Nome do evento.</param>
         /// <param name="eventArgs">Argumentos do evento.</param>
-        protected virtual void OnNext(string eventName, object eventArgs)
+        protected virtual void OnNext(string eventName, object? eventArgs)
         {
+            if (eventArgs is null)
+                return;
             foreach (var handler in eventHandlers)
             {
                 if (handler.EventName == eventName)

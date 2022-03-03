@@ -96,7 +96,7 @@ namespace RoyalCode.Diagnostics
         /// <typeparam name="TItem">The item type.</typeparam>
         /// <returns>The item object or default</returns>
         public TItem? TryGetItem<TItem>()
-            => (TItem)(items.TryGetValue(typeof(TItem), out var item) ? item : InternalTryGetItem(typeof(TItem)));
+            => (TItem?)(items.TryGetValue(typeof(TItem), out var item) ? item : InternalTryGetItem(typeof(TItem)));
 
         /// <summary>
         /// Get the item of the type, when not found, returns default.
@@ -283,7 +283,7 @@ namespace RoyalCode.Diagnostics
             /// <returns>A mesma instância para chamadas encadeadas.</returns>
             public WithItem<TItem> Add()
             {
-                items.Add(typeof(TItem), item);
+                items.Add(typeof(TItem), item!);
                 return this;
             }
 
@@ -294,7 +294,7 @@ namespace RoyalCode.Diagnostics
             /// <returns>A mesma instância para chamadas encadeadas.</returns>
             public WithItem<TItem> AddAs<TItemType>()
             {
-                if (!typeof(TItemType).IsAssignableFrom(item.GetType()))
+                if (!typeof(TItemType).IsAssignableFrom(item!.GetType()))
                 {
                     throw new ArgumentException(
                         $"The current item is of type '{item.GetType().FullName}' " +
