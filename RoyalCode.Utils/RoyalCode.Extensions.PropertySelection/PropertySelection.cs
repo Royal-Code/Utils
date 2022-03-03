@@ -1,274 +1,296 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-namespace RoyalCode.Extensions.PropertySelection
+namespace RoyalCode.Extensions.PropertySelection;
+
+/// <summary>
+/// <para>
+///     Selection of a property.
+/// </para>
+/// <para>
+///     It contains the selection of a property and the selection of the parent property,
+///     and there may be a chaining of properties.
+/// </para>
+/// <para>
+///     The responsibility of this class is to identify class properties using a string
+///     containing the names of the properties to be selected separated by dots or trying to select by PascalCase.
+/// </para>
+/// <para>
+///     With a property selected, you can take all the <see cref="PropertyInfo"/> of the selection,
+///     generate a <see cref="Expression"/> to access the member,
+///     check if it is possible to assign the value to the property at all its levels.
+/// </para>
+/// <para>
+///     This functionality is useful for creating lambda expressions
+///     where members are accessed and need to be found by property names.
+/// </para>
+/// <para>
+///     See the facilitator <see cref="PropertySelectionExtensions.SelectProperty(Type, string)"/>.
+/// </para>
+/// </summary>
+public class PropertySelection
 {
+    private readonly Type declarationType;
+    private readonly PropertyInfo info;
+    private Stack<string>? addOns;
+
     /// <summary>
-    /// Seleção de propriedades.
-    /// Contém a seleção de uma propriedade e a seleção da propriedade pai.
-    /// Util para o acesso de várias propriedades encadeadas.
-    /// Veja o facilitador <see cref="PropertySelectionExtensions.SelectProperty(Type, string)"/>.
+    /// The current selected property type.
     /// </summary>
-    public class PropertySelection
+    public Type PropertyType => info.PropertyType;
+
+    /// <summary>
+    /// The declaring class type of the root selected property.
+    /// if this selection does not have a parent, this selection will be the root.
+    /// </summary>
+    public Type RootDeclaringType => Parent != null ? Parent.RootDeclaringType : info.DeclaringType!;
+
+    /// <summary>
+    /// The parent <see cref="PropertySelection"/>. Can be null.
+    /// </summary>
+    public PropertySelection? Parent { get; private set; }
+
+    /// <summary>
+    /// The current selected property name.
+    /// </summary>
+    public string PropertyName => info.Name;
+
+    /// <summary>
+    /// If have some addon.
+    /// </summary>
+    public bool HasAddOn => addOns is not null;
+
+    /// <summary>
+    /// Get all the property selection addons.
+    /// </summary>
+    public IEnumerable<string> AddOns => addOns?.AsEnumerable() ?? Array.Empty<string>();
+
+    /// <summary>
+    /// <para>
+    ///     Creates a new property selection from a <see cref="PropertyInfo"/>.
+    /// </para>
+    /// <para>
+    ///     It is useful for creating a root selection and then selecting one or more child properties, forming a chain.
+    /// </para>
+    /// </summary>
+    /// <param name="info">The <see cref="PropertyInfo"/>.</param>
+    public PropertySelection(PropertyInfo info)
     {
-        private readonly Type declarationType;
+        if (info == null)
+            throw new ArgumentNullException(nameof(info));
 
-        private readonly PropertyInfo info;
-
-        private Stack<string>? _addOns;
-
-        /// <summary>
-        /// Tipo da propriedade;
-        /// </summary>
-        public Type PropertyType => info.PropertyType;
-
-        /// <summary>
-        /// Tipo da propriedade raiz da seleção.
-        /// </summary>
-        public Type RootDeclaringType => Parent != null ? Parent.RootDeclaringType : info.DeclaringType;
-
-        /// <summary>
-        /// <see cref="PropertySelection"/> pai desta. Pode ser nulo.
-        /// </summary>
-        public PropertySelection? Parent { get; private set; }
-
-        /// <summary>
-        /// Nome da propriedade.
-        /// </summary>
-        public string PropertyName => info.Name;
-
-        /// <summary>
-        /// Se possui algum add-on, complemento.
-        /// </summary>
-        public bool HasAddOn => _addOns != null;
-
-        /// <summary>
-        /// Adicionais, complementos, da seleção da propriedade.
-        /// </summary>
-        public IEnumerable<string> AddOns => _addOns?.AsEnumerable() ?? Array.Empty<string>();
-
-        /// <summary>
-        /// Cria uma nova seleção para uma propriedade.
-        /// </summary>
-        /// <param name="info">Informações da propriedade.</param>
-        public PropertySelection(PropertyInfo info)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            Parent = null;
-            declarationType = info.DeclaringType;
-            this.info = info;
-        }
-
-        /// <summary>
-        /// Método para criar uma seleção de propriedade a partir da nomenclatura das propriedades.
-        /// É considerado o PascalCase para seleção das propriedades.
-        /// </summary>
-        /// <example>
-        /// <para>
-        /// Tendo de partida uma classe chamada Filial e querendo selecionar a propriedade Id da empresa da filial,
-        /// onde a filial possuí uma propriedade chamada Empresa, do tipo empresa, podemos usar a string:
-        /// <code>EmpresaId</code>.
-        /// </para>
-        /// <para>
-        /// O código em c# para acessar a propriedade mensionada acima seria assim:
-        /// <code>filial.Empresa.Id</code>
-        /// </para>
-        /// </example>
-        /// <param name="type">Tipo de dado que contém a propriedade.</param>
-        /// <param name="property">Nome da propriedade, onde é procurado por pascal case.</param>
-        /// <param name="required">Se a existência da propriedade é requerida. Opcional, padrão true</param>
-        /// <returns>A seleção da propriedade, ou nulo se ela não é requerida e não for encontrada.</returns>
-        /// <exception cref="ArgumentException">
-        ///     Caso não seja possível selecionar a propriedade e ela seja requerida.
-        /// </exception>
-        public static PropertySelection? Select(Type type, string property, bool required = true)
-        {
-            var info = type.GetProperty(property);
-            if (info != null)
-                return new PropertySelection(info);
-
-            PropertySelection? ps = null;
-            var pascalCase = property.SplitPascalCase();
-            if (pascalCase.Contains(' '))
-            {
-                var partSelector = new PropertySelectionPart(pascalCase.Split(' '), type);
-                ps = partSelector.Select();
-            }
-
-            if (ps is null)
-            {
-                if (required)
-                    throw CreateException(type.Name, property);
-                else
-                    return null;
-            }
-
-            return ps;
-        }
-
-        private static ArgumentException CreateException(string typeName, string propertyName)
-        {
-            return new ArgumentException($"The class '{typeName}' does not have the property '{propertyName}'");
-        }
-
-        /// <summary>
-        /// Cria uma nova seleção de propriedade a partir da propriedade selecionada.
-        /// A seleção atual será pai da nova seleção.
-        /// </summary>
-        /// <param name="property">Nome da propriedade.</param>
-        /// <returns>Nova instância de PropertySelection.</returns>
-        public PropertySelection Push(string property)
-        {
-            if (string.IsNullOrEmpty(property))
-                throw new ArgumentNullException(nameof(property));
-
-            var newSelection = Select(info.PropertyType, property)!;
-            newSelection.Parent = this;
-            newSelection._addOns = _addOns;
-
-            return newSelection;
-        }
-
-        /// <summary>
-        /// Cria uma nova seleção de propriedade a partir da propriedade selecionada.
-        /// A seleção atual será pai da nova seleção.
-        /// </summary>
-        /// <param name="property">Nome da propriedade.</param>
-        /// <returns>Nova instância de PropertySelection.</returns>
-        public PropertySelection Push(PropertyInfo property)
-        {
-            if (property == null)
-                throw new ArgumentNullException(nameof(property));
-
-            if (property.DeclaringType != PropertyType)
-                throw new ArgumentException("The property type is different from the current selection type. "
-                    + $"{declarationType.Name} was expected but was found {property.DeclaringType.Name}");
-
-            var newSelection = new PropertySelection(property)
-            {
-                Parent = this,
-                _addOns = _addOns
-            };
-
-            return newSelection;
-        }
-
-        /// <summary>
-        /// Adiciona um complemento.
-        /// </summary>
-        /// <param name="addOn">Complemento.</param>
-        public void AddOn(string addOn)
-        {
-            if (_addOns == null)
-                _addOns = new Stack<string>();
-
-            _addOns.Push(addOn);
-        }
-
-        /// <summary>
-        /// Monta uma expressão para acessar uma propriedade segundo o path da seleção.
-        /// </summary>
-        /// <param name="expression">Expressão de partida.</param>
-        /// <returns>A expressão de acesso a propriedade.</returns>
-        public MemberExpression GetAccessExpression(Expression expression)
-        {
-            var fromExpression = Parent != null
-                ? Parent.GetAccessExpression(expression)
-                : expression;
-
-            if (!declarationType.IsAssignableFrom(fromExpression.Type))
-            {
-                throw new ArgumentException("The expression type is different from the property class type.\n"
-                    + $"The class type of property '{info.Name}' is '{declarationType.Name}', " 
-                    + $"and expression class type is '{expression.Type.Name}'.");
-            }
-
-            return Expression.Property(fromExpression, info);
-        }
-
-        /// <summary>
-        /// Array com as propriedades da seleção.
-        /// </summary>
-        /// <remarks>
-        /// Os pais vem por primeiro no array.
-        /// </remarks>
-        /// <returns>Array de propriedades, com ao menos uma.</returns>
-        public PropertyInfo[] PropertyPath()
-        {
-            var stack = new Stack<PropertyInfo>();
-            CreatePropertyPath(stack);
-            return stack.ToArray();
-        }
-
-        /// <summary>
-        /// Determina se todo o path pode ter valores atribuídos.
-        /// </summary>
-        /// <returns>Verdadeiro se todo path pode ter os membros atribuídos.</returns>
-        public bool CanSetValue()
-        {
-            return info.CanWrite && (Parent?.CanSetValue() ?? true);
-        }
-
-        /// <summary>
-        /// Monta o path das propriedades.
-        /// </summary>
-        /// <returns>String que representa o path separados por pontos.</returns>
-        public override string ToString()
-            => Parent == null
-                ? info.Name
-                : Parent.ToString() + "." + info.Name;
-
-        private void CreatePropertyPath(Stack<PropertyInfo> stack)
-        {
-            stack.Push(info);
-            if (Parent != null)
-                Parent.CreatePropertyPath(stack);
-        }
+        Parent = null;
+        declarationType = info.DeclaringType 
+            ?? throw new InvalidOperationException("The property info does not hava a DeclaringType");
+        this.info = info;
     }
 
-    internal class PropertySelectionPart
+    /// <summary>
+    /// <para>
+    ///     Factory method to create a property selection from property names.
+    /// </para>
+    /// <para>
+    ///     PascalCase is considered for property selection.
+    /// </para>
+    /// </summary>
+    /// <example>
+    /// <para>
+    ///     Starting from a class called Affiliate and wanting to select the Id property of the affiliate's company,
+    ///     where the affiliate has a property called Company,
+    ///     of type Company, we can use the string: <code>CompanyId</code>.
+    /// </para>
+    /// <para>
+    ///     The code in C# to access the property mentioned above would look like this:
+    ///     <code>affiliate.Company.Id</code>.
+    /// </para>
+    /// </example>
+    /// <param name="type">The class type containing the property.</param>
+    /// <param name="property">The property selection, the names to search the properties, separating by dots and searching by PascalCase.</param>
+    /// <param name="required">If the existence of the property is required. Optional, default true.</param>
+    /// <returns>The selection of the property, or null if it is not required and not found.</returns>
+    /// <exception cref="ArgumentException">
+    ///     If the property cannot be selected and is required.
+    /// </exception>
+    public static PropertySelection? Select(Type type, string property, bool required = true)
     {
-        private readonly string[] parts;
-        private readonly Type currentType;
-        private readonly int position;
-        private readonly PropertySelection? parent;
+        PropertySelection? ps = null;
 
-        internal PropertySelectionPart(string[] parts, Type currentType, int position = 0, PropertySelection? parent = null)
+        if (property.Contains('.'))
+            return Select(type, property.Split('.'), required);
+        
+        var info = type.GetProperty(property);
+        if (info is not null)
+            return new PropertySelection(info);
+        
+        var pascalCase = property.SplitPascalCase();
+        if (pascalCase.Contains(' '))
         {
-            this.parts = parts;
-            this.currentType = currentType;
-            this.position = position;
-            this.parent = parent;
+            var partSelector = new PropertySelectionPart(pascalCase.Split(' '), type);
+            ps = partSelector.Select();
         }
 
-        internal PropertySelection? Select()
+        if (ps is not null)
+            return ps;
+
+        if (required)
+            throw CreateException(type.Name, property);
+
+        return null;
+    }
+
+    private static PropertySelection? Select(Type type, string[] properties, bool required)
+    {
+        PropertySelection? ps = null;
+        foreach (var property in properties)
         {
-            var currentProperty = string.Empty;
+            ps = ps is null 
+                ? Select(type, property, required) 
+                : ps.SelectChild(property, required);
 
-            for (int i = position; i < parts.Length; i++)
-            {
-                currentProperty += parts[i];
-                var info = currentType.GetTypeInfo().PropertyLookup(currentProperty);
-                if (info is not null)
-                {
-                    var ps = parent == null ? new PropertySelection(info) : parent.Push(info);
-                    if (i + 1 < parts.Length)
-                    {
-                        var nextPart = new PropertySelectionPart(parts, info.PropertyType, i + 1, ps);
-                        var nextPs = nextPart.Select();
-                        if (nextPs is not null)
-                            return nextPs;
-                    }
-                    else
-                    {
-                        return ps;
-                    }
-                }
-            }
-
+            if (ps is not null) 
+                continue;
+                
+            if (required)
+                throw CreateException(type.Name, property);
+                
             return null;
         }
+
+        return ps;
+    }
+
+    private static ArgumentException CreateException(string typeName, string propertyName)
+    {
+        return new ArgumentException($"The class '{typeName}' does not have the property '{propertyName}'");
+    }
+
+    /// <summary>
+    /// <para>
+    ///     Creates a new <see cref="PropertySelection"/> from the current selection as a child selection.
+    /// </para>
+    /// <para>
+    ///     This selection will be the parent of the new selection.
+    /// </para>
+    /// </summary>
+    /// <param name="property">The property selection, the names to search the properties, separating by dots and searching by PascalCase.</param>
+    /// <param name="required">If the existence of the property is required. Optional, default true.</param>
+    /// <returns>
+    ///     A new instance of <see cref="PropertySelection"/>
+    ///     or null if the property does not exists and is not required.
+    /// </returns>
+    public PropertySelection? SelectChild(string property, bool required = true)
+    {
+        if (string.IsNullOrEmpty(property))
+            throw new ArgumentNullException(nameof(property));
+
+        var newSelection = Select(info.PropertyType, property, required);
+        if (newSelection is null)
+            return null;
+        
+        newSelection.Parent = this;
+        newSelection.addOns = addOns;
+
+        return newSelection;
+    }
+
+    /// <summary>
+    /// <para>
+    ///     Creates a new <see cref="PropertySelection"/> from the current selection.
+    /// </para>
+    /// <para>
+    ///     This selection will be the parent of the new selection.
+    /// </para>
+    /// </summary>
+    /// <param name="property">
+    ///     Some <see cref="PropertyInfo"/> of the current selected type (<see cref="PropertyType"/>).
+    /// </param>
+    /// <returns>A new instance of <see cref="PropertySelection"/>.</returns>
+    /// <exception cref="ArgumentException">
+    ///     If the <param name="property"></param> declaring type are not equal to current select property type
+    ///     (<see cref="PropertyType"/>).
+    /// </exception>
+    public PropertySelection SelectChild(PropertyInfo property)
+    {
+        if (property is null)
+            throw new ArgumentNullException(nameof(property));
+
+        if (property.DeclaringType != PropertyType)
+            throw new ArgumentException("The property type is different from the current selection type. "
+                + $"{declarationType.Name} was expected but was found {property.DeclaringType!.Name}");
+
+        var newSelection = new PropertySelection(property)
+        {
+            Parent = this,
+            addOns = addOns
+        };
+
+        return newSelection;
+    }
+
+    /// <summary>
+    /// Add a addon.
+    /// </summary>
+    /// <param name="addOn">Addon.</param>
+    public void AddOn(string addOn)
+    {
+        addOns ??= new Stack<string>();
+        addOns.Push(addOn);
+    }
+
+    /// <summary>
+    /// Builds an expression to access a property according to the selection path.
+    /// </summary>
+    /// <param name="expression">Expression for the start of access to property.</param>
+    /// <returns>The expression of access to property.</returns>
+    public MemberExpression GetAccessExpression(Expression expression)
+    {
+        var fromExpression = Parent?.GetAccessExpression(expression) ?? expression;
+
+        if (!declarationType.IsAssignableFrom(fromExpression.Type))
+        {
+            throw new ArgumentException("The expression type is different from the property class type.\n"
+                                        + $"The class type of property '{info.Name}' is '{declarationType.Name}', "
+                                        + $"and expression class type is '{expression.Type.Name}'.");
+        }
+
+        return Expression.Property(fromExpression, info);
+    }
+
+    /// <summary>
+    /// Array with the properties of the selection.
+    /// </summary>
+    /// <remarks>
+    /// Parents come first in the array.
+    /// </remarks>
+    /// <returns>Array of properties, with at least one.</returns>
+    public PropertyInfo[] PropertyPath()
+    {
+        var stack = new Stack<PropertyInfo>();
+        CreatePropertyPath(stack);
+        return stack.ToArray();
+    }
+
+    /// <summary>
+    /// Determines whether the entire path can be assigned values.
+    /// </summary>
+    /// <returns>True if every path can have its members assigned.</returns>
+    public bool CanSetValue()
+    {
+        return info.CanWrite && (Parent?.CanSetValue() ?? true);
+    }
+
+    /// <summary>
+    /// Build the path of the properties.
+    /// </summary>
+    /// <returns>String representing the path separated by dots.</returns>
+    public override string ToString()
+        => Parent is null
+            ? info.Name
+            : $"{Parent}.{info.Name}";
+
+    private void CreatePropertyPath(Stack<PropertyInfo> stack)
+    {
+        stack.Push(info);
+        Parent?.CreatePropertyPath(stack);
     }
 }

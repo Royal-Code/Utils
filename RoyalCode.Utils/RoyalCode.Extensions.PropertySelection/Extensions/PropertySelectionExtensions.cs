@@ -35,7 +35,7 @@ namespace System
             var ps = PropertySelection.Select(type, selections[0])!;
             for (int i = 1; i < selections.Length; i++)
             {
-                ps = ps.Push(selections[i]);
+                ps = ps.SelectChild(selections[i]);
             }
 
             if (addOns is not null)
@@ -80,7 +80,7 @@ namespace System
         /// <param name="separetor">Caracter separador, por padrão é ' '.</param>
         /// <param name="lower">Se devem ser convertidos para minúsculo os caracteres, padrão falso.</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string SplitUpperCase(this string name, char separetor = ' ', bool lower = false)
+        internal static string SplitUpperCase(this string name, char separetor = ' ', bool lower = false)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return name;
@@ -101,6 +101,12 @@ namespace System
             }
 
             return sb.ToString();
+        }
+
+        internal static IEnumerable<string[]> SplitPropertySelection(this string propertySelection)
+        {
+            return propertySelection.Split('.')
+                .Select(part => part.SplitPascalCase().Split(' '));
         }
 
         /// <summary>
