@@ -21,3 +21,5 @@ public class Delta
 
     public string GetOnly => "Get Only";
 }
+
+public class AlphaExtended : Alpha { }

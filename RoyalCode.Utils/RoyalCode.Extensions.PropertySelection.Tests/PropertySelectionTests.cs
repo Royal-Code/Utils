@@ -80,4 +80,15 @@ public class PropertySelectionTests
         Assert.NotNull(expr);
         Assert.Equal("root.Betha.Gamma.Delta.Name", expr.ToString());
     }
+    
+    [Fact]
+    public void T10_GetAccessExpressionFromExtendedRootType()
+    {
+        var selected = typeof(Alpha).SelectProperty("BethaGammaDeltaName");
+        var root = Expression.Variable(typeof(AlphaExtended), "root");
+        var expr = selected.GetAccessExpression(root);
+        
+        Assert.NotNull(expr);
+        Assert.Equal("root.Betha.Gamma.Delta.Name", expr.ToString());
+    }
 }
