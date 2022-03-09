@@ -22,26 +22,28 @@ namespace System
         /// <returns>A seleção de propriedades</returns>
         public static PropertySelection SelectProperty(this Type type, string propertyPath)
         {
-            string path = propertyPath;
-            string[]? addOns = null;
-            if (propertyPath.Contains(' '))
-            {
-                addOns = propertyPath.Split(' ');
-                path = addOns[0];
-            }
-
-            var selections = path.Contains('.') ? path.Split('.') : new string[] { path };
-
-            var ps = PropertySelection.Select(type, selections[0])!;
-            for (int i = 1; i < selections.Length; i++)
-            {
-                ps = ps.SelectChild(selections[i]);
-            }
-
-            if (addOns is not null)
-                addOns.Skip(1).Each(ps.AddOn);
-
-            return ps;
+            return PropertySelection.Select(type, propertyPath)!;
+            
+            // string path = propertyPath;
+            // string[]? addOns = null;
+            // if (propertyPath.Contains(' '))
+            // {
+            //     addOns = propertyPath.Split(' ');
+            //     path = addOns[0];
+            // }
+            //
+            // var selections = path.Contains('.') ? path.Split('.') : new string[] { path };
+            //
+            // var ps = PropertySelection.Select(type, selections[0])!;
+            // for (int i = 1; i < selections.Length; i++)
+            // {
+            //     ps = ps.SelectChild(selections[i]);
+            // }
+            //
+            // if (addOns is not null)
+            //     addOns.Skip(1).Each(ps.AddOn);
+            //
+            // return ps;
         }
 
         /// <summary>
