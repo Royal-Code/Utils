@@ -3,8 +3,10 @@ using System.Reflection;
 namespace RoyalCode.Extensions.PropertySelection;
 
 /// <summary>
-/// Component that brings the result of the selection of a property of a class
-/// from a property of another class.
+/// <para>
+///     Component that brings the result of the selection of a property of a class
+///     from a property of another class.
+/// </para>
 /// </summary>
 public class PropertyMatch
 {
@@ -37,7 +39,17 @@ public class PropertyMatch
     public PropertySelection? TargetSelection { get; }
 
     /// <summary>
-    /// If the selection success.
+    /// <para>
+    ///     If the selection is successful, check that the selected property matches the source property type.
+    /// </para>
+    /// <para>
+    ///     if the selection failed, the value will be 'false'.
+    /// </para>
+    /// </summary>
+    public bool TypeMatch => TargetSelection?.PropertyType.IsAssignableFrom(OriginProperty.PropertyType) ?? false;
+    
+    /// <summary>
+    /// If the selection is successful.
     /// </summary>
     public bool Match => TargetSelection is not null;
 
