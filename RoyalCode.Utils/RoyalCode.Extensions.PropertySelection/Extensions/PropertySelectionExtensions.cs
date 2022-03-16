@@ -36,6 +36,18 @@ namespace System
         {
             return new MatchSelection(origin, target);
         }
+        
+        /// <summary>
+        /// Creates a new selection of properties where properties of the source type
+        /// serve to select the properties of the target type.
+        /// </summary>
+        /// <param name="origin">The source type.</param>
+        /// <typeparam name="TTaget">The target type.</typeparam>
+        /// <returns>A new instance of <see cref="MatchSelection"/>.</returns>
+        public static MatchSelection MatchProperties<TTaget>(this Type origin)
+        {
+            return new MatchSelection(origin, typeof(TTaget));
+        }
 
         /// <summary>
         /// 'For Each' function. Similar to the ForEach of the lists. 
