@@ -11,47 +11,52 @@ namespace System
     public static class PropertySelectionExtensions
     {
         /// <summary>
-        /// Obtém uma seleção de propriedade a partir dos nomes das propriedades separadas por ponto (.).
+        /// Gets a property selection from the property names separated by dot (.).
         /// </summary>
         /// <example>
-        /// Para obter o Cep do cliente de uma venda se usaria algo como:
-        /// typeof(Venda).SelectProperty("Cliente.Endereco.Cep");
+        /// To get the customer's ZIP code from a sale you would use something like:
+        /// typeof(Sale).SelectProperty("Customer.Address.ZipCode");
         /// </example>
-        /// <param name="type">Tipo de dado que contém a propriedade.</param>
-        /// <param name="propertyPath">Caminho de propriedades que precisam ser acessadas.</param>
-        /// <returns>A seleção de propriedades</returns>
+        /// <param name="type">Data type containing the property.</param>
+        /// <param name="propertyPath">Path of properties that need to be accessed.</param>
+        /// <returns>The selection of properties.</returns>
         public static PropertySelection SelectProperty(this Type type, string propertyPath)
         {
-            string path = propertyPath;
-            string[]? addOns = null;
-            if (propertyPath.Contains(' '))
-            {
-                addOns = propertyPath.Split(' ');
-                path = addOns[0];
-            }
-
-            var selections = path.Contains('.') ? path.Split('.') : new string[] { path };
-
-            var ps = PropertySelection.Select(type, selections[0])!;
-            for (int i = 1; i < selections.Length; i++)
-            {
-                ps = ps.SelectChild(selections[i]);
-            }
-
-            if (addOns is not null)
-                addOns.Skip(1).Each(ps.AddOn);
-
-            return ps;
+            return PropertySelection.Select(type, propertyPath)!;
         }
 
         /// <summary>
-        /// Função 'Para Cada'. Semelhando ao ForEach das listas. 
+        /// Creates a new selection of properties where properties of the source type
+        /// serve to select the properties of the target type.
         /// </summary>
-        /// <typeparam name="T">Tipo de dado do enumerado.</typeparam>
-        /// <param name="enumerable">Enumerado</param>
-        /// <param name="action">Função.</param>
+        /// <param name="origin">The source type.</param>
+        /// <param name="target">The target type.</param>
+        /// <returns>A new instance of <see cref="MatchSelection"/>.</returns>
+        public static MatchSelection MatchProperties(this Type origin, Type target)
+        {
+            return new MatchSelection(origin, target);
+        }
+        
+        /// <summary>
+        /// Creates a new selection of properties where properties of the source type
+        /// serve to select the properties of the target type.
+        /// </summary>
+        /// <param name="origin">The source type.</param>
+        /// <typeparam name="TTaget">The target type.</typeparam>
+        /// <returns>A new instance of <see cref="MatchSelection"/>.</returns>
+        public static MatchSelection MatchProperties<TTaget>(this Type origin)
+        {
+            return new MatchSelection(origin, typeof(TTaget));
+        }
+
+        /// <summary>
+        /// 'For Each' function. Similar to the ForEach of the lists. 
+        /// </summary>
+        /// <typeparam name="T">Data type of the enumerate.</typeparam>
+        /// <param name="enumerable">Enumerated.</param>
+        /// <param name="action">Function.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void Each<T>(this IEnumerable<T> enumerable, Action<T> action)
+        internal static void Each<T>(this IEnumerable<T>? enumerable, Action<T> action)
         {
             if (enumerable is null)
                 return;
@@ -63,13 +68,13 @@ namespace System
         }
 
         /// <summary>
-		/// Splits pascal case, so "FooBar" would become "Foo Bar"
+		/// Splits pascal case, so "FooBar" would become "Foo Bar".
 		/// </summary>
         /// <param name="name">A string, thats represents a name of something, to be splited.</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static string SplitPascalCase(this string name)
         {
-            return SplitUpperCase(name, ' ', false);
+            return SplitUpperCase(name);
         }
 
         /// <summary>
@@ -110,8 +115,9 @@ namespace System
         }
 
         /// <summary>
-        /// Semelhante ao <see cref="Type.GetProperty(string)"/>, porém olhando as propriedades
-        /// declaradas no tipo atual, e caso não encontrado, pesquisa nos tipos superiores (herdados).
+        /// Similar to <see cref="Type.GetProperty(string)"/>,
+        /// but looking at the properties declared in the current type,
+        /// and if not found, searches the higher (inherited) types.
         /// </summary>
         /// <param name="type">Tipo com propriedades.</param>
         /// <param name="name">Nome da propriedade pesquisada.</param>

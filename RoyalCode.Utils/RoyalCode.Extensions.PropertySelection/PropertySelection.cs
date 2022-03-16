@@ -187,10 +187,18 @@ public class PropertySelection
         if (newSelection is null)
             return null;
         
-        newSelection.Parent = this;
+        newSelection.SetParent(this);
         newSelection.addOns = addOns;
 
         return newSelection;
+    }
+
+    private void SetParent(PropertySelection parent)
+    {
+        if (Parent is not null)
+            Parent.SetParent(parent);
+        else
+            Parent = parent;
     }
 
     /// <summary>
