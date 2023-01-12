@@ -11,7 +11,7 @@ namespace System
     public static class PropertySelectionExtensions
     {
         /// <summary>
-        /// Gets a property selection from the property names separated by dot (.).
+        /// Gets a property selection from the property names separated by dot (.) and PascalCase.
         /// </summary>
         /// <example>
         /// To get the customer's ZIP code from a sale you would use something like:
@@ -23,6 +23,21 @@ namespace System
         public static PropertySelection SelectProperty(this Type type, string propertyPath)
         {
             return PropertySelection.Select(type, propertyPath)!;
+        }
+
+        /// <summary>
+        /// try gets a property selection from the property names separated by dot (.) and PascalCase.
+        /// </summary>
+        /// <example>
+        /// To get the customer's ZIP code from a sale you would use something like:
+        /// typeof(Sale).SelectProperty("Customer.Address.ZipCode");
+        /// </example>
+        /// <param name="type">Data type containing the property.</param>
+        /// <param name="propertyPath">Path of properties that need to be accessed.</param>
+        /// <returns>The selection of properties or null if not found.</returns>
+        public static PropertySelection? TrySelectProperty(this Type type, string propertyPath)
+        {
+            return PropertySelection.Select(type, propertyPath, false);
         }
 
         /// <summary>
@@ -106,12 +121,6 @@ namespace System
             }
 
             return sb.ToString();
-        }
-
-        internal static IEnumerable<string[]> SplitPropertySelection(this string propertySelection)
-        {
-            return propertySelection.Split('.')
-                .Select(part => part.SplitPascalCase().Split(' '));
         }
 
         /// <summary>
