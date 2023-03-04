@@ -53,3 +53,28 @@ public class OriginQux
 
     public string? Name { get; set; }
 }
+
+
+public class ComplexBase
+{
+    public int Id { get; set; }
+}
+
+public class ComplexBar : ComplexBase
+{
+    public string Name { get; set; } = null!;
+}
+
+public class ComplexFoo : ComplexBase
+{
+    public string Name { get; set; } = null!;
+
+    public ComplexBar Bar { get; set; } = null!;
+}
+
+public class ComplexFilter
+{
+    public int? Id { get; set; }
+
+    public int? BarId { get; set; }
+}

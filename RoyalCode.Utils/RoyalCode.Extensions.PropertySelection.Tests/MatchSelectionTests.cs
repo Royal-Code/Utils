@@ -98,4 +98,12 @@ public class MatchSelectionTests
 
 
     }
+
+    [Fact]
+    public void ComplexMacth()
+    {
+        var match = typeof(ComplexFilter).MatchProperties<ComplexFoo>();
+
+        match.EnsureAllMatched();
+    }
 }
