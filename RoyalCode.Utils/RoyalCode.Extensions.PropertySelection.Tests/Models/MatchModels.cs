@@ -36,3 +36,20 @@ public class OriginFailureMatch
 
     public DateTimeOffset Date { get; set; }
 }
+
+public class TargetQuxBase
+{
+    public int Id { get; set; }
+}
+
+public class TargetQux : TargetQuxBase
+{
+    public string Name { get; set; } = null!;
+}
+
+public class OriginQux
+{
+    public int? Id { get; set; }
+
+    public string? Name { get; set; }
+}
