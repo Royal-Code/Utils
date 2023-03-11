@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>1.0.1</Version>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <FileVersion>1.0.1</FileVersion>
+    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
+    <FileVersion>1.0.2</FileVersion>
     <Description>
       Utility extension project with components to search and select properties of a type/class based on property names.
     </Description>
