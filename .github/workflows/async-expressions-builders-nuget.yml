@@ -1,4 +1,4 @@
-name: property-selection-nuget
+name: async-expressions.builders.nuget
 
 on:
    # Allows you to run this workflow manually from the Actions tab
