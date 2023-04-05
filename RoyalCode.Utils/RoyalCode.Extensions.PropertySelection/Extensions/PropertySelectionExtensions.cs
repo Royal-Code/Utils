@@ -83,29 +83,17 @@ namespace System
         }
 
         /// <summary>
-		/// Splits pascal case, so "FooBar" would become "Foo Bar".
+		/// Splits pascal case, so "FooBar" would become [ "Foo", "Bar" ].
 		/// </summary>
         /// <param name="name">A string, thats represents a name of something, to be splited.</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static string SplitPascalCase(this string name)
-        {
-            return SplitUpperCase(name);
-        }
-
-        /// <summary>
-		/// Splits pascal case, so "FooBar" would become "Foo Bar" if separetor was ' ',
-        /// and would become "Foo-Bar" if separetor was '-'. The separetor default is ' '.
-		/// </summary>
-        /// <param name="name">A string, thats represents a name of something, to be splited.</param>
-        /// <param name="separetor">Caracter separador, por padrão é ' '.</param>
-        /// <param name="lower">Se devem ser convertidos para minúsculo os caracteres, padrão falso.</param>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static string SplitUpperCase(this string name, char separetor = ' ', bool lower = false)
+        internal static string[]? SplitUpperCase(this string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return name;
+                return null;
 
-            var sb = new StringBuilder(name.Length + 5);
+            var parts = new LinkedList<string>();
+            var sb = new StringBuilder();
 
             for (int i = 0; i < name.Length; ++i)
             {
@@ -113,14 +101,15 @@ namespace System
                 if (char.IsUpper(currentChar) && i > 1
                     && (!char.IsUpper(name[i - 1]) || (i + 1 < name.Length && !char.IsUpper(name[i + 1]))))
                 {
-                    sb.Append(separetor);
+                    parts.AddLast(sb.ToString());
+                    sb.Clear();
                 }
-                if (lower)
-                    currentChar = char.ToLowerInvariant(currentChar);
                 sb.Append(currentChar);
             }
 
-            return sb.ToString();
+            parts.AddLast(sb.ToString());
+
+            return parts.Count > 1 ? parts.ToArray() : null;
         }
 
         /// <summary>

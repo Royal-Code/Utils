@@ -9,7 +9,11 @@ internal class PropertySelectionPart
     private readonly int position;
     private readonly PropertySelection? parent;
 
-    internal PropertySelectionPart(string[] parts, Type currentType, int position = 0, PropertySelection? parent = null)
+    internal PropertySelectionPart(
+        string[] parts,
+        Type currentType,
+        int position = 0,
+        PropertySelection? parent = null)
     {
         this.parts = parts;
         this.currentType = currentType;

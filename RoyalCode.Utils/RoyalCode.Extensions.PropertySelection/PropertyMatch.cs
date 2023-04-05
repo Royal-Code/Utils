@@ -47,7 +47,18 @@ public class PropertyMatch
     /// </para>
     /// </summary>
     public bool TypeMatch => TargetSelection?.PropertyType.IsAssignableFrom(OriginProperty.PropertyType) ?? false;
-    
+
+    /// <summary>
+    /// <para>
+    ///     If the selection is successful, check that the source property type matches the selected property type.
+    /// </para>
+    /// <para>
+    ///     if the selection failed, the value will be 'false'.
+    /// </para>
+    /// </summary>
+    public bool InvetedTypeMatch => TargetSelection is not null && 
+        OriginProperty.PropertyType.IsAssignableFrom(TargetSelection.PropertyType);
+
     /// <summary>
     /// If the selection is successful.
     /// </summary>

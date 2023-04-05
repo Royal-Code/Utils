@@ -88,4 +88,22 @@ public class MatchSelectionTests
         
         Assert.Equal(message, exception.Message);
     }
+
+    [Fact]
+    public void ExtendedTypesMacth()
+    {
+        var match = typeof(OriginQux).MatchProperties<TargetQux>();
+
+        match.EnsureAllMatched();
+
+
+    }
+
+    [Fact]
+    public void ComplexMacth()
+    {
+        var match = typeof(ComplexFilter).MatchProperties<ComplexFoo>();
+
+        match.EnsureAllMatched();
+    }
 }

@@ -32,7 +32,6 @@ public class PropertySelection
 {
     private readonly Type declarationType;
     private readonly PropertyInfo info;
-    private Stack<string>? addOns;
 
     /// <summary>
     /// The current selected property type.
@@ -54,16 +53,6 @@ public class PropertySelection
     /// The current selected property name.
     /// </summary>
     public string PropertyName => info.Name;
-
-    /// <summary>
-    /// If have some addon.
-    /// </summary>
-    public bool HasAddOn => addOns is not null;
-
-    /// <summary>
-    /// Get all the property selection addons.
-    /// </summary>
-    public IEnumerable<string> AddOns => addOns?.AsEnumerable() ?? Array.Empty<string>();
 
     /// <summary>
     /// <para>
@@ -117,15 +106,18 @@ public class PropertySelection
 
         if (property.Contains('.'))
             return Select(type, property.Split('.'), required);
-        
+
+        if (property.Contains('-'))
+            return Select(type, property.Split('-'), required);
+
         var info = type.GetProperty(property);
         if (info is not null)
             return new PropertySelection(info);
         
-        var pascalCase = property.SplitPascalCase();
-        if (pascalCase.Contains(' '))
+        var parts = property.SplitUpperCase();
+        if (parts is not null)
         {
-            var partSelector = new PropertySelectionPart(pascalCase.Split(' '), type);
+            var partSelector = new PropertySelectionPart(parts, type);
             ps = partSelector.Select();
         }
 
@@ -188,7 +180,6 @@ public class PropertySelection
             return null;
         
         newSelection.SetParent(this);
-        newSelection.addOns = addOns;
 
         return newSelection;
     }
@@ -214,7 +205,7 @@ public class PropertySelection
     /// </param>
     /// <returns>A new instance of <see cref="PropertySelection"/>.</returns>
     /// <exception cref="ArgumentException">
-    ///     If the <param name="property"></param> declaring type are not equal to current select property type
+    ///     If the <paramref name="property"/> declaring type are not equal to current select property type
     ///     (<see cref="PropertyType"/>).
     /// </exception>
     public PropertySelection SelectChild(PropertyInfo property)
@@ -222,27 +213,17 @@ public class PropertySelection
         if (property is null)
             throw new ArgumentNullException(nameof(property));
 
-        if (property.DeclaringType != PropertyType)
+        if (PropertyType != property.DeclaringType &&
+            !property.DeclaringType.IsAssignableFrom(PropertyType))
             throw new ArgumentException("The property type is different from the current selection type. "
                 + $"{declarationType.Name} was expected but was found {property.DeclaringType!.Name}");
 
         var newSelection = new PropertySelection(property)
         {
-            Parent = this,
-            addOns = addOns
+            Parent = this
         };
 
         return newSelection;
-    }
-
-    /// <summary>
-    /// Add a addon.
-    /// </summary>
-    /// <param name="addOn">Addon.</param>
-    public void AddOn(string addOn)
-    {
-        addOns ??= new Stack<string>();
-        addOns.Push(addOn);
     }
 
     /// <summary>
