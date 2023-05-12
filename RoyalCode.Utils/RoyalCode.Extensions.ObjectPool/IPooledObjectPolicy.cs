@@ -22,3 +22,8 @@ public interface IPooledObjectPolicy<T> where T : notnull
     /// <returns><see langword="true" /> if the object should be returned to the pool. <see langword="false" /> if it's not possible/desirable for the pool to keep the object.</returns>
     bool Return(T obj);
 }
+
+public interface IDestructionPolicy<T>
+{
+    void Destroy(T obj);
+}
