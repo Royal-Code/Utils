@@ -24,6 +24,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Extensions.AsyncE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Extensions.AsyncExpressionsBuilders.Tests", "RoyalCode.Extensions.AsyncExpressionsBuilders.Tests\RoyalCode.Extensions.AsyncExpressionsBuilders.Tests.csproj", "{F7205739-6039-4F56-811F-A73B23E73AB2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntityFramework", "EntityFramework", "{CBB4EA64-EEDB-4820-9FB7-C7BF0388672F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.EntityFramework.Postgres", "RoyalCode.EntityFramework.Postgres\RoyalCode.EntityFramework.Postgres.csproj", "{844C7394-1970-4972-90D0-02C310725B65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generators", "Generators", "{CE3E48B9-60CD-4F58-8AD0-7077E1439A7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.WorkContext.Generators", "RoyalCode.WorkContext.Generators\RoyalCode.WorkContext.Generators.csproj", "{795193F3-B3EF-4327-8D49-2D4CE032CC2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.WorkContext.Generators.Tests", "RoyalCode.WorkContext.Generators.Tests\RoyalCode.WorkContext.Generators.Tests.csproj", "{BF7913B0-5820-49F4-8BD7-9511E05D2100}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +64,18 @@ Global
 		{F7205739-6039-4F56-811F-A73B23E73AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7205739-6039-4F56-811F-A73B23E73AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7205739-6039-4F56-811F-A73B23E73AB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{844C7394-1970-4972-90D0-02C310725B65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{844C7394-1970-4972-90D0-02C310725B65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{844C7394-1970-4972-90D0-02C310725B65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{844C7394-1970-4972-90D0-02C310725B65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{795193F3-B3EF-4327-8D49-2D4CE032CC2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{795193F3-B3EF-4327-8D49-2D4CE032CC2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{795193F3-B3EF-4327-8D49-2D4CE032CC2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{795193F3-B3EF-4327-8D49-2D4CE032CC2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF7913B0-5820-49F4-8BD7-9511E05D2100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF7913B0-5820-49F4-8BD7-9511E05D2100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF7913B0-5820-49F4-8BD7-9511E05D2100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF7913B0-5820-49F4-8BD7-9511E05D2100}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +87,9 @@ Global
 		{EBBEE0B7-BDB2-4A7F-AB18-ACF819D86F3F} = {3EC21AB3-0F1D-4F72-B5F2-955227540A42}
 		{5D442F2B-F959-4916-9B4E-5902B2321D14} = {3EC21AB3-0F1D-4F72-B5F2-955227540A42}
 		{F7205739-6039-4F56-811F-A73B23E73AB2} = {3EC21AB3-0F1D-4F72-B5F2-955227540A42}
+		{844C7394-1970-4972-90D0-02C310725B65} = {CBB4EA64-EEDB-4820-9FB7-C7BF0388672F}
+		{795193F3-B3EF-4327-8D49-2D4CE032CC2C} = {CE3E48B9-60CD-4F58-8AD0-7077E1439A7F}
+		{BF7913B0-5820-49F4-8BD7-9511E05D2100} = {CE3E48B9-60CD-4F58-8AD0-7077E1439A7F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {75616174-F0B2-4678-A9C4-6B497C17A98D}
