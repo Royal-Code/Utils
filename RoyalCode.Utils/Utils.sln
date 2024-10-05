@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.WorkContext.Gener
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.WorkContext.Generators.Tests", "RoyalCode.WorkContext.Generators.Tests\RoyalCode.WorkContext.Generators.Tests.csproj", "{BF7913B0-5820-49F4-8BD7-9511E05D2100}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.DependencyInjection.Generators", "RoyalCode.DependencyInjection.Generators\RoyalCode.DependencyInjection.Generators.csproj", "{DC02881F-E918-4A51-AC64-C1B78D74E810}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,10 @@ Global
 		{BF7913B0-5820-49F4-8BD7-9511E05D2100}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF7913B0-5820-49F4-8BD7-9511E05D2100}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF7913B0-5820-49F4-8BD7-9511E05D2100}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC02881F-E918-4A51-AC64-C1B78D74E810}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC02881F-E918-4A51-AC64-C1B78D74E810}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC02881F-E918-4A51-AC64-C1B78D74E810}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC02881F-E918-4A51-AC64-C1B78D74E810}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
