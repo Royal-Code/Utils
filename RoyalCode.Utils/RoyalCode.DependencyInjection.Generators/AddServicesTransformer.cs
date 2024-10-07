@@ -28,16 +28,17 @@ public static class AddServicesTransformer
         }
 
         // o método deve ser public, partial e static
-        var notPublic = !method.Modifiers.Any(SyntaxKind.PublicKeyword);
+        var isPrivate = method.Modifiers.Any(SyntaxKind.PrivateKeyword);
+        var isPublic = method.Modifiers.Any(SyntaxKind.PublicKeyword);
         var notStatic = !method.Modifiers.Any(SyntaxKind.StaticKeyword);
         var notPartial = !method.Modifiers.Any(SyntaxKind.PartialKeyword);
 
-        if (notPublic || notStatic || notPartial)
+        if (isPrivate || notStatic || notPartial)
         {
             return new AddServicesInformation(Diagnostic.Create(
                 Diagnostics.InvalidAddServicesUsage,
                 method.GetLocation(),
-                "The method must be public static partial"));
+                "The method must be public or internal and static and partial"));
         }
 
         // obtém o retorno do método
@@ -63,7 +64,7 @@ public static class AddServicesTransformer
 
         var classDescriptor = new TypeDescriptor(classDeclaration.Identifier.Text, [classDeclaration.GetNamespace()]);
 
-        return new AddServicesInformation(methodReturnType, method.Identifier.Text, classDescriptor);
+        return new AddServicesInformation(methodReturnType, method.Identifier.Text, isPublic, classDescriptor);
     }
 
     public static bool IsValidReturnType(MethodDeclarationSyntax method, SemanticModel semanticModel)

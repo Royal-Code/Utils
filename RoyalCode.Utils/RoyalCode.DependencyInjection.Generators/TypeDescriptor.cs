@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RoyalCode.DependencyInjection.Generators;
 
-public sealed class TypeDescriptor
+public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
 {
     public static TypeDescriptor Create(TypeSyntax typeSyntax, SemanticModel model)
     {
@@ -26,5 +26,25 @@ public sealed class TypeDescriptor
 
     public string[] Namespaces { get; }
 
+    public bool Equals(TypeDescriptor other)
+    {
+        return other is not null &&
+            Equals(Name, other.Name) &&
+            EqualityComparer<string[]>.Default.Equals(Namespaces, other.Namespaces);
+    }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is TypeDescriptor descriptor && Equals(descriptor);
+    }
+
+    public override int GetHashCode()
+    {
+        int hashCode = -353132481;
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+        hashCode = hashCode * -1521134295 + EqualityComparer<string[]>.Default.GetHashCode(Namespaces);
+        return hashCode;
+    }
+
+    
 }

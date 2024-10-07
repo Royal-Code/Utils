@@ -73,7 +73,10 @@ internal class AddServicesGenerator
     {
         builder.Append("public static partial class ").AppendLine(addServices.ClassDescriptor.Name);
         builder.AppendLine("{");
-        builder.Append("    public static partial ")
+
+        builder.Append("    ")
+            .Append(addServices.MethodIsPublic ? "public" : "internal")
+            .Append(" static partial ")
             .Append(addServices.ReturnType.Name)
             .Append(' ')
             .Append(addServices.MethodName)
