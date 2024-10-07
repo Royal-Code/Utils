@@ -1,14 +1,32 @@
+
+using Microsoft.CodeAnalysis;
+
 namespace RoyalCode.DependencyInjection.Generators;
 
-public sealed class AddServicesInformation
+/// <summary>
+/// Descriptions for generating the method that will add services.
+/// </summary>
+public sealed class AddServicesInformation : TransformationBase
 {
-    public AddServicesInformation(TypeDescriptor serviceType, string methodName)
+    public AddServicesInformation(TypeDescriptor returnType, string methodName, TypeDescriptor classDescriptor)
     {
-        ServiceType = serviceType;
-        MethodName = methodName;
+        ReturnType = returnType ?? throw new ArgumentNullException(nameof(returnType));
+        MethodName = methodName ?? throw new ArgumentNullException(nameof(methodName));
+        ClassDescriptor = classDescriptor ?? throw new ArgumentNullException(nameof(classDescriptor));
+        CanGenerate = true;
     }
 
-    public TypeDescriptor ServiceType { get; }
+    public AddServicesInformation(Diagnostic diagnostic)
+    {
+        CanGenerate = false;
+        AddError(diagnostic);
+    }
+
+    public bool CanGenerate { get; }
+
+    public TypeDescriptor ReturnType { get; }
 
     public string MethodName { get; }
+
+    public TypeDescriptor ClassDescriptor { get; }
 }

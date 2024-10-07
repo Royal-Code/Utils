@@ -32,9 +32,4 @@
     </ItemGroup>
   </Target>
 
-  <ItemGroup>
-    <!-- Package items -->
-    <None Include="RoyalCode.SmartCommands.Generators.props" Pack="true" PackagePath="build" Visible="false" />
-  </ItemGroup>
-
 </Project>

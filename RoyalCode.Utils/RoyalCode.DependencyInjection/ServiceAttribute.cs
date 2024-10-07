@@ -1,4 +1,4 @@
-﻿namespace RoyalCode.DependencyInjection.Subscribers.Attributes;
+﻿namespace RoyalCode.DependencyInjection;
 
 /// <summary>
 /// The Service attribute is used in classes that must be registered in the Microsoft.Extensions.DependencyInjection.IServiceCollection.

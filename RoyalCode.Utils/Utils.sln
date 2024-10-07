@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".items", ".items", "{BEF360
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DependencyInjection", "DependencyInjection", "{524448A6-38A1-4642-8DBB-D21924B44F0C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.DependencyInjection.Subscribers", "RoyalCode.DependencyInjection.Subscribers\RoyalCode.DependencyInjection.Subscribers.csproj", "{8DC86676-CDDB-4D97-BEEC-83618B865943}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{3EC21AB3-0F1D-4F72-B5F2-955227540A42}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Extensions.PropertySelection", "RoyalCode.Extensions.PropertySelection\RoyalCode.Extensions.PropertySelection.csproj", "{08E7D801-9DEA-4D01-9FF2-5E74A8BE8D67}"
@@ -26,15 +24,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.Extensions.AsyncE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntityFramework", "EntityFramework", "{CBB4EA64-EEDB-4820-9FB7-C7BF0388672F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.EntityFramework.Postgres", "RoyalCode.EntityFramework.Postgres\RoyalCode.EntityFramework.Postgres.csproj", "{844C7394-1970-4972-90D0-02C310725B65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.EntityFramework.Postgres", "RoyalCode.EntityFramework.Postgres\RoyalCode.EntityFramework.Postgres.csproj", "{844C7394-1970-4972-90D0-02C310725B65}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generators", "Generators", "{CE3E48B9-60CD-4F58-8AD0-7077E1439A7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.WorkContext.Generators", "RoyalCode.WorkContext.Generators\RoyalCode.WorkContext.Generators.csproj", "{795193F3-B3EF-4327-8D49-2D4CE032CC2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.WorkContext.Generators", "RoyalCode.WorkContext.Generators\RoyalCode.WorkContext.Generators.csproj", "{795193F3-B3EF-4327-8D49-2D4CE032CC2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.WorkContext.Generators.Tests", "RoyalCode.WorkContext.Generators.Tests\RoyalCode.WorkContext.Generators.Tests.csproj", "{BF7913B0-5820-49F4-8BD7-9511E05D2100}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.WorkContext.Generators.Tests", "RoyalCode.WorkContext.Generators.Tests\RoyalCode.WorkContext.Generators.Tests.csproj", "{BF7913B0-5820-49F4-8BD7-9511E05D2100}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoyalCode.DependencyInjection.Generators", "RoyalCode.DependencyInjection.Generators\RoyalCode.DependencyInjection.Generators.csproj", "{DC02881F-E918-4A51-AC64-C1B78D74E810}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.DependencyInjection.Generators", "RoyalCode.DependencyInjection.Generators\RoyalCode.DependencyInjection.Generators.csproj", "{DC02881F-E918-4A51-AC64-C1B78D74E810}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.DependencyInjection.Tests", "RoyalCode.DependencyInjection.Tests\RoyalCode.DependencyInjection.Tests.csproj", "{7CBE5D1E-080D-41FF-8697-94BDD152F74E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoyalCode.DependencyInjection", "RoyalCode.DependencyInjection\RoyalCode.DependencyInjection.csproj", "{6319ED59-BA26-427F-B8A8-20238CD9DC34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,10 +44,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8DC86676-CDDB-4D97-BEEC-83618B865943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DC86676-CDDB-4D97-BEEC-83618B865943}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DC86676-CDDB-4D97-BEEC-83618B865943}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DC86676-CDDB-4D97-BEEC-83618B865943}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08E7D801-9DEA-4D01-9FF2-5E74A8BE8D67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08E7D801-9DEA-4D01-9FF2-5E74A8BE8D67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08E7D801-9DEA-4D01-9FF2-5E74A8BE8D67}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -82,12 +80,19 @@ Global
 		{DC02881F-E918-4A51-AC64-C1B78D74E810}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC02881F-E918-4A51-AC64-C1B78D74E810}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC02881F-E918-4A51-AC64-C1B78D74E810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CBE5D1E-080D-41FF-8697-94BDD152F74E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CBE5D1E-080D-41FF-8697-94BDD152F74E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CBE5D1E-080D-41FF-8697-94BDD152F74E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CBE5D1E-080D-41FF-8697-94BDD152F74E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6319ED59-BA26-427F-B8A8-20238CD9DC34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6319ED59-BA26-427F-B8A8-20238CD9DC34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6319ED59-BA26-427F-B8A8-20238CD9DC34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6319ED59-BA26-427F-B8A8-20238CD9DC34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8DC86676-CDDB-4D97-BEEC-83618B865943} = {524448A6-38A1-4642-8DBB-D21924B44F0C}
 		{08E7D801-9DEA-4D01-9FF2-5E74A8BE8D67} = {3EC21AB3-0F1D-4F72-B5F2-955227540A42}
 		{DF85E567-FA13-4D44-9563-B7551741E3D9} = {3EC21AB3-0F1D-4F72-B5F2-955227540A42}
 		{EBBEE0B7-BDB2-4A7F-AB18-ACF819D86F3F} = {3EC21AB3-0F1D-4F72-B5F2-955227540A42}
@@ -97,6 +102,8 @@ Global
 		{795193F3-B3EF-4327-8D49-2D4CE032CC2C} = {CE3E48B9-60CD-4F58-8AD0-7077E1439A7F}
 		{BF7913B0-5820-49F4-8BD7-9511E05D2100} = {CE3E48B9-60CD-4F58-8AD0-7077E1439A7F}
 		{DC02881F-E918-4A51-AC64-C1B78D74E810} = {524448A6-38A1-4642-8DBB-D21924B44F0C}
+		{7CBE5D1E-080D-41FF-8697-94BDD152F74E} = {524448A6-38A1-4642-8DBB-D21924B44F0C}
+		{6319ED59-BA26-427F-B8A8-20238CD9DC34} = {524448A6-38A1-4642-8DBB-D21924B44F0C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {75616174-F0B2-4678-A9C4-6B497C17A98D}

@@ -17,11 +17,21 @@ public class IncrementalGenerator : IIncrementalGenerator
             predicate: AddServicesTransformer.Predicate,
             transform: AddServicesTransformer.Transform);
 
-        var combine = pipelineAddServices.Collect().Combine(pipelineService.Collect());
+        var combine = pipelineAddServices.Combine(pipelineService.Collect());
 
         context.RegisterSourceOutput(combine, (spc, source) =>
         {
+            var (addServices, services) = source;
 
+            addServices.ReportDiagnostic(spc);
+            foreach (var service in services)
+                service.ReportDiagnostic(spc);
+
+            if (!addServices.CanGenerate)
+                return;
+
+            var generator = new AddServicesGenerator(spc, addServices, services);
+            generator.Generate();
         });
     }
 }
