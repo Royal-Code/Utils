@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace RoyalCode.DependencyInjection;
 
 /// <summary>
@@ -6,4 +8,5 @@ namespace RoyalCode.DependencyInjection;
 /// </para>
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
+[Conditional("COMPILE_TIME_ONLY")]
 public class AddServicesAttribute() : Attribute { }
