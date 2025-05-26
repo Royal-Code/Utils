@@ -117,8 +117,7 @@ public class PropertySelection
         var parts = property.SplitUpperCase();
         if (parts is not null)
         {
-            var partSelector = new PropertySelectionPart(parts, type);
-            ps = partSelector.Select();
+            ps = SelectByParts(parts, type, 0, null);
         }
 
         if (ps is not null)
@@ -149,6 +148,32 @@ public class PropertySelection
         }
 
         return ps;
+    }
+
+    // Novo método estático recursivo que substitui PropertySelectionPart
+    private static PropertySelection? SelectByParts(string[] parts, Type currentType, int position, PropertySelection? parent)
+    {
+        var currentProperty = string.Empty;
+        for (int i = position; i < parts.Length; i++)
+        {
+            currentProperty += parts[i];
+            var info = currentType.GetTypeInfo().PropertyLookup(currentProperty);
+            if (info is not null)
+            {
+                var ps = parent == null ? new PropertySelection(info) : parent.SelectChild(info);
+                if (i + 1 < parts.Length)
+                {
+                    var nextPs = SelectByParts(parts, info.PropertyType, i + 1, ps);
+                    if (nextPs is not null)
+                        return nextPs;
+                }
+                else
+                {
+                    return ps;
+                }
+            }
+        }
+        return null;
     }
 
     private static ArgumentException CreateException(string typeName, string propertyName)
