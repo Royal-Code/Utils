@@ -11,10 +11,22 @@ public sealed class ParameterDescriptor : IEquatable<ParameterDescriptor>
     private static ParameterDescriptor? cancellationToken;
     public static ParameterDescriptor CancellationToken(SemanticModel model)
     {
-        if (cancellationToken is not null)
+        if (cancellationToken is not null && cancellationToken.Type.Symbol is not null)
             return cancellationToken;
 
         var type = TypeDescriptor.CancellationToken(model);
+
+        cancellationToken = new(type, "ct");
+
+        return cancellationToken;
+    }
+
+    public static ParameterDescriptor CancellationToken()
+    {
+        if (cancellationToken is not null)
+            return cancellationToken;
+
+        var type = TypeDescriptor.CancellationToken();
 
         cancellationToken = new(type, "ct");
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Reflection;
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors;
 
@@ -48,7 +49,7 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
             {
                 name = underlyingSymbol.GetName() + "?";
             }
-            else
+            else if (namedTypeSymbol.SpecialType == SpecialType.None)
             {
                 name = namedTypeSymbol.GetName();
             }
@@ -60,7 +61,7 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
     private static TypeDescriptor? cancellationToken;
     public static TypeDescriptor CancellationToken(SemanticModel model)
     {
-        if (cancellationToken is not null)
+        if (cancellationToken is not null && cancellationToken.Symbol is not null)
             return cancellationToken;
 
         var name = "CancellationToken";
@@ -72,10 +73,22 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
         return cancellationToken;
     }
 
+    public static TypeDescriptor CancellationToken()
+    {
+        if (cancellationToken is not null)
+            return cancellationToken;
+
+        var name = "CancellationToken";
+        var namespaces = new[] { "System.Threading" };
+
+        cancellationToken = new(name, namespaces, null, false);
+        return cancellationToken;
+    }
+
     private static TypeDescriptor? voidTypeDescriptor;
     public static TypeDescriptor Void(SemanticModel model)
     {
-        if (voidTypeDescriptor is not null)
+        if (voidTypeDescriptor is not null && voidTypeDescriptor.Symbol is not null)
             return voidTypeDescriptor;
 
         var name = "void";
@@ -84,6 +97,18 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
             ?? throw new InvalidOperationException($"Type '{name}' not found in the compilation.");
 
         voidTypeDescriptor = new(name, namespaces, symbol, false);
+        return voidTypeDescriptor;
+    }
+
+    public static TypeDescriptor Void()
+    {
+        if (voidTypeDescriptor is not null)
+            return voidTypeDescriptor;
+
+        var name = "void";
+        var namespaces = new[] { "System" };
+
+        voidTypeDescriptor = new(name, namespaces);
         return voidTypeDescriptor;
     }
 

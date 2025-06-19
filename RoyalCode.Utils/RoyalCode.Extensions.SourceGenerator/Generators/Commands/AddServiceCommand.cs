@@ -3,7 +3,7 @@ using System.Text;
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators.Commands;
 
-public class AddServiceCommand : GeneratorNode
+public class AddServiceCommand : GeneratorNode, IWithNamespaces
 {
     private readonly ServiceTypeDescriptor serviceTypeDescriptor;
     private readonly string servicesVarName;
@@ -12,6 +12,15 @@ public class AddServiceCommand : GeneratorNode
     {
         this.serviceTypeDescriptor = serviceTypeDescriptor;
         this.servicesVarName = servicesVarName;
+    }
+
+    public IEnumerable<string> GetNamespaces()
+    {
+        foreach(var ns in serviceTypeDescriptor.HandlerType.Namespaces)
+            yield return ns;
+        foreach(var ns in serviceTypeDescriptor.InterfaceType.Namespaces)
+            yield return ns;
+        yield return "Microsoft.Extensions.DependencyInjection";
     }
 
     public override void Write(StringBuilder sb, int ident = 0)

@@ -32,11 +32,7 @@ public sealed class EditTypeDescriptor : IEquatable<EditTypeDescriptor>
 
     public TypeDescriptor IdType { get; }
 
-#nullable disable
-
-    public ParameterDescriptor Parameter { get; internal set; }
-
-#nullable enable
+    public ParameterDescriptor? Parameter { get; set; }
 
     public bool Equals(EditTypeDescriptor? other)
     {
