@@ -15,10 +15,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
       
       - name: Build and pack
-        run: sudo /home/runner/.dotnet/dotnet build ./RoyalCode.Utils/RoyalCode.Extensions.SourceGenerator/RoyalCode.Extensions.SourceGenerator.csproj -c Release
+        run: dotnet build ./RoyalCode.Utils/RoyalCode.Extensions.SourceGenerator/RoyalCode.Extensions.SourceGenerator.csproj -c Release -o ./publish/RoyalCode.Extensions.SourceGenerator
     
       - name: publish nuget package
-        run: sudo /home/runner/.dotnet/dotnet nuget push ./RoyalCode.Utils/RoyalCode.Extensions.SourceGenerator/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./RoyalCode.Utils/RoyalCode.Extensions.SourceGenerator/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
