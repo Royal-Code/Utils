@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<LangVersion>latest</LangVersion>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+    <Import Project="../libs.targets" />
 
 	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		
 		<Version>0.1.0</Version>
 		<AssemblyVersion>0.1.0</AssemblyVersion>
 		<FileVersion>0.1.0</FileVersion>
+		
 		<Description>
 			Utilities for building source generators, including property selection,
 			SyntaxNode utilities, Symbol utilities, classes for working with source generators,
