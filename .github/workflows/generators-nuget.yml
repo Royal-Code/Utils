@@ -21,4 +21,4 @@ jobs:
         run: dotnet build ./RoyalCode.Utils/RoyalCode.Extensions.SourceGenerator/RoyalCode.Extensions.SourceGenerator.csproj -c Release -o ./publish/RoyalCode.Extensions.SourceGenerator
     
       - name: publish nuget package
-        run: dotnet nuget push ./RoyalCode.Utils/RoyalCode.Extensions.SourceGenerator/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./publish/RoyalCode.SmartSelector.Generators/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
