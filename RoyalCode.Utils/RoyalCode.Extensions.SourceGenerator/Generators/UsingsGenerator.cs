@@ -29,24 +29,9 @@ public class UsingsGenerator : GeneratorNode
         usings.Add(@namespace);
     }
 
-    public void AddNamespace(INamedTypeSymbol symbol)
-    {
-        AddNamespace(symbol.ContainingNamespace.ToDisplayString());
-    }
-
-    public void AddNamespaces(TypeDescriptor descriptor)
-        => AddNamespaces(descriptor.Namespaces);
-
-    public void AddNamespaces(ParameterDescriptor descriptor)
-        => AddNamespaces(descriptor.Type.Namespaces);
-
-    public void AddNamespaces(MethodGenerator method) 
-        => method.AddUsings(this);
-
     public void AddNamespaces(IEnumerable<string> namespaces)
     {
-        foreach(var ns in namespaces)
-            usings.Add(ns);
+        usings.AddRange(namespaces);
     }
 
     public override void Write(StringBuilder sb, int ident = 0)

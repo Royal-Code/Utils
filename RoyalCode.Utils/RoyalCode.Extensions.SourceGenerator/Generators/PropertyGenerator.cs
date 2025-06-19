@@ -3,7 +3,7 @@ using System.Text;
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators;
 
-public class PropertyGenerator : GeneratorNode
+public class PropertyGenerator : GeneratorNode, IWithNamespaces
 {
     private ModifiersGenerator? modifiers;
 
@@ -26,6 +26,15 @@ public class PropertyGenerator : GeneratorNode
     public bool CanSet { get; set; } = true;
 
     public ValueNode? Value { get; set; }
+
+    public IEnumerable<string> GetNamespaces()
+    {
+        foreach (var ns in Type.Namespaces)
+            yield return ns;
+        if (Value is IWithNamespaces wns)
+            foreach (var ns in wns.GetNamespaces())
+                yield return ns;
+    }
 
     public override void Write(StringBuilder sb, int ident = 0)
     {

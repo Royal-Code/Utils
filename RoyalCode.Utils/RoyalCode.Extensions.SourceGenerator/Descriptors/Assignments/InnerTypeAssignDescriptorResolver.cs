@@ -14,7 +14,7 @@ internal class InnerTypeAssignDescriptorResolver : IAssignDescriptorResolver
         descriptor = null;
 
         // check if the left type is a class or struct and has a public parameterless constructor
-        if (leftType.HasNamedTypeSymbol(out var leftNamedSymbol) || rightType.Symbol is null
+        if (!leftType.HasNamedTypeSymbol(out var leftNamedSymbol) || rightType.Symbol is null
             || !leftNamedSymbol.Constructors.Any(c => c.Parameters.Length == 0))
             return false;
 

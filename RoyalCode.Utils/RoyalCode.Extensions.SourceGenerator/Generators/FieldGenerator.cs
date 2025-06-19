@@ -3,7 +3,7 @@ using System.Text;
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators;
 
-public class FieldGenerator : GeneratorNode
+public class FieldGenerator : GeneratorNode, IWithNamespaces
 {
     private ModifiersGenerator? modifiers;
 
@@ -37,5 +37,11 @@ public class FieldGenerator : GeneratorNode
             sb.Append(" = ").Append(Value.GetValue(ident));
 
         sb.AppendLine(";");
+    }
+
+    public IEnumerable<string> GetNamespaces()
+    {
+        foreach (var ns in Type.Namespaces)
+            yield return ns;
     }
 }

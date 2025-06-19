@@ -7,7 +7,7 @@ using System.Text;
 
 namespace RoyalCode.Extensions.SourceGenerator;
 
-internal static class ExtensionMethods
+public static class ExtensionMethods
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryGetAttribute(this MemberDeclarationSyntax node,

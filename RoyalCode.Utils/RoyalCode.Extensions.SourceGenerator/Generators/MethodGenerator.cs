@@ -3,7 +3,7 @@ using System.Text;
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators;
 
-public class MethodGenerator : GeneratorNode
+public class MethodGenerator : GeneratorNode, IWithNamespaces
 {
     public static MethodGenerator CreateImplementation(MethodGenerator abstractMethod)
     {
@@ -23,7 +23,6 @@ public class MethodGenerator : GeneratorNode
     private ParametersGenerator? parameters;
     private GeneratorNodeList? commands;
     private BaseParametersGenerator? baseParameters;
-    private List<string>? usings;
 
     public MethodGenerator(string name, TypeDescriptor returnType)
     {
@@ -41,8 +40,6 @@ public class MethodGenerator : GeneratorNode
 
     public GeneratorNodeList Commands => commands ??= new();
 
-    public List<string> Usings => usings ??= [];
-
     public string Name { get; set; }
 
     public TypeDescriptor ReturnType { get; set; }
@@ -51,12 +48,19 @@ public class MethodGenerator : GeneratorNode
 
     public bool UseArrow { get; set; }
 
-    public void AddUsings(UsingsGenerator usings)
+    public IEnumerable<string> GetNamespaces()
     {
-        usings.AddNamespaces(ReturnType);
-        parameters?.AddUsings(usings);
-        if (this.usings is not null)
-            usings.AddNamespaces(this.usings);
+        foreach (var ns in ReturnType.Namespaces)
+            yield return ns;
+        if (attributes is not null)
+            foreach (var ns in attributes.GetNamespaces())
+                yield return ns;
+        if (parameters is not null)
+            foreach (var ns in parameters.GetNamespaces())
+                yield return ns;
+        if (commands is not null)
+            foreach (var ns in commands.GetNamespaces())
+                yield return ns;
     }
 
     public override void Write(StringBuilder sb, int ident = 0)

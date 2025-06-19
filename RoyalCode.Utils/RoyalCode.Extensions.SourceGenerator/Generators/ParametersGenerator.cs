@@ -3,7 +3,7 @@ using System.Text;
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators;
 
-public class ParametersGenerator : GeneratorNode
+public class ParametersGenerator : GeneratorNode, IWithNamespaces
 {
     private List<ParameterGenerator>? parameters;
 
@@ -48,9 +48,12 @@ public class ParametersGenerator : GeneratorNode
         return newParameters;
     }
 
-    public void AddUsings(UsingsGenerator usings)
+    public IEnumerable<string> GetNamespaces()
     {
-        parameters?.ForEach(p => p.AddUsings(usings));
+        if (parameters is not null)
+            foreach (var p in parameters)
+                foreach (var ns in p.GetNamespaces())
+                    yield return ns;
     }
 
     public override void Write(StringBuilder sb, int ident = 0)

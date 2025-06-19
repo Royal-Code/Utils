@@ -16,9 +16,8 @@ namespace RoyalCode.Extensions.SourceGenerator.Generators;
 ///     which causes this node to generate a .cs file of the class, using the nodes added to the class.
 /// </para>
 /// </summary>
-public class ClassGenerator : ITransformationGenerator
+public class ClassGenerator : ITransformationGenerator, IWithNamespaces
 {
-    private UsingsGenerator? usings;
     private GeneratorNodeList? attributes;
     private ModifiersGenerator? modifiers;
     private GenericsGenerator? generics;
@@ -35,8 +34,6 @@ public class ClassGenerator : ITransformationGenerator
         Namespace = ns;
         TypeType = typeType;
     }
-
-    public UsingsGenerator Usings => usings ??= new();
 
     public string Namespace { get; set; }
 
@@ -74,7 +71,6 @@ public class ClassGenerator : ITransformationGenerator
     public MethodGenerator CreateImplementation(MethodGenerator abstractMethod)
     {
         var impl = MethodGenerator.CreateImplementation(abstractMethod);
-        impl.AddUsings(Usings);
         Methods.Add(impl);
         return impl;
     }
@@ -94,12 +90,42 @@ public class ClassGenerator : ITransformationGenerator
         spc.AddSource(FileName ?? $"{Name}.g.cs", source);
     }
 
+    public IEnumerable<string> GetNamespaces()
+    {
+        if (attributes is not null)
+            foreach (var ns in attributes.GetNamespaces())
+                yield return ns;
+        if (generics is not null)
+            foreach (var ns in generics.GetNamespaces())
+                yield return ns;
+        if (hierarchy is not null)
+            foreach (var ns in hierarchy.GetNamespaces())
+                yield return ns;
+        if (where is not null)
+            foreach (var ns in where.GetNamespaces())
+                yield return ns;
+        if (fields is not null)
+            foreach (var field in fields.GetNamespaces())
+                yield return field;
+        if (constructors is not null)
+            foreach (var constructor in constructors.GetNamespaces())
+                yield return constructor;
+        if (properties is not null)
+            foreach (var property in properties.GetNamespaces())
+                yield return property;
+        if (methods is not null)
+            foreach (var method in methods.GetNamespaces())
+                yield return method;
+    }
+
     public bool HasErrors(SourceProductionContext spc, SyntaxToken mainToken) => false;
 
     protected void Write(StringBuilder sb)
     {
-        usings?.ExcludeNamespace(Namespace);
-        usings?.Write(sb);
+        var usings = new UsingsGenerator();
+        usings.AddNamespaces(GetNamespaces());
+        usings.ExcludeNamespace(Namespace);
+        usings.Write(sb);
 
         sb.AppendLine();
         sb.Append("namespace ").Append(Namespace).AppendLine(";");
