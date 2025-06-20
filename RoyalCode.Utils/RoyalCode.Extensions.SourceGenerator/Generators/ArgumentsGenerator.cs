@@ -2,7 +2,7 @@
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators;
 
-public class ArgumentsGenerator : GeneratorNode
+public class ArgumentsGenerator : GeneratorNode, IWithNamespaces
 {
     private List<ValueNode>? arguments;
 
@@ -18,6 +18,16 @@ public class ArgumentsGenerator : GeneratorNode
     {
         this.arguments ??= [];
         this.arguments.AddRange(arguments);
+    }
+
+    public IEnumerable<string> GetNamespaces()
+    {
+        if (arguments is null)
+            yield break;
+        foreach (var arg in arguments)
+            if (arg is IWithNamespaces withNamespaces)
+                foreach (var ns in withNamespaces.GetNamespaces())
+                    yield return ns;
     }
 
     public override void Write(StringBuilder sb, int ident = 0)

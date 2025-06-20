@@ -18,9 +18,12 @@ public class GeneratorNodeList : GeneratorNode, IWithNamespaces
 
     public IEnumerable<string> GetNamespaces()
     {
-        if (nodes is not null)
-            foreach (var ns in nodes.OfType<IWithNamespaces>().SelectMany(node => node.GetNamespaces()))
-                yield return ns;
+        if (nodes is null)
+            yield break;
+        foreach (var node in nodes)
+            if (node is IWithNamespaces withNamespaces)
+                foreach (var ns in withNamespaces.GetNamespaces())
+                    yield return ns;
     }
 
     public override void Write(StringBuilder sb, int ident = 0)

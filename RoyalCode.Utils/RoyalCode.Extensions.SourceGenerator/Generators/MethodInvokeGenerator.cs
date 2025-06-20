@@ -2,7 +2,7 @@
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators;
 
-public class MethodInvokeGenerator : GeneratorNode
+public class MethodInvokeGenerator : GeneratorNode, IWithNamespaces
 {
     private readonly ValueNode identifier;
     private readonly string method;
@@ -29,6 +29,15 @@ public class MethodInvokeGenerator : GeneratorNode
     public bool LineIdent { get; set; }
 
     public void AddArgument(ValueNode arg) => arguments.AddArgument(arg);
+
+    public IEnumerable<string> GetNamespaces()
+    {
+        if (identifier is IWithNamespaces withNamespaces)
+            foreach (var ns in withNamespaces.GetNamespaces())
+                yield return ns;
+        foreach (var ns in arguments.GetNamespaces())
+            yield return ns;
+    }
 
     public void UseArgumentPerLine() => arguments.InLine = false;
 
