@@ -31,9 +31,10 @@ public sealed class IfCommand : GeneratorNode
 
     public override void Write(StringBuilder sb, int ident = 0)
     {
-        int idented = Idented ? ident : 0;
+        int localIdent = Idented ? ident : 0;
 
-        sb.Append("if (").Append(condition.GetValue(idented)).Append(")");
+        sb.Ident(localIdent);
+        sb.Append("if (").Append(condition.GetValue(localIdent)).Append(")");
 
         if (commands is null || commands.Count is 0)
         {
@@ -42,30 +43,30 @@ public sealed class IfCommand : GeneratorNode
         else if (commands.Count is 1)
         {
             sb.AppendLine();
-            commands.Write(sb, idented + 1);
+            commands.Write(sb, localIdent + 1);
         }
         else
         {
-            sb.AppendLine().Ident(idented).AppendLine("{");
-            commands.Write(sb, idented + 1);
-            sb.Ident(idented).AppendLine("}");
+            sb.AppendLine().Ident(localIdent).AppendLine("{");
+            commands.Write(sb, localIdent + 1);
+            sb.Ident(localIdent).AppendLine("}");
         }
 
         if (elseCommands is not null && elseCommands.Count > 0)
         {
-            sb.Ident(idented);
+            sb.Ident(localIdent);
 
             sb.AppendLine("else");
 
             if (elseCommands.Count is 1)
             {
-                elseCommands.Write(sb, idented + 1);
+                elseCommands.Write(sb, localIdent + 1);
             }
             else
             {
-                sb.Ident(idented).AppendLine("{");
-                elseCommands.Write(sb, idented + 1);
-                sb.Ident(idented).AppendLine("}");
+                sb.Ident(localIdent).AppendLine("{");
+                elseCommands.Write(sb, localIdent + 1);
+                sb.Ident(localIdent).AppendLine("}");
             }
         }
 

@@ -6,7 +6,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
-		<Ver>0.1.2</Ver>
+		<Ver>0.1.3</Ver>
 		<Prev></Prev>
 		
 		<Version>$(Ver)$(Prev)</Version>

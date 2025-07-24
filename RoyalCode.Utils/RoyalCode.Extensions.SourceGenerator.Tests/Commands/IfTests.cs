@@ -178,4 +178,46 @@ public class IfTests
         // Assert
         Assert.Equal(expected, generated);
     }
+
+    [Fact]
+    public void If_Ident()
+    {
+        // Arrange
+        var sb = new StringBuilder();
+        var expected =
+            """
+                if (1 == 1) { }
+
+
+            """;
+
+        // Act
+        var command = new IfCommand("1 == 1");
+        command.Write(sb, 1);
+        var generated = sb.ToString();
+
+        // Assert
+        Assert.Equal(expected, generated);
+    }
+
+    [Fact]
+    public void If_Ident_False()
+    {
+        // Arrange
+        var sb = new StringBuilder();
+        var expected =
+            """
+            if (1 == 1) { }
+
+
+            """;
+
+        // Act
+        var command = new IfCommand("1 == 1") { Idented = false };
+        command.Write(sb, 1);
+        var generated = sb.ToString();
+
+        // Assert
+        Assert.Equal(expected, generated);
+    }
 }
