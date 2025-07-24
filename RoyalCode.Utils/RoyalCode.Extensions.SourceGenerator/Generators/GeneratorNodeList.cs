@@ -16,6 +16,8 @@ public class GeneratorNodeList : GeneratorNode, IWithNamespaces
 
     public IEnumerable<T> Enumerate<T>() => nodes?.OfType<T>() ?? [];
 
+    public int Count => nodes?.Count ?? 0;
+
     public IEnumerable<string> GetNamespaces()
     {
         if (nodes is null)
