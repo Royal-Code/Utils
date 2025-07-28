@@ -1,4 +1,6 @@
-﻿using RoyalCode.Extensions.SourceGenerator.Descriptors;
+﻿// Ignore Spelling: ident
+
+using RoyalCode.Extensions.SourceGenerator.Descriptors;
 using System.Text;
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators;
@@ -20,7 +22,9 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
 
     private GeneratorNodeList? attributes;
     private ModifiersGenerator? modifiers;
+    private GenericsGenerator? generics;
     private ParametersGenerator? parameters;
+    private GeneratorNodeList? where;
     private GeneratorNodeList? commands;
     private BaseParametersGenerator? baseParameters;
 
@@ -34,7 +38,11 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
     
     public ModifiersGenerator Modifiers => modifiers ??= new();
 
+    public GenericsGenerator Generics => generics ??= new();
+
     public ParametersGenerator Parameters => parameters ??= new();
+
+    public GeneratorNodeList Where => where ??= new();
 
     public BaseParametersGenerator BaseParameters => baseParameters ??= new();
 
@@ -61,6 +69,12 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
         if (commands is not null)
             foreach (var ns in commands.GetNamespaces())
                 yield return ns;
+        if (generics is not null)
+            foreach (var ns in generics.GetNamespaces())
+                yield return ns;
+        if (where is not null)
+            foreach (var ns in where.GetNamespaces())
+                yield return ns;
     }
 
     public override void Write(StringBuilder sb, int ident = 0)
@@ -75,11 +89,16 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
         sb.Append(ReturnType.Name).Append(' ');
         
         sb.Append(Name);
+
+        generics?.Write(sb);
+
         if (parameters is null)
             sb.Append("()");
         else
             parameters.Write(sb, ident);
-        
+
+        where?.Write(sb, ident + 1);
+
         if (IsAbstract)
         {
             sb.AppendLine(";");

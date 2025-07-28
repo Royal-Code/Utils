@@ -193,6 +193,9 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
             ? Name.Substring(0, Name.Length - 3)
             : UnderlyingType;
 
+    /// <summary>
+    /// Get the generic type name if the type is generic, otherwise returns the type name itself.
+    /// </summary>
     public string GenericType
     {
         get
@@ -204,6 +207,49 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
             // foo<bar> => index of < is 3, length is 8, so start is 3 + 1 = 4, length is 8 - 3 - 2 = 3 => bar
             return Name.Substring(index + 1, Name.Length - index - 2);
         }
+    }
+
+    /// <summary>
+    /// Gets all generic type names or empty if it is not a generic type.
+    /// </summary>
+    /// <returns></returns>
+    public string[] GetGenericTypes()
+    {
+        var index = Name.IndexOf('<');
+        if (index == -1)
+            return [];
+
+        var generics = Name.Substring(index + 1, Name.Length - index - 2);
+        if (generics.Contains(','))
+            return generics.Split(',').Select(g => g.Trim()).ToArray();
+        else
+            return [generics];
+    }
+
+    /// <summary>
+    /// Checks if the type is a generic type. A generic type is defined as one that contains <c>&lt;</c> and <c>&gt;</c>
+    /// </summary>
+    public bool IsGenericType => Name.Contains('<') && Name.Contains('>');
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="genericTypeNames"></param>
+    /// <param name="namespaces"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    public TypeDescriptor ChangeGenericType(string[] genericTypeNames, string[] namespaces)
+    {
+        if (!IsGenericType)
+            throw new InvalidOperationException($"Type '{Name}' is not a generic type.");
+
+        if (genericTypeNames.Length == 0)
+            throw new ArgumentException("Generic type names cannot be empty.", nameof(genericTypeNames));
+
+        var genericPart = string.Join(", ", genericTypeNames);
+        var newName = $"{Name.Substring(0, Name.IndexOf('<') + 1)}{genericPart}>";
+        return new TypeDescriptor(newName, namespaces, Symbol, IsNullable);
     }
 
     public IReadOnlyList<PropertyDescriptor> CreateProperties(Func<IPropertySymbol, bool>? predicate)

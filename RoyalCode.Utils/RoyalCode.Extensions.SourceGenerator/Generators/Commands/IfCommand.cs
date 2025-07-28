@@ -2,7 +2,7 @@
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators.Commands;
 
-public sealed class IfCommand : GeneratorNode
+public sealed class IfCommand : GeneratorNode, IWithNamespaces
 {
     private readonly ValueNode condition;
     private GeneratorNodeList? commands;
@@ -27,6 +27,20 @@ public sealed class IfCommand : GeneratorNode
     {
         elseCommands ??= new GeneratorNodeList();
         elseCommands.Add(command);
+    }
+
+    public IEnumerable<string> GetNamespaces()
+    {
+        if (commands is not null)
+        {
+            foreach (var ns in commands.GetNamespaces())
+                yield return ns;
+        }
+        if (elseCommands is not null)
+        {
+            foreach (var ns in elseCommands.GetNamespaces())
+                yield return ns;
+        }
     }
 
     public override void Write(StringBuilder sb, int ident = 0)
