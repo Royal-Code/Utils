@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments;
 
@@ -7,7 +8,8 @@ internal class CastAssignDescriptorResolver : IAssignDescriptorResolver
     public bool TryCreateAssignDescriptor(
         TypeDescriptor leftType,
         TypeDescriptor rightType, 
-        SemanticModel model, 
+        SemanticModel model,
+        MatchOptions options,
         out AssignDescriptor? descriptor)
     {
         var areEquivalentEnums = Enums.AreEquivalentEnums(leftType.Symbol, rightType.Symbol);

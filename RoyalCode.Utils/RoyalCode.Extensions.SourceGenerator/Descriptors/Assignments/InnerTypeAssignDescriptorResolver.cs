@@ -8,7 +8,8 @@ internal class InnerTypeAssignDescriptorResolver : IAssignDescriptorResolver
     public bool TryCreateAssignDescriptor(
         TypeDescriptor leftType, 
         TypeDescriptor rightType,
-        SemanticModel model, 
+        SemanticModel model,
+        MatchOptions options,
         out AssignDescriptor? descriptor)
     {
         descriptor = null;
@@ -19,14 +20,14 @@ internal class InnerTypeAssignDescriptorResolver : IAssignDescriptorResolver
             return false;
 
         // obtém propriedades do tipo de origem
-        var leftProperties = leftType.CreateProperties(p => p.SetMethod is not null);
+        var leftProperties = options.OriginPropertiesRetriever.GetProperties(leftType);
 
         // valida se tem propriedades
         if (leftProperties.Count == 0)
             return false;
 
         // obtém propriedades do tipo de destino
-        var rightProperties = rightType.CreateProperties(p => p.GetMethod is not null);
+        var rightProperties = options.TargetPropertiesRetriever.GetProperties(rightType);
 
         // valida se tem propriedades
         if (rightProperties.Count == 0)
@@ -34,7 +35,7 @@ internal class InnerTypeAssignDescriptorResolver : IAssignDescriptorResolver
 
         // faz o match entre as propriedades
         // match das propriedades da classe com o attributo e a classe definida no TFrom.
-        var matchSelection = MatchSelection.Create(leftType, leftProperties, rightType, rightProperties, model);
+        var matchSelection = MatchSelection.Create(leftType, leftProperties, rightType, rightProperties, model, options);
 
         // se tem problemas, não é possível fazer o match.
         if (matchSelection.HasMissingProperties(out _) || matchSelection.HasNotAssignableProperties(out _))

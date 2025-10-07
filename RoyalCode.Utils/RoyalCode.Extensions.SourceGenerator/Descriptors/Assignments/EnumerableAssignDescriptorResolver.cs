@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments;
 
@@ -9,6 +10,7 @@ internal class EnumerableAssignDescriptorResolver : IAssignDescriptorResolver
         TypeDescriptor leftType,
         TypeDescriptor rightType,
         SemanticModel model,
+        MatchOptions options,
         out AssignDescriptor? descriptor)
     {
         if (leftType.Symbol is null || rightType.Symbol is null ||
@@ -31,7 +33,7 @@ internal class EnumerableAssignDescriptorResolver : IAssignDescriptorResolver
         if (!leftGenericType.Equals(rightGenericType))
         {
             requireSelect = true;
-            genericAssignment = AssignDescriptorFactory.Create(leftGenericType, rightGenericType, model);
+            genericAssignment = AssignDescriptorFactory.Create(leftGenericType, rightGenericType, model, options);
 
             // se a conversão dos tipos genéricos não for possível, não é possível fazer a conversão desta propriedade
             if (genericAssignment is null)

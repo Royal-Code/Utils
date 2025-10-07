@@ -1,16 +1,16 @@
 <Project>
-    <PropertyGroup>
-        <BaseOutputPath Condition="'$(BaseOutputPath)' == ''">bin</BaseOutputPath>
-    </PropertyGroup>
+	<PropertyGroup>
+		<BaseOutputPath Condition="'$(BaseOutputPath)' == ''">bin</BaseOutputPath>
+	</PropertyGroup>
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-        <DocumentationFile Condition="'$(Configuration)' != 'Release'">$(BaseOutputPath)/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
-        <DocumentationFile Condition="'$(Configuration)' == 'Release'">.publish/$(AssemblyName)/$(AssemblyName).xml</DocumentationFile>
+		<DocumentationFile Condition="'$(Configuration)' != 'Release'">$(BaseOutputPath)/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
+		<DocumentationFile Condition="'$(Configuration)' == 'Release'">.publish/$(AssemblyName)/$(AssemblyName).xml</DocumentationFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>Royal Code</Authors>
-		<Copyright>Royal Code Copyright © 2025</Copyright>
+		<Copyright>Royal Code Copyright © $([System.DateTime]::UtcNow.ToString("yyyy"))</Copyright>
 		<RepositoryUrl>https://github.com/Royal-Code/Utils</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
 		<Configurations>Debug;Release</Configurations>
@@ -18,7 +18,7 @@
 		<PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Include="../icon.png" Pack="true" PackagePath="/"/>
+		<None Include="../icon2.png" Pack="true" PackagePath="/"/>
 		<None Include="../../README.md" Pack="true" PackagePath="/"/>
 	</ItemGroup>
 </Project>

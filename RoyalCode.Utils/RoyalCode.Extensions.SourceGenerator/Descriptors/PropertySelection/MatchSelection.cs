@@ -7,22 +7,29 @@ public class MatchSelection : IEquatable<MatchSelection>
 {
     #region Factory
 
-    public static MatchSelection Create(TypeDescriptor origin, TypeDescriptor target, SemanticModel model)
+    public static MatchSelection Create(
+        TypeDescriptor origin, 
+        TypeDescriptor target,
+        SemanticModel model,
+        MatchOptions? options = null)
     {
-        var originProperties = origin.CreateProperties(p => p.SetMethod is not null);
-        var targetProperties = target.CreateProperties(p => p.GetMethod is not null);
+        options ??= MatchOptions.Default;
 
-        return Create(origin, originProperties, target, targetProperties, model);
+        var originProperties = options.OriginPropertiesRetriever.GetProperties(origin);
+        var targetProperties = options.TargetPropertiesRetriever.GetProperties(target);
+
+        return Create(origin, originProperties, target, targetProperties, model, options);
     }
 
     public static MatchSelection Create(
         TypeDescriptor origin, IReadOnlyList<PropertyDescriptor> originProperties,
         TypeDescriptor target, IReadOnlyList<PropertyDescriptor> targetProperties,
-        SemanticModel model)
+        SemanticModel model,
+        MatchOptions options)
     {
         List<PropertyMatch> matches = [];
 
-        var targetType = new MatchTypeInfo(target, targetProperties);
+        var targetType = new MatchTypeInfo(target, targetProperties, options);
 
         foreach (var originProperty in originProperties)
         {
@@ -31,7 +38,7 @@ public class MatchSelection : IEquatable<MatchSelection>
 
             // se a propriedade for encontrada, avalia os tipos entre elas e a forma de atribuíção.
             AssignDescriptor? assignDescriptor = targetSelection is not null
-                ? AssignDescriptorFactory.Create(originProperty.Type, targetSelection.PropertyType.Type, model)
+                ? AssignDescriptorFactory.Create(originProperty.Type, targetSelection.PropertyType.Type, model, options)
                 : null;
 
             // por fim, cria o match entre as propriedades, mesmo que não tenha sido encontrado.

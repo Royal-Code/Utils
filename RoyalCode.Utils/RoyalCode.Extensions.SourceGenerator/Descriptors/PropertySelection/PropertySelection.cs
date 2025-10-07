@@ -79,9 +79,7 @@ public class PropertySelection : IEquatable<PropertySelection>
                 if (i + 1 < parts.Length)
                 {
                     // creates the next MatchTypeInfo
-                    var nextTypeInfo = new MatchTypeInfo(
-                        property.Type,
-                        property.Type.CreateProperties(p => p.GetMethod is not null));
+                    var nextTypeInfo = MatchTypeInfo.Create(property.Type,targetType.Options);
 
                     var nextPs = SelectPart(parts, nextTypeInfo, i + 1, ps);
                     if (nextPs is not null)

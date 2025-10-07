@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments;
 
@@ -13,7 +14,8 @@ internal class AssignDescriptorFactory
             new InnerTypeAssignDescriptorResolver(),
         ];
 
-    public static AssignDescriptor? Create(TypeDescriptor leftType, TypeDescriptor rightType, SemanticModel model)
+    public static AssignDescriptor? Create(
+        TypeDescriptor leftType, TypeDescriptor rightType, SemanticModel model, MatchOptions options)
     {
         foreach (var analyzer in resolvers)
         {
@@ -21,6 +23,7 @@ internal class AssignDescriptorFactory
                 leftType,
                 rightType,
                 model,
+                options,
                 out var descriptor))
             {
                 return descriptor;

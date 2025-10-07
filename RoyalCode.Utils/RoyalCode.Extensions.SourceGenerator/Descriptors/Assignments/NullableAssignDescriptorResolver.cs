@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments;
 
@@ -8,6 +9,7 @@ internal class NullableAssignDescriptorResolver : IAssignDescriptorResolver
         TypeDescriptor leftType,
         TypeDescriptor rightType,
         SemanticModel model,
+        MatchOptions options,
         out AssignDescriptor? descriptor)
     {
         // check if the rightType property is nullable and the leftType property is not nullable,

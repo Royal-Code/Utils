@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments;
 
@@ -9,6 +10,7 @@ internal sealed class DirectAssignDescriptorResolver : IAssignDescriptorResolver
         TypeDescriptor leftType,
         TypeDescriptor rightType,
         SemanticModel model,
+        MatchOptions options,
         out AssignDescriptor? descriptor)
     {
         if (!CanBeAssigned(leftType, rightType, model))
