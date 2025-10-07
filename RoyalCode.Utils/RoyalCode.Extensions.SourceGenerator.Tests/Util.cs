@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace RoyalCode.SmartSelector.Tests;
+namespace RoyalCode.Extensions.SourceGenerator.Tests;
 
 internal static class Util
 {

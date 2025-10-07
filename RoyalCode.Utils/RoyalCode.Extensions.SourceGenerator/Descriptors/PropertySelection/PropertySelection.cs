@@ -43,11 +43,11 @@ public class PropertySelection : IEquatable<PropertySelection>
 
     public static PropertySelection? Select(PropertyDescriptor property, MatchTypeInfo targetType)
     {
-        PropertySelection? ps =null;
+        PropertySelection? ps = null;
 
         var targetProperty = targetType.Properties.FirstOrDefault(p => p.Name == property.Name);
-        
-        if(targetProperty != null)
+
+        if (targetProperty != null)
         {
             return new PropertySelection(targetProperty);
         }
@@ -79,7 +79,7 @@ public class PropertySelection : IEquatable<PropertySelection>
                 if (i + 1 < parts.Length)
                 {
                     // creates the next MatchTypeInfo
-                    var nextTypeInfo = MatchTypeInfo.Create(property.Type,targetType.Options);
+                    var nextTypeInfo = MatchTypeInfo.Create(property.Type, targetType.Options);
 
                     var nextPs = SelectPart(parts, nextTypeInfo, i + 1, ps);
                     if (nextPs is not null)
@@ -141,5 +141,5 @@ public class PropertySelection : IEquatable<PropertySelection>
         return hashCode;
     }
 
-    
+
 }

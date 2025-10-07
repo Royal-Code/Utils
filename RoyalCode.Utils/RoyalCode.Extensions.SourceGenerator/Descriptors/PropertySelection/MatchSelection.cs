@@ -13,7 +13,7 @@ public class MatchSelection : IEquatable<MatchSelection>
         SemanticModel model,
         MatchOptions? options = null)
     {
-        options ??= MatchOptions.Default;
+        options ??= MatchOptions.InternalDefault;
 
         var originProperties = options.OriginPropertiesRetriever.GetProperties(origin);
         var targetProperties = options.TargetPropertiesRetriever.GetProperties(target);
@@ -37,8 +37,13 @@ public class MatchSelection : IEquatable<MatchSelection>
             var targetSelection = PropertySelection.Select(originProperty, targetType);
 
             // se a propriedade for encontrada, avalia os tipos entre elas e a forma de atribuíção.
+            // Obs: a fábrica espera (destino, origem) para validar conversão origem -> destino.
             AssignDescriptor? assignDescriptor = targetSelection is not null
-                ? AssignDescriptorFactory.Create(originProperty.Type, targetSelection.PropertyType.Type, model, options)
+                ? AssignDescriptorFactory.Create(
+                    targetSelection.PropertyType.Type, // destino (target)
+                    originProperty.Type,               // origem (origin)
+                    model,
+                    options)
                 : null;
 
             // por fim, cria o match entre as propriedades, mesmo que não tenha sido encontrado.

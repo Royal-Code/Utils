@@ -9,7 +9,12 @@ public class MatchOptions
     /// <summary>
     /// Internal default instance of <see cref="MatchOptions"/>.
     /// </summary>
-    internal static MatchOptions Default { get; } = new();
+    internal static MatchOptions InternalDefault { get; } = new();
+
+    /// <summary>
+    /// Creates a new instance of <see cref="MatchOptions"/> with default settings.
+    /// </summary>
+    public static MatchOptions Default => new();
 
     /// <summary>
     /// Default method to retrieve properties from the origin type.
@@ -18,7 +23,7 @@ public class MatchOptions
     /// <param name="origin"></param>
     /// <returns></returns>
     public static IReadOnlyList<PropertyDescriptor> GetOriginProperties(TypeDescriptor origin)
-        => Default.OriginPropertiesRetriever.GetProperties(origin);
+        => InternalDefault.OriginPropertiesRetriever.GetProperties(origin);
 
     /// <summary>
     /// Default method to retrieve properties from the target type.
@@ -27,7 +32,7 @@ public class MatchOptions
     /// <param name="target"></param>
     /// <returns></returns>
     public static IReadOnlyList<PropertyDescriptor> GetTargetProperties(TypeDescriptor target)
-        => Default.TargetPropertiesRetriever.GetProperties(target);
+        => InternalDefault.TargetPropertiesRetriever.GetProperties(target);
 
     /// <summary>
     /// The retriever used to obtain properties from the origin type.
