@@ -36,13 +36,15 @@ public class OriginFailureMatch
 
     public DateTimeOffset Date { get; set; }
 
-    //public void Teste()
-    //{
-    //    var target = new TargetBar()
-    //    {
-    //        Date = Date
-    //    };
-    //}
+    public static OriginFailureMatch Teste(TargetBar target)
+    {
+        var dto = new OriginFailureMatch
+        {
+            Date = target.Date
+        };
+
+        return dto;
+    }
 }
 
 public class TargetQuxBase

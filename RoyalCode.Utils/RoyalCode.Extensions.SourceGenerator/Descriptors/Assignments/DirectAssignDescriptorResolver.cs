@@ -34,9 +34,7 @@ internal sealed class DirectAssignDescriptorResolver : IAssignDescriptorResolver
         if (leftType.Symbol is null || rightType.Symbol is null)
             return false;
 
-        var conversion = model.Compilation.ClassifyConversion(
-                    leftType.Symbol!,
-                    rightType.Symbol!);
+        var conversion = model.Compilation.ClassifyConversion(rightType.Symbol!, leftType.Symbol!);
 
         return conversion.Exists && conversion.IsImplicit;
     }

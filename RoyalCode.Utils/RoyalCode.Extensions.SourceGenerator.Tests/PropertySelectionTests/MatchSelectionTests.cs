@@ -167,7 +167,7 @@ internal static partial class Code
             public class TargetBar
             {
                 public string Name { get; set; }
-                public DateTime Date { get; set; }
+                public DateTimeOffset Date { get; set; }
             }
 
             public class TargetFoo
@@ -186,7 +186,7 @@ internal static partial class Code
             public class OriginFailureMatch
             {
                 public string Hello { get; set; }
-                public DateTimeOffset Date { get; set; }
+                public DateTime Date { get; set; }
             }
 
             public interface ITargetBar
