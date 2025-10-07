@@ -27,7 +27,7 @@ public interface ITransformationGenerator
 ///     the provided <see cref="SourceProductionContext"/>.
 ///     This is typically used in source generators to contribute additional code or artifacts during compilation.
 /// </remarks>
-/// <typeparam name="TModel">Type of models used to generate sources<typeparamref name="TModel"/>
+/// <typeparam name="TModel">Type of models used to generate sources </typeparam>
 public interface ITransformationGenerator<in TModel>
 {
     public void Generate(SourceProductionContext spc, IEnumerable<TModel> models);
