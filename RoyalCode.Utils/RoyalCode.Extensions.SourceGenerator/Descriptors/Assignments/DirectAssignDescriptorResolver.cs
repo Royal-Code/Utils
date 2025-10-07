@@ -35,8 +35,8 @@ internal sealed class DirectAssignDescriptorResolver : IAssignDescriptorResolver
             return false;
 
         var conversion = model.Compilation.ClassifyConversion(
-                    rightType.Symbol!,
-                    leftType.Symbol!);
+                    leftType.Symbol!,
+                    rightType.Symbol!);
 
         return conversion.Exists && conversion.IsImplicit;
     }

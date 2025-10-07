@@ -37,11 +37,10 @@ public class MatchSelection : IEquatable<MatchSelection>
             var targetSelection = PropertySelection.Select(originProperty, targetType);
 
             // se a propriedade for encontrada, avalia os tipos entre elas e a forma de atribuíção.
-            // Obs: a fábrica espera (destino, origem) para validar conversão origem -> destino.
             AssignDescriptor? assignDescriptor = targetSelection is not null
                 ? AssignDescriptorFactory.Create(
-                    targetSelection.PropertyType.Type, // destino (target)
-                    originProperty.Type,               // origem (origin)
+                    originProperty.Type,
+                    targetSelection.PropertyType.Type,
                     model,
                     options)
                 : null;
