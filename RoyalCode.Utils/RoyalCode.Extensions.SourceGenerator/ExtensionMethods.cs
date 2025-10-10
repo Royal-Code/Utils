@@ -564,4 +564,107 @@ public static class ExtensionMethods
         property.WritePropertyPath(sb);
         return sb;
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static IEnumerable<string> GetConstructorStrings(this AttributeSyntax attr)
+    {
+        if (attr.ArgumentList is not { Arguments.Count: > 0 }) yield break;
+        foreach (var arg in attr.ArgumentList.Arguments)
+        {
+            if (arg.NameEquals is not null) continue; // skip named
+            if (TryReadStringValue(arg.Expression, out var value))
+                yield return value;
+            else if (arg.Expression is ArrayCreationExpressionSyntax acs && acs.Initializer is not null)
+            {
+                foreach (var expr in acs.Initializer.Expressions)
+                    if (TryReadStringValue(expr, out var v)) yield return v;
+            }
+            else if (arg.Expression is ImplicitArrayCreationExpressionSyntax iacs && iacs.Initializer is not null)
+            {
+                foreach (var expr in iacs.Initializer.Expressions)
+                    if (TryReadStringValue(expr, out var v)) yield return v;
+            }
+            else if (arg.Expression is InitializerExpressionSyntax init)
+            {
+                foreach (var expr in init.Expressions)
+                    if (TryReadStringValue(expr, out var v)) yield return v;
+            }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static IEnumerable<string> GetNamedArgumentStrings(this AttributeSyntax attr, string name)
+    {
+        if (attr.ArgumentList is not { Arguments.Count: > 0 }) yield break;
+        foreach (var arg in attr.ArgumentList.Arguments)
+        {
+            if (arg.NameEquals?.Name.Identifier.Text != name) continue;
+            var expr = arg.Expression;
+            if (TryReadStringValue(expr, out var value))
+            {
+                yield return value;
+                continue;
+            }
+            if (expr is ArrayCreationExpressionSyntax acs && acs.Initializer is not null)
+            {
+                foreach (var item in acs.Initializer.Expressions)
+                    if (TryReadStringValue(item, out var v)) yield return v;
+            }
+            else if (expr is ImplicitArrayCreationExpressionSyntax iacs && iacs.Initializer is not null)
+            {
+                foreach (var item in iacs.Initializer.Expressions)
+                    if (TryReadStringValue(item, out var v)) yield return v;
+            }
+            else if (expr is InitializerExpressionSyntax init)
+            {
+                foreach (var item in init.Expressions)
+                    if (TryReadStringValue(item, out var v)) yield return v;
+            }
+        }
+    }
+
+    /// <summary>
+    /// <para>
+    ///     Attempts to extract a string value from the specified expression syntax node.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    ///     This method supports string literal expressions and 'nameof' invocations with a single argument.
+    ///     For unsupported expression types, the method returns false and sets <paramref name="value"/>
+    ///     to an empty string.
+    /// </remarks>
+    /// <param name="expr">
+    ///     The expression syntax node to analyze for a string value.
+    ///     Supported expressions include string literals and 'nameof' invocations.
+    /// </param>
+    /// <param name="value">
+    ///     When this method returns <see langword="true"/>, contains the extracted string value; 
+    ///     otherwise, contains an empty string.
+    /// </param>
+    /// <returns>
+    ///     true if a string value was successfully extracted from the expression; otherwise, false.
+    /// </returns>
+    public static bool TryReadStringValue(this ExpressionSyntax expr, out string value)
+    {
+        switch (expr)
+        {
+            case LiteralExpressionSyntax { Token.Value: string s }:
+                value = s; return true;
+            case InvocationExpressionSyntax { Expression: IdentifierNameSyntax id } inv when id.Identifier.Text == "nameof":
+                if (inv.ArgumentList.Arguments.Count == 1)
+                {
+                    var inner = inv.ArgumentList.Arguments[0].Expression;
+                    if (inner is IdentifierNameSyntax ins)
+                    {
+                        value = ins.Identifier.Text; return true;
+                    }
+                    else if (inner is MemberAccessExpressionSyntax ma)
+                    {
+                        value = ma.Name.Identifier.Text; return true;
+                    }
+                }
+                break;
+        }
+        value = string.Empty; return false;
+    }
 }

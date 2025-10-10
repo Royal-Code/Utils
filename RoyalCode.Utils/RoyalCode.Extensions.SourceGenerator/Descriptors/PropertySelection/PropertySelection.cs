@@ -41,18 +41,62 @@ public class PropertySelection : IEquatable<PropertySelection>
         sb.Append(property.Name);
     }
 
+    /// <summary>
+    /// Returns a flattened string representation of the property path by concatenating the names of all properties in
+    /// the path.
+    /// </summary>
+    /// <examples>
+    ///     Given a property path like "Address.Street.Name", this method will return "AddressStreetName".
+    /// </examples>
+    /// <returns>
+    ///     A <see cref="string"/> that represents the flattened property path.
+    /// </returns>
+    public string FlattenedPropertyPath()
+    {
+        StringBuilder sb = new();
+        foreach (var p in ToEnumerablePath())
+        {
+            sb.Append(p.property.Name);
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Returns an enumerable sequence representing the path from the root to the current property selection.
+    /// </summary>
+    /// <remarks>
+    ///     The returned sequence includes all ancestor property selections, followed by the current instance. 
+    ///     This can be used to traverse or analyze the full selection path in hierarchical scenarios.
+    /// </remarks>
+    /// <returns>
+    ///     An <see cref="IEnumerable{PropertySelection}"/> containing each property selection in the path,
+    ///     ordered from the root to the current instance.
+    /// </returns>
+    public IEnumerable<PropertySelection> ToEnumerablePath()
+    {
+        if (Parent is not null)
+        {
+            foreach (var p in Parent.ToEnumerablePath())
+                yield return p;
+        }
+        yield return this;
+    }
+
     public static PropertySelection? Select(PropertyDescriptor property, MatchTypeInfo targetType)
+        => Select(property.Name, targetType);
+
+    public static PropertySelection? Select(string propertyName, MatchTypeInfo targetType)
     {
         PropertySelection? ps = null;
 
-        var targetProperty = targetType.Properties.FirstOrDefault(p => p.Name == property.Name);
+        var targetProperty = targetType.Properties.FirstOrDefault(p => p.Name == propertyName);
 
         if (targetProperty != null)
         {
             return new PropertySelection(targetProperty);
         }
 
-        var parts = property.Name.SplitUpperCase();
+        var parts = propertyName.SplitUpperCase();
         if (parts is not null)
         {
             ps = SelectPart(parts, targetType);

@@ -33,7 +33,6 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
     {
         var name = typeSymbol.ToString();
         bool isNullable = false;
-
         var namedTypeSymbol = typeSymbol as INamedTypeSymbol;
 
         if (name[name.Length - 1] == '?')
@@ -52,6 +51,10 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
             else if (namedTypeSymbol.SpecialType == SpecialType.None)
             {
                 name = namedTypeSymbol.GetName();
+            }
+            else
+            {
+                name = namedTypeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
             }
         }
 
@@ -111,6 +114,8 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
         voidTypeDescriptor = new(name, namespaces);
         return voidTypeDescriptor;
     }
+
+    public static TypeDescriptor Object { get; } = new("object", ["System"]);
 
     #endregion
 
