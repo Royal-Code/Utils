@@ -133,9 +133,12 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
 
     public string[] Namespaces { get; }
 
+    public IReadOnlyList<PropertyDescriptor>? DefinedProperties { get; set; }
+
     public ITypeSymbol? Symbol { get; }
 
     public bool IsNullable { get; }
+
 
     public void AddHint(string hint)
     {
@@ -259,6 +262,9 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
 
     public IReadOnlyList<PropertyDescriptor> CreateProperties(Func<IPropertySymbol, bool>? predicate)
     {
+        if (DefinedProperties is not null)
+            return DefinedProperties;
+
         if (Symbol is null)
             return [];
 
@@ -305,7 +311,10 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
             return true;
 
         return Name == other.Name &&
-               Namespaces.SequenceEqual(other.Namespaces);
+               Namespaces.SequenceEqual(other.Namespaces) &&
+               (DefinedProperties == null && other.DefinedProperties == null ||
+               DefinedProperties.SequenceEqual(other.DefinedProperties));
+
     }
 
     public override bool Equals(object? obj)
@@ -318,6 +327,7 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
         int hashCode = -353132481;
         hashCode = hashCode * -1521134295 + Name.GetHashCode();
         hashCode = hashCode * -1521134295 + Namespaces.GetHashCode();
+        hashCode = hashCode * -1521134295 + (DefinedProperties != null ? DefinedProperties.GetHashCode() : 0);
         return hashCode;
     }
 
