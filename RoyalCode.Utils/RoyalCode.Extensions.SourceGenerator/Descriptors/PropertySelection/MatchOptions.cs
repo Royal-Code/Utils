@@ -55,5 +55,5 @@ public class MatchOptions
     ///     Use this property to specify custom resolvers that extend or override the default assignment behavior.
     ///     The order of resolvers in the array may affect resolution precedence.
     /// </remarks>
-    public IAssignDescriptorResolver[]? AdditionalAssignDescriptorResolvers { get; set; };
+    public IAssignDescriptorResolver[]? AdditionalAssignDescriptorResolvers { get; set; }
 }

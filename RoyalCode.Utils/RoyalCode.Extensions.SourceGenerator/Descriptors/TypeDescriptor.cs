@@ -171,6 +171,8 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
 
     public bool Is(ParameterDescriptor parameter) => Equals(parameter.Type);
 
+    public bool HasDefinedProperties() => DefinedProperties is not null && DefinedProperties.Count > 0;
+
     public void MarkAsEntity() => AddHint("IsEntity");
 
     public bool IsEntity => HasHint("IsEntity");
