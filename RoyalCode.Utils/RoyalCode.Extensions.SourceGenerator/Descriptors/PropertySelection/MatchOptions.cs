@@ -1,4 +1,6 @@
-﻿namespace RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
+﻿using RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments;
+
+namespace RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
 /// <summary>
 /// Provides configuration options for controlling how property values are retrieved and compared during a match
@@ -43,4 +45,15 @@ public class MatchOptions
     /// The retriever used to obtain properties from the target type.
     /// </summary>
     public ITargetPropertiesRetriever TargetPropertiesRetriever { get; set; } = new DefaultTargetPropertiesRetriever();
+
+    /// <summary>
+    /// Gets or sets the collection of additional assign descriptor resolvers to be used during assignment operations.
+    /// <br />
+    /// Optional; if not set, only the default resolvers will be used.
+    /// </summary>
+    /// <remarks>
+    ///     Use this property to specify custom resolvers that extend or override the default assignment behavior.
+    ///     The order of resolvers in the array may affect resolution precedence.
+    /// </remarks>
+    public IAssignDescriptorResolver[]? AdditionalAssignDescriptorResolvers { get; set; };
 }
