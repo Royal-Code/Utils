@@ -47,7 +47,7 @@ public sealed class IfCommand : GeneratorNode, IWithNamespaces
     {
         int localIdent = Idented ? indent : 0;
 
-        sb.Ident(localIdent);
+        sb.Indent(localIdent);
         sb.Append("if (").Append(condition.GetValue(localIdent)).Append(")");
 
         if (commands is null || commands.Count is 0)
@@ -61,14 +61,14 @@ public sealed class IfCommand : GeneratorNode, IWithNamespaces
         }
         else
         {
-            sb.AppendLine().Ident(localIdent).AppendLine("{");
+            sb.AppendLine().Indent(localIdent).AppendLine("{");
             commands.Write(sb, localIdent + 1);
-            sb.Ident(localIdent).AppendLine("}");
+            sb.Indent(localIdent).AppendLine("}");
         }
 
         if (elseCommands is not null && elseCommands.Count > 0)
         {
-            sb.Ident(localIdent);
+            sb.Indent(localIdent);
 
             sb.AppendLine("else");
 
@@ -78,9 +78,9 @@ public sealed class IfCommand : GeneratorNode, IWithNamespaces
             }
             else
             {
-                sb.Ident(localIdent).AppendLine("{");
+                sb.Indent(localIdent).AppendLine("{");
                 elseCommands.Write(sb, localIdent + 1);
-                sb.Ident(localIdent).AppendLine("}");
+                sb.Indent(localIdent).AppendLine("}");
             }
         }
 

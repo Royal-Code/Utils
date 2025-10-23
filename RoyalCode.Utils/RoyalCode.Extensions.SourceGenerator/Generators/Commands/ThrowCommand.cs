@@ -22,7 +22,7 @@ public class ThrowCommand : GeneratorNode, IWithNamespaces
 
     public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(indent);
+        sb.Indent(indent);
         sb.Append("throw new ").Append(exceptionType.Name);
         if (parameters is null)
             sb.Append("()");

@@ -30,6 +30,8 @@ public class AttributeGenerator : GeneratorNode, IWithNamespaces
 
     public ArgumentsGenerator Arguments => arguments ??= new();
 
+    public bool InLine { get; set; } = false;
+
     public IEnumerable<string> GetNamespaces()
     {
         for (var i = 0; i < namespaces.Length; i++)
@@ -38,12 +40,17 @@ public class AttributeGenerator : GeneratorNode, IWithNamespaces
 
     public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(indent)
+        sb.Indent(indent)
             .Append('[')
             .Append(name);
         
         arguments?.Write(sb);
-        
-        sb.Append(']').AppendLine();
+
+        sb.Append(']');
+            
+        if (InLine)
+            sb.Append(' ');
+        else
+            sb.AppendLine();
     }
 }

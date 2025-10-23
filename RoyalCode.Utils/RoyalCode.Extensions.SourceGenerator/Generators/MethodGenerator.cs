@@ -81,7 +81,7 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
         
         attributes?.Write(sb, indent);
         
-        sb.Ident(indent);
+        sb.Indent(indent);
         modifiers?.Write(sb);
         
         sb.Append(ReturnType.Name).Append(' ');
@@ -119,13 +119,13 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
         else
         {
             sb.AppendLine();
-            sb.Ident(indent).Append('{');
+            sb.Indent(indent).Append('{');
             sb.AppendLine();
 
             int commandsIdent = indent + 1;
             commands.Write(sb, commandsIdent);
 
-            sb.Ident(indent).Append('}');
+            sb.Indent(indent).Append('}');
             sb.AppendLine();
         }
     }

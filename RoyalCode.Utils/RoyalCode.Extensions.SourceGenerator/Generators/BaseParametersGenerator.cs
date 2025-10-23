@@ -18,7 +18,7 @@ public class BaseParametersGenerator : GeneratorNode
             return;
 
         sb.AppendLine()
-            .IdentPlus(indent)
+            .IndentPlus(indent)
             .Append(" : base (");
 
         bool first = true;

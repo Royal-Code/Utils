@@ -36,6 +36,9 @@ public class ParameterGenerator : GeneratorNode, IWithNamespaces
         if (defaultValue is IWithNamespaces wns)
             foreach (var ns in wns.GetNamespaces())
                 yield return ns;
+        if (attributes is IWithNamespaces wnsAttr)
+            foreach (var ns in wnsAttr.GetNamespaces())
+                yield return ns;
     }
 
     public override void Write(StringBuilder sb, int indent = 0)

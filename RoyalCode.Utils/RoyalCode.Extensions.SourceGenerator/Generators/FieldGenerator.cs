@@ -29,7 +29,7 @@ public class FieldGenerator : GeneratorNode, IWithNamespaces
 
     public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(indent);
+        sb.Indent(indent);
         modifiers?.Write(sb);
         sb.Append(Type.Name).Append(' ').Append(Name);
 

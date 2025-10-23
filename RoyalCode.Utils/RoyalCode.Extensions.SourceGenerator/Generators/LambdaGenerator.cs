@@ -43,9 +43,9 @@ public class LambdaGenerator : GeneratorNode
             else
             {
                 sb.AppendLine();
-                sb.Ident(indent).AppendLine("{");
+                sb.Indent(indent).AppendLine("{");
                 commands.Write(sb, indent + 1);
-                sb.Ident(indent).AppendLine("}");
+                sb.Indent(indent).AppendLine("}");
             }
         }
         else

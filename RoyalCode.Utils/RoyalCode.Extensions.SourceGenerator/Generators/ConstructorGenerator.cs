@@ -27,7 +27,7 @@ public class ConstructorGenerator : GeneratorNode
     public override void Write(StringBuilder sb, int indent = 0)
     {
         sb.AppendLine();
-        sb.Ident(indent);
+        sb.Indent(indent);
 
         modifiers?.Write(sb);
         
@@ -37,13 +37,13 @@ public class ConstructorGenerator : GeneratorNode
         baseParameters?.Write(sb, indent);
         
         sb.AppendLine();
-        sb.Ident(indent).Append('{');
+        sb.Indent(indent).Append('{');
         sb.AppendLine();
         
         int commandsIdent = indent + 1;
         commands?.Write(sb, commandsIdent);
         
-        sb.Ident(indent).Append('}');
+        sb.Indent(indent).Append('}');
         sb.AppendLine();
     }
 }

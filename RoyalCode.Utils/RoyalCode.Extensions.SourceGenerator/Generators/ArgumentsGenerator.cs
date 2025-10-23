@@ -45,13 +45,13 @@ public class ArgumentsGenerator : GeneratorNode, IWithNamespaces
             if (first)
             {
                 if (!InLine)
-                    sb.AppendLine().IdentPlus(indent);
+                    sb.AppendLine().IndentPlus(indent);
                 first = false;
             }
             else
             {
                 if (!InLine)
-                    sb.AppendLine(",").IdentPlus(indent);
+                    sb.AppendLine(",").IndentPlus(indent);
                 else
                     sb.Append(", ");
             }

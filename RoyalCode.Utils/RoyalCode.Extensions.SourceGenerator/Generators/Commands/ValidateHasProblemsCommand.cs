@@ -13,11 +13,11 @@ public class ValidateHasProblemsCommand : GeneratorNode
 
     public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(indent);
+        sb.Indent(indent);
         sb.Append("if (");
         sb.Append(identifier).Append(".HasProblems(out var validationProblems)");
         sb.AppendLine(")");
-        sb.IdentPlus(indent);
+        sb.IndentPlus(indent);
         sb.AppendLine("return validationProblems;");
         sb.AppendLine();
     }

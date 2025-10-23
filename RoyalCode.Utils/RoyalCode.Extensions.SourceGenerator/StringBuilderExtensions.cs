@@ -6,7 +6,7 @@ namespace RoyalCode.Extensions.SourceGenerator;
 public static class StringBuilderExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static StringBuilder Ident(this StringBuilder builder, int level)
+    public static StringBuilder Indent(this StringBuilder builder, int level)
     {
         for (int i = 0; i < level; i++)
             builder.Append("    ");
@@ -15,8 +15,8 @@ public static class StringBuilderExtensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static StringBuilder IdentPlus(this StringBuilder builder, int level)
+    public static StringBuilder IndentPlus(this StringBuilder builder, int level)
     {
-        return builder.Ident(level).Append("    ");
+        return builder.Indent(level).Append("    ");
     }
 }

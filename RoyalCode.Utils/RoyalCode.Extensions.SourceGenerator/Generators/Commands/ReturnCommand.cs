@@ -15,7 +15,7 @@ public class ReturnCommand : GeneratorNode
 
     public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(indent).Append("return ").Append(valueNode.GetValue(indent)).Append(";");
+        sb.Indent(indent).Append("return ").Append(valueNode.GetValue(indent)).Append(";");
 
         if (AppendLine)
             sb.AppendLine();

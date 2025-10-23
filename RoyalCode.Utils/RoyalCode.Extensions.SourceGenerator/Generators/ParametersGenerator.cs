@@ -62,7 +62,7 @@ public class ParametersGenerator : GeneratorNode, IWithNamespaces
         if (parameters is not null)
         {
             if (!InLine)
-                sb.AppendLine().IdentPlus(indent);
+                sb.AppendLine().IndentPlus(indent);
 
             var first = true;
             foreach(var p in parameters)
@@ -73,7 +73,7 @@ public class ParametersGenerator : GeneratorNode, IWithNamespaces
                 {
                     sb.Append(", ");
                     if (!InLine)
-                        sb.AppendLine().IdentPlus(indent);
+                        sb.AppendLine().IndentPlus(indent);
                 }
 
                 p.Write(sb);

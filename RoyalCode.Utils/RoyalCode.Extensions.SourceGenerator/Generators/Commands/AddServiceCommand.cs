@@ -25,7 +25,7 @@ public class AddServiceCommand : GeneratorNode, IWithNamespaces
 
     public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(indent);
+        sb.Indent(indent);
 
         sb.Append(servicesVarName).Append(".AddTransient<")
             .Append(serviceTypeDescriptor.InterfaceType.Name).Append(", ")

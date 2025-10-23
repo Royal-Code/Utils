@@ -17,7 +17,7 @@ public class WhereGenerator : GeneratorNode
     public override void Write(StringBuilder sb, int indent = 0)
     {
         sb.AppendLine()
-            .Ident(indent)
+            .Indent(indent)
             .Append("where ").Append(Argument).Append(" : ").Append(Type);
     }
 }

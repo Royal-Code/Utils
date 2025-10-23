@@ -22,7 +22,7 @@ public sealed class Command : GeneratorNode
     public override void Write(StringBuilder sb, int indent = 0)
     {
         if (Idented)
-            sb.Ident(indent);
+            sb.Indent(indent);
 
         if (Await)
             sb.Append("await ");

@@ -49,7 +49,7 @@ public class MethodInvokeGenerator : GeneratorNode, IWithNamespaces
         sb.Append(identifier.GetValue(indent));
 
         if (LineIdent)
-            sb.AppendLine().IdentPlus(indent);
+            sb.AppendLine().IndentPlus(indent);
 
         sb.Append(".").Append(method);
 

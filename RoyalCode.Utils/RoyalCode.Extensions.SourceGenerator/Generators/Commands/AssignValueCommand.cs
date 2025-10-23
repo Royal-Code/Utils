@@ -24,7 +24,7 @@ public class AssignValueCommand : GeneratorNode
 
     public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(indent).Append(left.GetValue(indent)).Append(" = ").Append(right.GetValue(indent)).AppendLine(";");
+        sb.Indent(indent).Append(left.GetValue(indent)).Append(" = ").Append(right.GetValue(indent)).AppendLine(";");
 
         if (AppendLine)
             sb.AppendLine();
