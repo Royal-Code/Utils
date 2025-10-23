@@ -16,12 +16,12 @@ public class LambdaGenerator : GeneratorNode
 
     public bool InLine { get; set; }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         if (Async)
             sb.Append("async ");
 
-        Parameters.Write(sb, ident);
+        Parameters.Write(sb, indent);
 
         sb.Append(" => ");
 
@@ -43,14 +43,14 @@ public class LambdaGenerator : GeneratorNode
             else
             {
                 sb.AppendLine();
-                sb.Ident(ident).AppendLine("{");
-                commands.Write(sb, ident + 1);
-                sb.Ident(ident).AppendLine("}");
+                sb.Ident(indent).AppendLine("{");
+                commands.Write(sb, indent + 1);
+                sb.Ident(indent).AppendLine("}");
             }
         }
         else
         {
-            commands.Write(sb, ident);
+            commands.Write(sb, indent);
         }
     }
 }

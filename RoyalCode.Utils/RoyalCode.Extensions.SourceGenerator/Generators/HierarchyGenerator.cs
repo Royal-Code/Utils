@@ -33,7 +33,7 @@ public class HierarchyGenerator : GeneratorNode, IWithNamespaces
                 yield return ns;
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         if (extends is null && implements is null)
             return;

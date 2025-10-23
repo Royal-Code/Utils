@@ -13,9 +13,9 @@ public class ReturnCommand : GeneratorNode
         this.valueNode = valueNode ?? throw new ArgumentNullException(nameof(valueNode));
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(ident).Append("return ").Append(valueNode.GetValue(ident)).Append(";");
+        sb.Ident(indent).Append("return ").Append(valueNode.GetValue(indent)).Append(";");
 
         if (AppendLine)
             sb.AppendLine();

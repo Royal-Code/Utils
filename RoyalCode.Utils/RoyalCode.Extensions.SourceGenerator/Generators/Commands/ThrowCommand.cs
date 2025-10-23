@@ -20,14 +20,14 @@ public class ThrowCommand : GeneratorNode, IWithNamespaces
 
     public ParametersGenerator Parameters => parameters ??= new ParametersGenerator();
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(ident);
+        sb.Ident(indent);
         sb.Append("throw new ").Append(exceptionType.Name);
         if (parameters is null)
             sb.Append("()");
         else
-            parameters.Write(sb, ident);
+            parameters.Write(sb, indent);
         sb.AppendLine(";");
     }
 

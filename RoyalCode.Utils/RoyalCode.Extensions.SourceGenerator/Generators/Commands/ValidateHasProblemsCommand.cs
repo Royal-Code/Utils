@@ -11,13 +11,13 @@ public class ValidateHasProblemsCommand : GeneratorNode
         this.identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(ident);
+        sb.Ident(indent);
         sb.Append("if (");
         sb.Append(identifier).Append(".HasProblems(out var validationProblems)");
         sb.AppendLine(")");
-        sb.IdentPlus(ident);
+        sb.IdentPlus(indent);
         sb.AppendLine("return validationProblems;");
         sb.AppendLine();
     }

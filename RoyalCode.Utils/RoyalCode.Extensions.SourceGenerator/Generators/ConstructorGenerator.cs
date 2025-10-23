@@ -24,26 +24,26 @@ public class ConstructorGenerator : GeneratorNode
 
     public string Name { get; set; }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         sb.AppendLine();
-        sb.Ident(ident);
+        sb.Ident(indent);
 
         modifiers?.Write(sb);
         
         sb.Append(Name);
         parameters?.Write(sb);
         
-        baseParameters?.Write(sb, ident);
+        baseParameters?.Write(sb, indent);
         
         sb.AppendLine();
-        sb.Ident(ident).Append('{');
+        sb.Ident(indent).Append('{');
         sb.AppendLine();
         
-        int commandsIdent = ident + 1;
+        int commandsIdent = indent + 1;
         commands?.Write(sb, commandsIdent);
         
-        sb.Ident(ident).Append('}');
+        sb.Ident(indent).Append('}');
         sb.AppendLine();
     }
 }

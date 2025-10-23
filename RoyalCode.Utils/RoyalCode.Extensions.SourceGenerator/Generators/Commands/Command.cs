@@ -19,15 +19,15 @@ public sealed class Command : GeneratorNode
 
     public bool Idented { get; set; } = true;
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         if (Idented)
-            sb.Ident(ident);
+            sb.Ident(indent);
 
         if (Await)
             sb.Append("await ");
 
-        generatorNode.Write(sb, ident);
+        generatorNode.Write(sb, indent);
 
         if (InLine)
         {

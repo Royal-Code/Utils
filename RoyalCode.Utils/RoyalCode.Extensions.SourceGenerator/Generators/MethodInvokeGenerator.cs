@@ -41,18 +41,18 @@ public class MethodInvokeGenerator : GeneratorNode, IWithNamespaces
 
     public void UseArgumentPerLine() => arguments.InLine = false;
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         if (Await)
             sb.Append("await ");
 
-        sb.Append(identifier.GetValue(ident));
+        sb.Append(identifier.GetValue(indent));
 
         if (LineIdent)
-            sb.AppendLine().IdentPlus(ident);
+            sb.AppendLine().IdentPlus(indent);
 
         sb.Append(".").Append(method);
 
-        arguments.Write(sb, ident + (LineIdent ? 1: 0));
+        arguments.Write(sb, indent + (LineIdent ? 1: 0));
     }
 }

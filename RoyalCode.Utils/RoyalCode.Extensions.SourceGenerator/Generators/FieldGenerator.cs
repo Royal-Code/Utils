@@ -27,14 +27,14 @@ public class FieldGenerator : GeneratorNode, IWithNamespaces
         }
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(ident);
+        sb.Ident(indent);
         modifiers?.Write(sb);
         sb.Append(Type.Name).Append(' ').Append(Name);
 
         if (Value is not null)
-            sb.Append(" = ").Append(Value.GetValue(ident));
+            sb.Append(" = ").Append(Value.GetValue(indent));
 
         sb.AppendLine(";");
     }

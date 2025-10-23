@@ -34,7 +34,7 @@ public class UsingsGenerator : GeneratorNode
         usings.AddRange(namespaces);
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         var toWrite = usings
             .Where(ns => ns is not null && ns.Length > 0)

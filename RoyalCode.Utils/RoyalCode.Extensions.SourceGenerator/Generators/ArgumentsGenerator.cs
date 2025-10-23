@@ -30,7 +30,7 @@ public class ArgumentsGenerator : GeneratorNode, IWithNamespaces
                     yield return ns;
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         sb.Append("(");
         if (arguments is null)
@@ -45,18 +45,18 @@ public class ArgumentsGenerator : GeneratorNode, IWithNamespaces
             if (first)
             {
                 if (!InLine)
-                    sb.AppendLine().IdentPlus(ident);
+                    sb.AppendLine().IdentPlus(indent);
                 first = false;
             }
             else
             {
                 if (!InLine)
-                    sb.AppendLine(",").IdentPlus(ident);
+                    sb.AppendLine(",").IdentPlus(indent);
                 else
                     sb.Append(", ");
             }
 
-            sb.Append(arg.GetValue(ident));
+            sb.Append(arg.GetValue(indent));
         }
 
         sb.Append(")");

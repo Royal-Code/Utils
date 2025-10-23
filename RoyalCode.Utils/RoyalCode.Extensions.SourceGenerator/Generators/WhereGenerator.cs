@@ -14,10 +14,10 @@ public class WhereGenerator : GeneratorNode
 
     public string Type { get; set; }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         sb.AppendLine()
-            .Ident(ident)
+            .Ident(indent)
             .Append("where ").Append(Argument).Append(" : ").Append(Type);
     }
 }

@@ -117,7 +117,7 @@ public class ModifiersGenerator : GeneratorNode
 
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         if (modifiers is null or { Count: 0 })
             return;

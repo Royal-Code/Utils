@@ -1,6 +1,4 @@
-﻿// Ignore Spelling: ident
-
-using RoyalCode.Extensions.SourceGenerator.Descriptors;
+﻿using RoyalCode.Extensions.SourceGenerator.Descriptors;
 using System.Text;
 
 namespace RoyalCode.Extensions.SourceGenerator.Generators;
@@ -77,13 +75,13 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
                 yield return ns;
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         sb.AppendLine();
         
-        attributes?.Write(sb, ident);
+        attributes?.Write(sb, indent);
         
-        sb.Ident(ident);
+        sb.Ident(indent);
         modifiers?.Write(sb);
         
         sb.Append(ReturnType.Name).Append(' ');
@@ -95,9 +93,9 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
         if (parameters is null)
             sb.Append("()");
         else
-            parameters.Write(sb, ident);
+            parameters.Write(sb, indent);
 
-        where?.Write(sb, ident + 1);
+        where?.Write(sb, indent + 1);
 
         if (IsAbstract)
         {
@@ -105,7 +103,7 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
             return;
         }
 
-        baseParameters?.Write(sb, ident);
+        baseParameters?.Write(sb, indent);
 
         if (commands is null)
         {
@@ -116,18 +114,18 @@ public class MethodGenerator : GeneratorNode, IWithNamespaces
         if (UseArrow)
         {
             sb.Append(" => ");
-            commands.Write(sb, ident + 1);
+            commands.Write(sb, indent + 1);
         }
         else
         {
             sb.AppendLine();
-            sb.Ident(ident).Append('{');
+            sb.Ident(indent).Append('{');
             sb.AppendLine();
 
-            int commandsIdent = ident + 1;
+            int commandsIdent = indent + 1;
             commands.Write(sb, commandsIdent);
 
-            sb.Ident(ident).Append('}');
+            sb.Ident(indent).Append('}');
             sb.AppendLine();
         }
     }

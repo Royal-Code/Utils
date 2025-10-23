@@ -31,7 +31,7 @@ public class GenericsGenerator : GeneratorNode, IWithNamespaces
         }
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         if (generics is null)
             return;

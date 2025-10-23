@@ -9,5 +9,5 @@ public sealed class StringValueNode : ValueNode
         this.value = value;
     }
 
-    public override string GetValue(int ident) => value;
+    public override string GetValue(int indent) => value;
 }

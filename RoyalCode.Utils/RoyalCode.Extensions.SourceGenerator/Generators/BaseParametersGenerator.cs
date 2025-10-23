@@ -12,13 +12,13 @@ public class BaseParametersGenerator : GeneratorNode
         parameters.Add(parameter);
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         if (parameters is null)
             return;
 
         sb.AppendLine()
-            .IdentPlus(ident)
+            .IdentPlus(indent)
             .Append(" : base (");
 
         bool first = true;

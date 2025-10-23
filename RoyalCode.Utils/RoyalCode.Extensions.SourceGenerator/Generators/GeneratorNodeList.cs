@@ -28,7 +28,7 @@ public class GeneratorNodeList : GeneratorNode, IWithNamespaces
                     yield return ns;
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         if (nodes is null)
             return;
@@ -47,7 +47,7 @@ public class GeneratorNodeList : GeneratorNode, IWithNamespaces
             }
             else
             {
-                node.Write(sb, ident);
+                node.Write(sb, indent);
             }
         }
     }

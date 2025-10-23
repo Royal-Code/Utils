@@ -22,9 +22,9 @@ public class AssignValueCommand : GeneratorNode
         this.right = right;
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(ident).Append(left.GetValue(ident)).Append(" = ").Append(right.GetValue(ident)).AppendLine(";");
+        sb.Ident(indent).Append(left.GetValue(indent)).Append(" = ").Append(right.GetValue(indent)).AppendLine(";");
 
         if (AppendLine)
             sb.AppendLine();

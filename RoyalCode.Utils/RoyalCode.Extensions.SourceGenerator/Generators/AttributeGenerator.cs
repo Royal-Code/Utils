@@ -36,9 +36,9 @@ public class AttributeGenerator : GeneratorNode, IWithNamespaces
             yield return namespaces[i];
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(ident)
+        sb.Ident(indent)
             .Append('[')
             .Append(name);
         

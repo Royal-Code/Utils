@@ -56,13 +56,13 @@ public class ParametersGenerator : GeneratorNode, IWithNamespaces
                     yield return ns;
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
         sb.Append('(');
         if (parameters is not null)
         {
             if (!InLine)
-                sb.AppendLine().IdentPlus(ident);
+                sb.AppendLine().IdentPlus(indent);
 
             var first = true;
             foreach(var p in parameters)
@@ -73,7 +73,7 @@ public class ParametersGenerator : GeneratorNode, IWithNamespaces
                 {
                     sb.Append(", ");
                     if (!InLine)
-                        sb.AppendLine().IdentPlus(ident);
+                        sb.AppendLine().IdentPlus(indent);
                 }
 
                 p.Write(sb);

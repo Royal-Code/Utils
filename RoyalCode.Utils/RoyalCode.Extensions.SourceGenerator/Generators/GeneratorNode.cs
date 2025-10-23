@@ -14,5 +14,5 @@ namespace RoyalCode.Extensions.SourceGenerator.Generators;
 /// </summary>
 public abstract class GeneratorNode
 {
-    public abstract void Write(StringBuilder sb, int ident = 0);
+    public abstract void Write(StringBuilder sb, int indent = 0);
 }

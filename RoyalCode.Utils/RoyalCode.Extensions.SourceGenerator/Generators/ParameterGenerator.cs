@@ -7,7 +7,8 @@ public class ParameterGenerator : GeneratorNode, IWithNamespaces
 {
     private readonly ParameterDescriptor parameter;
     private readonly ValueNode? defaultValue;
-    
+    private GeneratorNodeList? attributes;
+
     public ParameterGenerator(ParameterDescriptor parameter, ValueNode? defaultValue = null)
     {
         this.parameter = parameter;
@@ -15,6 +16,8 @@ public class ParameterGenerator : GeneratorNode, IWithNamespaces
     }
 
     public bool ThisModifier { get; set; }
+
+    public GeneratorNodeList Attributes => attributes ??= new();
 
     public ParameterDescriptor ParameterDescriptor => parameter;
 
@@ -35,13 +38,19 @@ public class ParameterGenerator : GeneratorNode, IWithNamespaces
                 yield return ns;
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
+        if (attributes is not null && attributes.Count > 0)
+        {
+            attributes.Write(sb, indent);
+            sb.Append(' ');
+        }
+
         if (ThisModifier)
             sb.Append("this ");
 
         sb.Append(parameter.Type.Name).Append(' ').Append(parameter.Name);
         if (defaultValue is not null)
-            sb.Append(" = ").Append(defaultValue.GetValue(ident));
+            sb.Append(" = ").Append(defaultValue.GetValue(indent));
     }
 }

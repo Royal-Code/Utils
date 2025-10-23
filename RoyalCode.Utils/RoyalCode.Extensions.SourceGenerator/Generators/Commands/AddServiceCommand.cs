@@ -23,9 +23,9 @@ public class AddServiceCommand : GeneratorNode, IWithNamespaces
         yield return "Microsoft.Extensions.DependencyInjection";
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
-        sb.Ident(ident);
+        sb.Ident(indent);
 
         sb.Append(servicesVarName).Append(".AddTransient<")
             .Append(serviceTypeDescriptor.InterfaceType.Name).Append(", ")

@@ -43,9 +43,9 @@ public sealed class IfCommand : GeneratorNode, IWithNamespaces
         }
     }
 
-    public override void Write(StringBuilder sb, int ident = 0)
+    public override void Write(StringBuilder sb, int indent = 0)
     {
-        int localIdent = Idented ? ident : 0;
+        int localIdent = Idented ? indent : 0;
 
         sb.Ident(localIdent);
         sb.Append("if (").Append(condition.GetValue(localIdent)).Append(")");

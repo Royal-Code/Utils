@@ -19,13 +19,13 @@ public class GeneratorValueNode : ValueNode, IWithNamespaces
                 yield return ns;
     }
 
-    public override string GetValue(int ident)
+    public override string GetValue(int indent)
     {
         if (cachedValue is not null)
             return cachedValue;
 
         var sb = new StringBuilder();
-        generatorNode.Write(sb, ident);
+        generatorNode.Write(sb, indent);
         cachedValue = sb.ToString();
 
         return cachedValue;
