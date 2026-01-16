@@ -47,6 +47,11 @@ public class MatchOptions
     public ITargetPropertiesRetriever TargetPropertiesRetriever { get; set; } = new DefaultTargetPropertiesRetriever();
 
     /// <summary>
+    /// Additional property name resolvers to be used during property matching.
+    /// </summary>
+    public IPropertyNameResolver[]? PropertyNameResolvers { get; set; }
+
+    /// <summary>
     /// Gets or sets the collection of additional assign descriptor resolvers to be used during assignment operations.
     /// <br />
     /// Optional; if not set, only the default resolvers will be used.

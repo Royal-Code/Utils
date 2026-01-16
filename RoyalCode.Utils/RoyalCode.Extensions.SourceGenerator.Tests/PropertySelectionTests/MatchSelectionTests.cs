@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.CodeAnalysis;
 using RoyalCode.Extensions.SourceGenerator.Descriptors;
+using RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments;
 using RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
 namespace RoyalCode.Extensions.SourceGenerator.Tests.PropertySelectionTests;
@@ -24,8 +25,14 @@ public class MatchSelectionTests
 
         var model = compilation.GetSemanticModel(compilation.SyntaxTrees.First());
 
+        var options = MatchOptions.Default;
+        options.PropertyNameResolvers = new IPropertyNameResolver[]
+        {
+            new MapFromPropertyNameResolver()
+        };
+
         // Act (criação do MatchSelection)
-        return MatchSelection.Create(originDescriptor, targetDescriptor, model);
+        return MatchSelection.Create(originDescriptor, targetDescriptor, model, options);
     }
 
     [Fact]
@@ -153,6 +160,22 @@ public class MatchSelectionTests
         deepMatch.Target!.WritePropertyPath(sb);
         Assert.Equal("Level1.Level2.Name", sb.ToString());
     }
+
+    [Fact]
+    public void CustomNameMatch()
+    {
+        // Arrange + Act
+        var match = BuildMatchSelection(Code.BaseSource, "CustomNameFoo", "TargetBar");
+        var customNameMatch = match.PropertyMatches.First(p => p.Origin.Name == "CustomName");
+
+        // Assert
+        Assert.False(customNameMatch.IsMissing);
+
+        var sb = new StringBuilder();
+        customNameMatch.Target!.WritePropertyPath(sb);
+        Assert.Equal("Name", sb.ToString());
+    }
+
 }
 
 
@@ -257,6 +280,41 @@ internal static partial class Code
             {
                 public string Level1Level2Name { get; set; }
             }
+
+            public class MapFromAttribute : Attribute
+            {
+                public string TargetPropertyName { get; }
+
+                public MapFromAttribute(string targetPropertyName)
+                {
+                    TargetPropertyName = targetPropertyName;
+                }
+
+            }
+
+            public class CustomNameFoo
+            {
+                [MapFrom("Name")]
+                public string CustomName { get; set; }
+            }
         }
         """;
+}
+
+file class MapFromPropertyNameResolver : IPropertyNameResolver
+{
+    public bool TryResolvePropertyName(IPropertySymbol propertySymbol, out string? resolvedName)
+    {
+        var mapFromAttribute = propertySymbol.GetAttributes()
+            .FirstOrDefault(attr => attr.AttributeClass?.Name == "MapFromAttribute");
+
+        if (mapFromAttribute != null && mapFromAttribute.ConstructorArguments.Length == 1)
+        {
+            resolvedName = mapFromAttribute.ConstructorArguments[0].Value as string;
+            return true;
+        }
+
+        resolvedName = null;
+        return false;
+    }
 }

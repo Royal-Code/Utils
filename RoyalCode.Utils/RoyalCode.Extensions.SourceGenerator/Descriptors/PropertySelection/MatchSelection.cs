@@ -33,8 +33,23 @@ public class MatchSelection : IEquatable<MatchSelection>
 
         foreach (var originProperty in originProperties)
         {
+            // determina o nome da propriedade de origem a ser procurada no target
+            string originPropertyName = null;
+            if (options.PropertyNameResolvers is not null && originProperty.Symbol is not null)
+            {
+                foreach (var resolver in options.PropertyNameResolvers)
+                {
+                    if (resolver.TryResolvePropertyName(originProperty.Symbol, out var resolvedName))
+                    {
+                        originPropertyName = resolvedName!;
+                        break;
+                    }
+                }
+            }
+            originPropertyName ??= originProperty.Name;
+
             // para cada propriedade, seleciona a propriedade correspondente no target
-            var targetSelection = PropertySelection.Select(originProperty, targetType);
+            var targetSelection = PropertySelection.Select(originPropertyName, targetType);
 
             // se a propriedade for encontrada, avalia os tipos entre elas e a forma de atribuíção.
             AssignDescriptor? assignDescriptor = targetSelection is not null
