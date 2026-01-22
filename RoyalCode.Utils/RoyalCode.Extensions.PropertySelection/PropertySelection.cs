@@ -55,6 +55,11 @@ public class PropertySelection
     public string PropertyName => info.Name;
 
     /// <summary>
+    /// The current selected property info.
+    /// </summary>
+    public PropertyInfo Info => info;
+
+    /// <summary>
     /// <para>
     ///     Creates a new property selection from a <see cref="PropertyInfo"/>.
     /// </para>
