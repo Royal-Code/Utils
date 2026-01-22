@@ -18,7 +18,7 @@ jobs:
           dotnet-version: '10.0.x'
       
       - name: Build and pack
-        run: sudo /home/runner/.dotnet/dotnet build ./RoyalCode.Utils/RoyalCode.Extensions.PropertySelection/RoyalCode.Extensions.PropertySelection.csproj -c Release
+        run: dotnet build ./RoyalCode.Utils/RoyalCode.Extensions.PropertySelection/RoyalCode.Extensions.PropertySelection.csproj -c Release
     
       - name: publish nuget package
-        run: sudo /home/runner/.dotnet/dotnet nuget push ./RoyalCode.Utils/RoyalCode.Extensions.PropertySelection/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./RoyalCode.Utils/RoyalCode.Extensions.PropertySelection/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
