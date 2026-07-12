@@ -1,0 +1,438 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RoyalCode.Extensions.SourceGenerator</name>
+    </assembly>
+    <members>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.Direct">
+            <summary>
+            Direct assignment, no conversion needed.
+            </summary>
+            <remarks>
+            Example:
+            <code>
+                Name = e.Name,
+                UserName = e.User.Name,
+            </code>
+            </remarks>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.SimpleCast">
+            <summary>
+            Simple cast, no conversion needed.
+            </summary>
+            <remarks>
+            Example:
+            <code>
+                Status = (Status)e.Status,
+                UserStatus = (Status)e.User.Status,
+            </code>
+            </remarks>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.NullableTernary">
+            <summary>
+            Represents a nullable assignment performed using a ternary operator.
+            This allows for conditional assignment based on the presence of a value.
+            </summary>
+            <remarks>
+            Example:
+            <code>
+                LastLogin = e.LastLogin.HasValue ? e.LastLogin.Value : default,
+            </code>
+            </remarks>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.NullableTernaryCast">
+            <summary>
+            Represents a nullable assignment performed using a ternary operator with a cast.
+            This allows for conditional assignment based on the presence of a value.
+            </summary>
+            <remarks>
+            Example:
+            <code>
+                LastLogin = e.LastLogin.HasValue ? (DateTime)e.LastLogin.Value : default,
+            </code>
+            </remarks>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.NewInstance">
+            <summary>
+            It is required to create a new object for the target property type,
+            mapping the properties between the two objects.
+            </summary>
+            <remarks>
+            Example:
+            <code>
+                CreatedBy = new UserDto
+                {
+                    Name = a.CreatedBy.Name
+                },
+            </code>
+            </remarks>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.Select">
+            <summary>
+            It is required to apply the Select method to the target property type,
+            to transform the elements accordingly.
+            </summary>
+            <remarks>
+            Example:
+            <code>
+                Posts = e.Posts.Select(p => new PostDto
+                {
+                    Title = p.Title,
+                    Content = p.Content
+                }),
+            </code>
+            </remarks>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.IPropertyNameResolver">
+            <summary>
+            Resolves property names for given property symbols.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.IPropertyNameResolver.TryResolvePropertyName(Microsoft.CodeAnalysis.IPropertySymbol,System.String@)">
+            <summary>
+            Tries to resolve the property name for the given property symbol.
+            </summary>
+            <param name="symbol">The property symbol to resolve the name for.</param>
+            <param name="propertyName">The resolved property name, if successful; otherwise, null.</param>
+            <returns>True if the property name was successfully resolved; otherwise, false.</returns>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions">
+            <summary>
+            Provides configuration options for controlling how property values are retrieved and compared during a match
+            operation.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions.InternalDefault">
+            <summary>
+            Internal default instance of <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions"/>.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions.Default">
+            <summary>
+            Creates a new instance of <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions"/> with default settings.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions.GetOriginProperties(RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor)">
+            <summary>
+            Default method to retrieve properties from the origin type.
+            Util when overriding the default retriever is not necessary.
+            </summary>
+            <param name="origin"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions.GetTargetProperties(RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor)">
+            <summary>
+            Default method to retrieve properties from the target type.
+            Util when overriding the default retriever is not necessary.
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions.OriginPropertiesRetriever">
+            <summary>
+            The retriever used to obtain properties from the origin type.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions.TargetPropertiesRetriever">
+            <summary>
+            The retriever used to obtain properties from the target type.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions.PropertyNameResolvers">
+            <summary>
+            Additional property name resolvers to be used during property matching.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions.AdditionalAssignDescriptorResolvers">
+            <summary>
+            Gets or sets the collection of additional assign descriptor resolvers to be used during assignment operations.
+            <br />
+            Optional; if not set, only the default resolvers will be used.
+            </summary>
+            <remarks>
+                Use this property to specify custom resolvers that extend or override the default assignment behavior.
+                The order of resolvers in the array may affect resolution precedence.
+            </remarks>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchTypeInfo">
+            <summary>
+            Represent a type and its properties that can be matched to another type.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchTypeInfo.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor,System.Collections.Generic.IReadOnlyList{RoyalCode.Extensions.SourceGenerator.Descriptors.PropertyDescriptor},RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions)">
+            <summary>
+            Creates a new instance of <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchTypeInfo"/>.
+            </summary>
+            <param name="type">The type descriptor.</param>
+            <param name="properties">The properties of the type.</param>
+            <param name="options">The match options used to retrieve the properties.</param>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchTypeInfo.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor)">
+            <summary>
+            Initializes a new instance of the MatchTypeInfo class for the specified target type descriptor.
+            </summary>
+            <remarks>
+                The constructed instance uses the default match options and retrieves the target type's
+                properties using the default property retriever.
+                This ensures consistent matching behavior across instances.
+            </remarks>
+            <param name="targetType">
+                The type descriptor representing the target type for which matching information will be constructed.
+                Cannot be null.
+            </param>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchTypeInfo.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor,System.Collections.Generic.IReadOnlyList{RoyalCode.Extensions.SourceGenerator.Descriptors.PropertyDescriptor})">
+            <summary>
+            Initializes a new instance of the MatchTypeInfo class with the specified type descriptor and property
+            descriptors.
+            </summary>
+            <param name="type">The type descriptor representing the type to be matched.</param>
+            <param name="properties">A read-only list of property descriptors that define the properties associated with the type.</param>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchTypeInfo.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor,RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchOptions)">
+            <summary>
+            Initializes a new instance of the MatchTypeInfo class using the specified type descriptor and matching options.
+            </summary>
+            <param name="targetType">The type descriptor representing the target type for which property matching information will be generated.
+            Cannot be null.</param>
+            <param name="options">The options that configure property matching behavior, including how target properties are retrieved. Cannot be
+            null.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchTypeInfo.Type">
+            <summary>
+            The type descriptor of the current type.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchTypeInfo.Properties">
+            <summary>
+            The properties of the current type.
+            </summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch">
+            <summary>
+            A result of matching a property from the origin type to a property in the target type.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertyDescriptor,RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection,RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignDescriptor)">
+            <summary>
+            A result of matching a property from the origin type to a property in the target type.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch.Origin">
+            <summary>
+            The origin property type descriptor. (DTO property)
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch.Target">
+            <summary>
+            The target property selection. (Entity property)
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch.AssignDescriptor">
+            <summary>
+            The assign descriptor that describes how to assign the origin property to the target property.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch.IsMissing">
+            <summary>
+            Determines if the target property selection is missing.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch.CanAssign">
+            <summary>
+            Determine if the properties are compatible and has a valid assign descriptor.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection.PropertyType">
+            <summary>
+            The current selected property type.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection.RootDeclaringType">
+            <summary>
+            The declaring class type of the root selected property.
+            if this selection does not have a parent, this selection will be the root.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection.Parent">
+            <summary>
+            The parent <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection"/>. Can be null.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection.WritePropertyPath(System.Text.StringBuilder)">
+            <summary>
+            Writes the property path to a <see cref="T:System.Text.StringBuilder"/>.
+            </summary>
+            <param name="sb"></param>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection.FlattenedPropertyPath">
+            <summary>
+            Returns a flattened string representation of the property path by concatenating the names of all properties in
+            the path.
+            </summary>
+            <examples>
+                Given a property path like "Address.Street.Name", this method will return "AddressStreetName".
+            </examples>
+            <returns>
+                A <see cref="T:System.String"/> that represents the flattened property path.
+            </returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection.ToEnumerablePath">
+            <summary>
+            Returns an enumerable sequence representing the path from the root to the current property selection.
+            </summary>
+            <remarks>
+                The returned sequence includes all ancestor property selections, followed by the current instance. 
+                This can be used to traverse or analyze the full selection path in hierarchical scenarios.
+            </remarks>
+            <returns>
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing each property selection in the path,
+                ordered from the root to the current instance.
+            </returns>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.NullableAnnotation">
+            <summary>
+            The nullable annotation of the type reference, captured from the symbol when available.
+            It is additional data: the <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.Name"/> is not modified by this annotation.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.GenericType">
+            <summary>
+            Get the generic type name if the type is generic, otherwise returns the type name itself.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.GetGenericTypes">
+            <summary>
+            Gets all generic type names or empty if it is not a generic type.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.IsGenericType">
+            <summary>
+            Checks if the type is a generic type. A generic type is defined as one that contains <c>&lt;</c> and <c>&gt;</c>
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.ChangeGenericType(System.String[],System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="genericTypeNames"></param>
+            <param name="namespaces"></param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.ExtensionMethods.SplitUpperCase(System.String)">
+            <summary>
+            Splits pascal case, so "FooBar" would become [ "Foo", "Bar" ].
+            </summary>
+            <param name="name">A string, thats represents a name of something, to be splited.</param>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.ExtensionMethods.TryGetEnumerableGenericType(Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.ITypeSymbol@)">
+            <summary>
+            Attempts to get the generic argument type of an <see cref="T:System.Collections.Generic.IEnumerable`1"/>-like type.
+            </summary>
+            <param name="typeSymbol">The symbol to inspect.</param>
+            <param name="underlyingType">The generic type argument <c>T</c>.</param>
+            <returns>
+                Returns <c>true</c> if the symbol represents or implements <see cref="T:System.Collections.Generic.IEnumerable`1"/>,
+                otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.ExtensionMethods.TryReadStringValue(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,System.String@)">
+            <summary>
+            <para>
+                Attempts to extract a string value from the specified expression syntax node.
+            </para>
+            </summary>
+            <remarks>
+                This method supports string literal expressions and 'nameof' invocations with a single argument.
+                For unsupported expression types, the method returns false and sets <paramref name="value"/>
+                to an empty string.
+            </remarks>
+            <param name="expr">
+                The expression syntax node to analyze for a string value.
+                Supported expressions include string literals and 'nameof' invocations.
+            </param>
+            <param name="value">
+                When this method returns <see langword="true"/>, contains the extracted string value; 
+                otherwise, contains an empty string.
+            </param>
+            <returns>
+                true if a string value was successfully extracted from the expression; otherwise, false.
+            </returns>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Generators.ClassGenerator">
+            <summary>
+            <para>
+                Represents a generator for creating C# class definitions, including support for namespaces,
+                attributes, modifiers, generics, hierarchy, and members such as fields, constructors, properties, and methods.
+            </para>
+            <para>
+                This class provides functionality to construct and generate source code for a C# class dynamically.
+            </para> 
+            <para>
+                It implements <see cref="T:RoyalCode.Extensions.SourceGenerator.Generators.ITransformationGenerator"/>,
+                which causes this node to generate a .cs file of the class, using the nodes added to the class.
+            </para>
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Generators.ClassGenerator.FileName">
+            <summary>
+            Nome do arquivo que será gerado, opcional, será utilizado o padrão: <c>"{Name}.g.cs"</c>.
+            </summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Generators.GeneratorNode">
+            <summary>
+            <para>
+                Represents a node for code generation.
+            </para>
+            <para>
+                A node can be a class, namespace, property, method, command, etc.
+                <br />
+                A node is a complete piece of code. For divisions in snippets, there is the <see cref="T:RoyalCode.Extensions.SourceGenerator.Generators.ValueNode"/>.
+            </para>
+            </summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Generators.ITransformationGenerator">
+            <summary>
+            <para>
+                Defines a contract for generating transformations within a source production context.
+            </para>
+            </summary>
+            <remarks>
+                Implementations of this interface are responsible for producing transformations or outputs based on
+                the provided <see cref="T:Microsoft.CodeAnalysis.SourceProductionContext"/>.
+                This is typically used in source generators to contribute additional code or artifacts during compilation.
+            </remarks>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Generators.ITransformationGenerator`1">
+            <summary>
+            <para>
+                Defines a contract for generating transformations within a source production context.
+            </para>
+            </summary>
+            <remarks>
+                Implementations of this interface are responsible for producing transformations or outputs based on
+                the provided <see cref="T:Microsoft.CodeAnalysis.SourceProductionContext"/>.
+                This is typically used in source generators to contribute additional code or artifacts during compilation.
+            </remarks>
+            <typeparam name="TModel">Type of models used to generate sources </typeparam>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Generators.PocoGenerator.FileName">
+            <summary>
+            Nome do arquivo que será gerado, opcional, será utilizado o padrão: <c>"{Name}.g.cs"</c>.
+            </summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Generators.ValueNode">
+            <summary>
+                Represents an abstract base class for nodes that encapsulate a value.
+            </summary>
+            <remarks>
+                The <see cref="T:RoyalCode.Extensions.SourceGenerator.Generators.ValueNode"/> class provides a common interface for derived classes that represent
+                specific types of values. It supports implicit conversion from <see langword="string"/> and 
+                <see cref="T:RoyalCode.Extensions.SourceGenerator.Generators.GeneratorNode"/> to their respective derived types.
+            </remarks>
+        </member>
+    </members>
+</doc>

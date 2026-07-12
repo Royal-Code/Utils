@@ -15,9 +15,14 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
         var name = typeSyntax.ToString();
         bool isNullable = false;
 
+        // na forma sintática a anotação nullable é derivada do texto do tipo
+        var nullableAnnotation = name.Length > 0 && name[name.Length - 1] == '?'
+            ? NullableAnnotation.Annotated
+            : NullableAnnotation.None;
+
         var typeInfo = model.GetTypeInfo(typeSyntax);
         if (typeInfo.Type is null)
-            return new(name, typeSyntax.GetNamespaces(model).ToArray(), null!, isNullable);
+            return new(name, typeSyntax.GetNamespaces(model).ToArray(), null!, isNullable, nullableAnnotation);
 
         var namedTypeSymbol = typeInfo.Type as INamedTypeSymbol;
 
@@ -26,7 +31,7 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
             isNullable = namedTypeSymbol?.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
         }
 
-        return new(name, typeSyntax.GetNamespaces(model).ToArray(), typeInfo.Type, isNullable);
+        return new(name, typeSyntax.GetNamespaces(model).ToArray(), typeInfo.Type, isNullable, nullableAnnotation);
     }
 
     public static TypeDescriptor Create(ITypeSymbol typeSymbol)
@@ -58,7 +63,9 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
             }
         }
 
-        return new(name, namespaces, typeSymbol, isNullable);
+        // preserva a anotação nullable do símbolo como dado do descritor;
+        // o Name não é alterado para não interferir em correspondências por nome
+        return new(name, namespaces, typeSymbol, isNullable, typeSymbol.NullableAnnotation);
     }
 
     public static TypeDescriptor CancellationToken(SemanticModel model)
@@ -103,12 +110,18 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
 
     private List<string>? hints;
 
-    public TypeDescriptor(string name, string[] namespaces, ITypeSymbol? symbol = null, bool isNullable = false)
+    public TypeDescriptor(
+        string name,
+        string[] namespaces,
+        ITypeSymbol? symbol = null,
+        bool isNullable = false,
+        NullableAnnotation nullableAnnotation = NullableAnnotation.None)
     {
         Name = name;
         Namespaces = namespaces;
         IsNullable = isNullable;
         Symbol = symbol;
+        NullableAnnotation = nullableAnnotation;
     }
 
     public string Name { get; }
@@ -120,6 +133,12 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
     public ITypeSymbol? Symbol { get; }
 
     public bool IsNullable { get; }
+
+    /// <summary>
+    /// The nullable annotation of the type reference, captured from the symbol when available.
+    /// It is additional data: the <see cref="Name"/> is not modified by this annotation.
+    /// </summary>
+    public NullableAnnotation NullableAnnotation { get; }
 
 
     public void AddHint(string hint)
@@ -297,6 +316,7 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
         return Name == other.Name &&
                Namespaces.SequenceEqual(other.Namespaces) &&
                IsNullable == other.IsNullable &&
+               NullableAnnotation == other.NullableAnnotation &&
                (DefinedProperties is null
                    ? other.DefinedProperties is null
                    : other.DefinedProperties is not null &&
@@ -316,6 +336,7 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
         foreach (var ns in Namespaces)
             hashCode = hashCode * -1521134295 + ns.GetHashCode();
         hashCode = hashCode * -1521134295 + IsNullable.GetHashCode();
+        hashCode = hashCode * -1521134295 + NullableAnnotation.GetHashCode();
         if (DefinedProperties is null)
         {
             hashCode = hashCode * -1521134295;
