@@ -34,7 +34,7 @@ public class MatchSelection : IEquatable<MatchSelection>
         foreach (var originProperty in originProperties)
         {
             // determina o nome da propriedade de origem a ser procurada no target
-            string originPropertyName = null;
+            string? originPropertyName = null;
             if (options.PropertyNameResolvers is not null && originProperty.Symbol is not null)
             {
                 foreach (var resolver in options.PropertyNameResolvers)
@@ -120,6 +120,7 @@ public class MatchSelection : IEquatable<MatchSelection>
             return true;
 
         return originType.Equals(other.originType) &&
+               targetType.Equals(other.targetType) &&
                propertyMatches.SequenceEqual(other.propertyMatches);
     }
 
@@ -131,8 +132,10 @@ public class MatchSelection : IEquatable<MatchSelection>
     public override int GetHashCode()
     {
         int hashCode = -1794252460;
-        hashCode = hashCode * -1521134295 + EqualityComparer<TypeDescriptor>.Default.GetHashCode(originType);
-        hashCode = hashCode * -1521134295 + EqualityComparer<IReadOnlyList<PropertyMatch>>.Default.GetHashCode(propertyMatches);
+        hashCode = hashCode * -1521134295 + originType.GetHashCode();
+        hashCode = hashCode * -1521134295 + targetType.GetHashCode();
+        foreach (var propertyMatch in propertyMatches)
+            hashCode = hashCode * -1521134295 + propertyMatch.GetHashCode();
         return hashCode;
     }
 }

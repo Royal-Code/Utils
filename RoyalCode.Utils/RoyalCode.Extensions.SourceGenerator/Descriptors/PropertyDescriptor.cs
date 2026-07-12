@@ -40,7 +40,7 @@ public sealed class PropertyDescriptor : IEquatable<PropertyDescriptor>
 
     public override bool Equals(object? obj)
     {
-        return obj is ParameterDescriptor other && Equals(other);
+        return obj is PropertyDescriptor other && Equals(other);
 
     }
 

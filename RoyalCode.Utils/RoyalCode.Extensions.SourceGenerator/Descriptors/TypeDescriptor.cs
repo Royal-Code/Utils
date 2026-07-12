@@ -61,58 +61,40 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
         return new(name, namespaces, typeSymbol, isNullable);
     }
 
-    private static TypeDescriptor? cancellationToken;
     public static TypeDescriptor CancellationToken(SemanticModel model)
     {
-        if (cancellationToken is not null && cancellationToken.Symbol is not null)
-            return cancellationToken;
-
         var name = "CancellationToken";
         var namespaces = new[] { "System.Threading" };
         var symbol = model.Compilation.GetTypeByMetadataName("System.Threading.CancellationToken")
             ?? throw new InvalidOperationException($"Type '{name}' not found in the compilation.");
 
-        cancellationToken = new(name, namespaces, symbol, false);
-        return cancellationToken;
+        return new(name, namespaces, symbol, false);
     }
 
     public static TypeDescriptor CancellationToken()
     {
-        if (cancellationToken is not null)
-            return cancellationToken;
-
         var name = "CancellationToken";
         var namespaces = new[] { "System.Threading" };
 
-        cancellationToken = new(name, namespaces, null, false);
-        return cancellationToken;
+        return new(name, namespaces, null, false);
     }
 
-    private static TypeDescriptor? voidTypeDescriptor;
     public static TypeDescriptor Void(SemanticModel model)
     {
-        if (voidTypeDescriptor is not null && voidTypeDescriptor.Symbol is not null)
-            return voidTypeDescriptor;
-
         var name = "void";
         var namespaces = new[] { "System" };
         var symbol = model.Compilation.GetSpecialType(SpecialType.System_Void)
             ?? throw new InvalidOperationException($"Type '{name}' not found in the compilation.");
 
-        voidTypeDescriptor = new(name, namespaces, symbol, false);
-        return voidTypeDescriptor;
+        return new(name, namespaces, symbol, false);
     }
 
     public static TypeDescriptor Void()
     {
-        if (voidTypeDescriptor is not null)
-            return voidTypeDescriptor;
-
         var name = "void";
         var namespaces = new[] { "System" };
 
-        voidTypeDescriptor = new(name, namespaces);
-        return voidTypeDescriptor;
+        return new(name, namespaces);
     }
 
     public static TypeDescriptor Object { get; } = new("object", ["System"]);
@@ -314,8 +296,11 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
 
         return Name == other.Name &&
                Namespaces.SequenceEqual(other.Namespaces) &&
-               (DefinedProperties == null && other.DefinedProperties == null ||
-               DefinedProperties.SequenceEqual(other.DefinedProperties));
+               IsNullable == other.IsNullable &&
+               (DefinedProperties is null
+                   ? other.DefinedProperties is null
+                   : other.DefinedProperties is not null &&
+                     DefinedProperties.SequenceEqual(other.DefinedProperties));
 
     }
 
@@ -328,8 +313,19 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
     {
         int hashCode = -353132481;
         hashCode = hashCode * -1521134295 + Name.GetHashCode();
-        hashCode = hashCode * -1521134295 + Namespaces.GetHashCode();
-        hashCode = hashCode * -1521134295 + (DefinedProperties != null ? DefinedProperties.GetHashCode() : 0);
+        foreach (var ns in Namespaces)
+            hashCode = hashCode * -1521134295 + ns.GetHashCode();
+        hashCode = hashCode * -1521134295 + IsNullable.GetHashCode();
+        if (DefinedProperties is null)
+        {
+            hashCode = hashCode * -1521134295;
+        }
+        else
+        {
+            hashCode = hashCode * -1521134295 + 1;
+            foreach (var property in DefinedProperties)
+                hashCode = hashCode * -1521134295 + property.GetHashCode();
+        }
         return hashCode;
     }
 
