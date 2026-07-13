@@ -290,6 +290,12 @@
                 ordered from the root to the current instance.
             </returns>
         </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory">
+            <summary>
+            Creates immutable, symbol-free snapshots of property matching results for safe
+            retention by incremental generator pipelines.
+            </summary>
+        </member>
         <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.NullableAnnotation">
             <summary>
             The nullable annotation of the type reference, captured from the symbol when available.
