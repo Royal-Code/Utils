@@ -27,6 +27,7 @@ public class ClassGenerator : ITransformationGenerator, IWithNamespaces
     private GeneratorNodeList? constructors;
     private GeneratorNodeList? properties;
     private GeneratorNodeList? methods;
+    private List<ContainingTypeGenerator>? containingTypes;
 
     public ClassGenerator(string name, string ns, string typeType = "class")
     {
@@ -58,6 +59,12 @@ public class ClassGenerator : ITransformationGenerator, IWithNamespaces
     public GeneratorNodeList Properties => properties ??= new();
 
     public GeneratorNodeList Methods => methods ??= new();
+
+    /// <summary>
+    /// Gets the containing type declarations, ordered from the outermost type to the
+    /// type that directly contains this generated class.
+    /// </summary>
+    public IList<ContainingTypeGenerator> ContainingTypes => containingTypes ??= [];
 
     /// <summary>
     /// Nome do arquivo que será gerado, opcional, será utilizado o padrão: <c>"{Name}.g.cs"</c>.
@@ -92,6 +99,10 @@ public class ClassGenerator : ITransformationGenerator, IWithNamespaces
 
     public IEnumerable<string> GetNamespaces()
     {
+        if (containingTypes is not null)
+            foreach (var containingType in containingTypes)
+                foreach (var ns in containingType.GetNamespaces())
+                    yield return ns;
         if (attributes is not null)
             foreach (var ns in attributes.GetNamespaces())
                 yield return ns;
@@ -131,6 +142,12 @@ public class ClassGenerator : ITransformationGenerator, IWithNamespaces
         sb.Append("namespace ").Append(Namespace).AppendLine(";");
         sb.AppendLine();
 
+        if (containingTypes is { Count: > 0 })
+        {
+            WriteNested(sb);
+            return;
+        }
+
         attributes?.Write(sb);
         modifiers?.Write(sb);
         sb.Append(TypeType).Append(" ").Append(Name);
@@ -153,5 +170,46 @@ public class ClassGenerator : ITransformationGenerator, IWithNamespaces
         methods?.Write(sb, 1);
 
         sb.AppendLine("}");
+    }
+
+    private void WriteNested(StringBuilder sb)
+    {
+        var indent = 0;
+        foreach (var containingType in containingTypes!)
+        {
+            containingType.WriteOpening(sb, indent);
+            indent++;
+        }
+
+        attributes?.Write(sb, indent);
+        sb.Indent(indent);
+        modifiers?.Write(sb);
+        sb.Append(TypeType).Append(" ").Append(Name);
+
+        generics?.Write(sb);
+        hierarchy?.Write(sb);
+        where?.Write(sb, indent + 1);
+
+        sb.AppendLine();
+        sb.Indent(indent).Append("{");
+
+        if (fields is not null)
+        {
+            sb.AppendLine();
+            fields.Write(sb, indent + 1);
+        }
+
+        constructors?.Write(sb, indent + 1);
+        properties?.Write(sb, indent + 1);
+        methods?.Write(sb, indent + 1);
+
+        sb.AppendLine();
+        sb.Indent(indent).AppendLine("}");
+
+        for (var i = containingTypes!.Count - 1; i >= 0; i--)
+        {
+            indent--;
+            sb.Indent(indent).AppendLine("}");
+        }
     }
 }
