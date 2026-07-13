@@ -10,14 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: sudo dotnet restore ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj
-    - name: Build and pack
-      run: sudo dotnet build ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj --no-restore -c Release
-    - name: Publish
-      run: sudo dotnet nuget push ./RoyalCode.Utils/RoyalCode.Tasks/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: sudo dotnet restore ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj
+
+      - name: Build and pack
+        run: sudo dotnet build ./RoyalCode.Utils/RoyalCode.Tasks/RoyalCode.Tasks.csproj --no-restore -c Release
+
+      - name: Publish
+        run: sudo dotnet nuget push ./RoyalCode.Utils/RoyalCode.Tasks/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
