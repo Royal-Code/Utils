@@ -23,7 +23,7 @@ internal class InnerTypeAssignDescriptorResolver : IAssignDescriptorResolver
         // (Capacity, Count, this[]...) em vez de projetar os elementos. Se o resolver de enumeráveis
         // não deu conta do tipo, a propriedade deve ficar como não-assinável (e ser reportada),
         // e não silenciosamente virar um NewInstance sem sentido.
-        if (leftNamedSymbol.TryGetEnumerableGenericType(out _))
+        if (leftType.IsCollection)
             return false;
 
         // obtém propriedades do tipo de origem

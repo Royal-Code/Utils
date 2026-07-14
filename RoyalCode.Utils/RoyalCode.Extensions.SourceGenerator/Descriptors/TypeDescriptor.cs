@@ -192,9 +192,28 @@ public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
 
     public bool MayBeNull => IsNullable || Name[Name.Length - 1] == '?';
 
-    public bool IsArray => Name.EndsWith("[]") || Name.EndsWith("[]?");
+    /// <summary>
+    /// Whether the type is an array (<c>T[]</c>).
+    /// </summary>
+    public bool IsArray => Symbol is not null
+        ? Symbol is IArrayTypeSymbol
+        : Name.EndsWith("[]") || Name.EndsWith("[]?");
 
-    public bool IsEnumerable => Name.StartsWith("IEnumerable<") || Name.Equals("IEnumerable");
+    /// <summary>
+    /// Whether the type is the enumerable interface itself (<c>IEnumerable&lt;T&gt;</c> or <c>IEnumerable</c>),
+    /// and not merely a type implementing it. See <see cref="IsCollection"/> for the latter.
+    /// </summary>
+    public bool IsEnumerable => Symbol is not null
+        ? Symbol.IsEnumerableInterface()
+        : Name.StartsWith("IEnumerable<") || Name.Equals("IEnumerable");
+
+    /// <summary>
+    /// Whether the type is a collection, that is, an array or any type implementing <c>IEnumerable&lt;T&gt;</c>
+    /// (including <c>IEnumerable&lt;T&gt;</c> itself). Strings are not considered collections.
+    /// </summary>
+    public bool IsCollection => Symbol is not null
+        && Symbol.SpecialType != SpecialType.System_String
+        && Symbol.TryGetEnumerableGenericType(out _);
 
     public string UnderlyingType => IsNullable || Name[Name.Length - 1] == '?' ? Name.Substring(0, Name.Length - 1) : Name;
 
