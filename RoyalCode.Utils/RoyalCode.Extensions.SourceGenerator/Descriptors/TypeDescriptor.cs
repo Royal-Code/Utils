@@ -6,6 +6,23 @@ namespace RoyalCode.Extensions.SourceGenerator.Descriptors;
 
 #pragma warning disable S3358 // Ternary operators should not be nested
 
+/// <summary>
+/// <para>
+///     Describes a type during matching and code generation.
+/// </para>
+/// <para>
+///     It implements <see cref="IEquatable{T}"/> because the matching logic compares types structurally
+///     (by name, namespaces and nullability — never by symbol). That equality is <em>not</em> a licence to use
+///     it in an incremental generator pipeline: it holds a <see cref="ISymbol"/> (see <see cref="Symbol"/>),
+///     which keeps the whole <see cref="Compilation"/> alive between builds, and its hints
+///     (see <see cref="MarkAsEntity"/> and friends) are mutable and excluded from equality.
+/// </para>
+/// <para>
+///     For anything the pipeline retains, use
+///     <see cref="Snapshots.MatchSelectionSnapshotFactory.Create(PropertySelection.MatchSelection)"/>
+///     and pass the resulting snapshot along — it is immutable, symbol-free and has value equality.
+/// </para>
+/// </summary>
 public sealed class TypeDescriptor : IEquatable<TypeDescriptor>
 {
     #region Factories

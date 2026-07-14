@@ -5,11 +5,44 @@ using RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots;
 
 /// <summary>
-/// Creates immutable, symbol-free snapshots of property matching results for safe
-/// retention by incremental generator pipelines.
+/// <para>
+///     Creates immutable, symbol-free snapshots of property matching results for safe
+///     retention by incremental generator pipelines.
+/// </para>
+/// <para>
+///     This is the boundary between the two models. <see cref="MatchSelection"/> and the descriptors it
+///     carries (<see cref="TypeDescriptor"/>, <see cref="PropertyDescriptor"/>, <c>AssignDescriptor</c>) are
+///     the working model of the matching: they hold Roslyn symbols and mutable state, so retaining them in a
+///     pipeline keeps the whole <c>Compilation</c> alive and makes caching unreliable. The snapshots are the
+///     pipeline model: immutable, symbol-free, with value equality all the way down.
+/// </para>
+/// <para>
+///     So resolve the match inside the transform, snapshot it, and let only the snapshot escape:
+/// </para>
+/// <code>
+///     var provider = context.SyntaxProvider
+///         .ForAttributeWithMetadataName(
+///             "Some.AttributeName",
+///             static (node, _) => node is TypeDeclarationSyntax,
+///             static (ctx, _) =>
+///             {
+///                 // modelo de trabalho: símbolos, vivo apenas dentro do transform
+///                 var selection = MatchSelection.Create(origin, target, ctx.SemanticModel);
+///
+///                 // modelo do pipeline: sem símbolos, comparável entre builds
+///                 return MatchSelectionSnapshotFactory.Create(selection);
+///             });
+///
+///     context.RegisterSourceOutput(provider, static (spc, snapshot) => Generate(spc, snapshot));
+/// </code>
 /// </summary>
 public static class MatchSelectionSnapshotFactory
 {
+    /// <summary>
+    /// Creates the snapshot of a matching result, to be retained by an incremental generator pipeline.
+    /// </summary>
+    /// <param name="selection">The matching result, which holds symbols and must not escape the transform.</param>
+    /// <returns>An immutable, symbol-free snapshot with value equality.</returns>
     public static MatchSelectionSnapshot Create(MatchSelection selection) =>
         Create(selection, Array.Empty<PropertySnapshot>());
 
@@ -27,17 +60,7 @@ public static class MatchSelectionSnapshotFactory
 
             AssignmentSnapshot? assignment = null;
             if (match.AssignDescriptor is { } descriptor)
-            {
-                var innerParent = descriptor.AssignType == AssignType.NewInstance && target is not null
-                    ? target.Properties
-                    : Array.Empty<PropertySnapshot>();
-                assignment = new AssignmentSnapshot(
-                    descriptor.AssignType,
-                    descriptor.Materialization,
-                    descriptor.InnerSelection is null
-                        ? null
-                        : Create(descriptor.InnerSelection, innerParent));
-            }
+                assignment = CreateAssignment(descriptor, target);
 
             return new PropertyMatchSnapshot(
                 PropertySnapshot.Create(match.Origin),
@@ -49,6 +72,29 @@ public static class MatchSelectionSnapshotFactory
             TypeSnapshot.Create(selection.OriginType),
             TypeSnapshot.Create(selection.TargetType),
             matches);
+    }
+
+    private static AssignmentSnapshot CreateAssignment(
+        AssignDescriptor descriptor,
+        PropertyPathSnapshot? target)
+    {
+        // apenas o NewInstance projeta sobre o caminho da propriedade de destino;
+        // os demais (inclusive o assignment do elemento de um Select) partem da raiz.
+        var innerParent = descriptor.AssignType == AssignType.NewInstance && target is not null
+            ? target.Properties
+            : Array.Empty<PropertySnapshot>();
+
+        return new AssignmentSnapshot(
+            descriptor.AssignType,
+            descriptor.Materialization,
+            descriptor.InnerSelection is null
+                ? null
+                : Create(descriptor.InnerSelection, innerParent),
+            // o assignment do elemento é relativo ao parâmetro do lambda do Select,
+            // e não ao caminho da propriedade de destino: por isso não herda o target.
+            descriptor.ElementAssignment is null
+                ? null
+                : CreateAssignment(descriptor.ElementAssignment, null));
     }
 }
 
@@ -331,11 +377,13 @@ public sealed class AssignmentSnapshot : IEquatable<AssignmentSnapshot>
     public AssignmentSnapshot(
         AssignType assignType,
         CollectionMaterialization materialization,
-        MatchSelectionSnapshot? innerSelection)
+        MatchSelectionSnapshot? innerSelection,
+        AssignmentSnapshot? elementAssignment = null)
     {
         AssignType = assignType;
         Materialization = materialization;
         InnerSelection = innerSelection;
+        ElementAssignment = elementAssignment;
     }
 
     public AssignType AssignType { get; }
@@ -346,17 +394,25 @@ public sealed class AssignmentSnapshot : IEquatable<AssignmentSnapshot>
 
     public MatchSelectionSnapshot? InnerSelection { get; }
 
+    /// <summary>
+    /// For <see cref="AssignType.Select"/>, how each element must be assigned. See
+    /// <see cref="Assignments.AssignDescriptor.ElementAssignment"/>.
+    /// </summary>
+    public AssignmentSnapshot? ElementAssignment { get; }
+
     public bool Equals(AssignmentSnapshot? other) =>
         other is not null &&
         AssignType == other.AssignType &&
         Materialization == other.Materialization &&
-        Equals(InnerSelection, other.InnerSelection);
+        Equals(InnerSelection, other.InnerSelection) &&
+        Equals(ElementAssignment, other.ElementAssignment);
 
     public override bool Equals(object? obj) => obj is AssignmentSnapshot other && Equals(other);
 
     public override int GetHashCode() =>
-        (((int)AssignType * 397) ^ (int)Materialization) * 397 ^
-        (InnerSelection?.GetHashCode() ?? 0);
+        ((((int)AssignType * 397) ^ (int)Materialization) * 397 ^
+        (InnerSelection?.GetHashCode() ?? 0)) * 397 ^
+        (ElementAssignment?.GetHashCode() ?? 0);
 }
 
 public sealed class PropertyMatchSnapshot : IEquatable<PropertyMatchSnapshot>

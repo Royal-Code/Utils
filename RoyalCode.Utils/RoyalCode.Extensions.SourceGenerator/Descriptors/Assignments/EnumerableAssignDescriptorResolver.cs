@@ -54,6 +54,7 @@ internal class EnumerableAssignDescriptorResolver : IAssignDescriptorResolver
                 AssignType = requireSelect ? AssignType.Select : AssignType.Direct,
                 Materialization = materialization,
                 InnerSelection = genericAssignment?.InnerSelection,
+                ElementAssignment = genericAssignment,
             };
         return true;
     }

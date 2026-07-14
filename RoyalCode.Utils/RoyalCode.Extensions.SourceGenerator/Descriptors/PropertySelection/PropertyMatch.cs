@@ -3,9 +3,17 @@
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
 /// <summary>
-/// A result of matching a property from the origin type to a property in the target type.
+/// <para>
+///     A result of matching a property from the origin type to a property in the target type.
+/// </para>
+/// <para>
+///     Holds Roslyn symbols and mutable state. Do not retain it in an incremental generator pipeline, and do
+///     not use it as a cache key: it has no value equality. Convert the matching result with
+///     <see cref="Snapshots.MatchSelectionSnapshotFactory.Create(MatchSelection)"/> and feed the pipeline with
+///     the resulting snapshot instead.
+/// </para>
 /// </summary>
-public class PropertyMatch(PropertyDescriptor origin, PropertySelection? target, AssignDescriptor? assignDescriptor) : IEquatable<PropertyMatch>
+public class PropertyMatch(PropertyDescriptor origin, PropertySelection? target, AssignDescriptor? assignDescriptor)
 {
     /// <summary>
     /// The origin property type descriptor. (DTO property)
@@ -31,32 +39,4 @@ public class PropertyMatch(PropertyDescriptor origin, PropertySelection? target,
     /// Determine if the properties are compatible and has a valid assign descriptor.
     /// </summary>
     public bool CanAssign => AssignDescriptor is not null && !IsMissing;
-
-    public bool Equals(PropertyMatch other)
-    {
-        if (other is null)
-            return false;
-        
-        if (ReferenceEquals(this, other))
-            return true;
-
-        return Origin.Equals(other.Origin) &&
-            Equals(Target, other.Target) &&
-            Equals(AssignDescriptor, other.AssignDescriptor);
-
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is PropertyMatch other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        int hashCode = -1013312977;
-        hashCode = hashCode * -1521134295 + EqualityComparer<PropertyDescriptor>.Default.GetHashCode(Origin);
-        hashCode = hashCode * -1521134295 + EqualityComparer<PropertySelection?>.Default.GetHashCode(Target);
-        hashCode = hashCode * -1521134295 + EqualityComparer<AssignDescriptor?>.Default.GetHashCode(AssignDescriptor);
-        return hashCode;
-    }
 }

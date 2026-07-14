@@ -2,7 +2,19 @@
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments;
 
-public class AssignDescriptor : IEquatable<AssignDescriptor>
+/// <summary>
+/// <para>
+///     Describes how to assign a property, as resolved during matching. Mutable, and part of a tree that
+///     holds Roslyn symbols (through <see cref="InnerSelection"/>).
+/// </para>
+/// <para>
+///     Do not retain it in an incremental generator pipeline, and do not use it as a cache key: it has no
+///     value equality. Convert the matching result with
+///     <see cref="Snapshots.MatchSelectionSnapshotFactory.Create(PropertySelection.MatchSelection)"/> and
+///     feed the pipeline with the resulting snapshot instead.
+/// </para>
+/// </summary>
+public class AssignDescriptor
 {
     public AssignType AssignType { get; set; }
 
@@ -18,33 +30,16 @@ public class AssignDescriptor : IEquatable<AssignDescriptor>
 
     public MatchSelection? InnerSelection { get; set; }
 
-    public bool Equals(AssignDescriptor other)
-    {
-        if (other is null)
-            return false;
-
-        if (ReferenceEquals(this, other))
-            return true;
-
-        return AssignType == other.AssignType &&
-            Materialization == other.Materialization &&
-            Equals(InnerSelection, other.InnerSelection);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (obj is not AssignDescriptor other)
-            return false;
-
-        return Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        int hashCode = -2066519001;
-        hashCode = hashCode * -1521134295 + AssignType.GetHashCode();
-        hashCode = hashCode * -1521134295 + Materialization.GetHashCode();
-        hashCode = hashCode * -1521134295 + (InnerSelection?.GetHashCode() ?? 0);
-        return hashCode;
-    }
+    /// <summary>
+    /// <para>
+    ///     For <see cref="AssignType.Select"/>, how each element of the enumerable must be assigned.
+    /// </para>
+    /// <para>
+    ///     When the elements are objects to be mapped, this is a <see cref="AssignType.NewInstance"/>
+    ///     carrying the <see cref="InnerSelection"/>. When they only need a conversion
+    ///     (e.g. <c>List&lt;int&gt;</c> to <c>List&lt;long&gt;</c>), this is the conversion of the element
+    ///     (<see cref="AssignType.SimpleCast"/>, <see cref="AssignType.Direct"/>...) and there is no inner selection.
+    /// </para>
+    /// </summary>
+    public AssignDescriptor? ElementAssignment { get; set; }
 }

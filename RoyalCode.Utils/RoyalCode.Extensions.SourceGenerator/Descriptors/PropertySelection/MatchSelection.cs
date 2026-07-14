@@ -3,7 +3,27 @@ using RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments;
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
-public class MatchSelection : IEquatable<MatchSelection>
+/// <summary>
+/// <para>
+///     The result of matching the properties of an origin type against a target type.
+/// </para>
+/// <para>
+///     This is the working model of the matching: it holds Roslyn symbols (which would keep the whole
+///     <see cref="Compilation"/> alive) and mutable state, so it must not cross into an incremental generator
+///     pipeline, nor be used as a cache key — it has no value equality.
+/// </para>
+/// <para>
+///     Use it while resolving the match, then convert it with
+///     <see cref="Snapshots.MatchSelectionSnapshotFactory.Create(MatchSelection)"/>. The resulting
+///     <see cref="Snapshots.MatchSelectionSnapshot"/> is immutable, symbol-free and has value equality, which
+///     is what the pipeline needs to cache and compare between builds:
+/// </para>
+/// <code>
+///     var snapshot = MatchSelectionSnapshotFactory.Create(matchSelection);
+///     // snapshot pode ser retornado de um provider e comparado entre builds
+/// </code>
+/// </summary>
+public class MatchSelection
 {
     #region Factory
 
@@ -111,31 +131,4 @@ public class MatchSelection : IEquatable<MatchSelection>
         }
     }
 
-    public bool Equals(MatchSelection other)
-    {
-        if (other is null)
-            return false;
-        
-        if (ReferenceEquals(this, other))
-            return true;
-
-        return originType.Equals(other.originType) &&
-               targetType.Equals(other.targetType) &&
-               propertyMatches.SequenceEqual(other.propertyMatches);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is MatchSelection other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        int hashCode = -1794252460;
-        hashCode = hashCode * -1521134295 + originType.GetHashCode();
-        hashCode = hashCode * -1521134295 + targetType.GetHashCode();
-        foreach (var propertyMatch in propertyMatches)
-            hashCode = hashCode * -1521134295 + propertyMatch.GetHashCode();
-        return hashCode;
-    }
 }

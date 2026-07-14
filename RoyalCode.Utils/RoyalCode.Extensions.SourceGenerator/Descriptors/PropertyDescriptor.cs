@@ -3,6 +3,18 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors;
 
+/// <summary>
+/// <para>
+///     Describes a property during matching and code generation.
+/// </para>
+/// <para>
+///     It implements <see cref="IEquatable{T}"/> for the matching logic (comparing name and type, never the
+///     symbol), but it holds a <see cref="IPropertySymbol"/> and therefore must not be retained by an
+///     incremental generator pipeline. Use
+///     <see cref="Snapshots.MatchSelectionSnapshotFactory.Create(PropertySelection.MatchSelection)"/> and pass
+///     the resulting symbol-free snapshot along instead.
+/// </para>
+/// </summary>
 public sealed class PropertyDescriptor : IEquatable<PropertyDescriptor>
 {
     public static PropertyDescriptor Create(PropertyDeclarationSyntax syntax, SemanticModel model)

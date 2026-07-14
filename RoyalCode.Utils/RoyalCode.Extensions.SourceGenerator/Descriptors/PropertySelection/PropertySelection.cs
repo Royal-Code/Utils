@@ -2,7 +2,19 @@
 
 namespace RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection;
 
-public class PropertySelection : IEquatable<PropertySelection>
+/// <summary>
+/// <para>
+///     A property, or a path of properties, selected on the target type.
+/// </para>
+/// <para>
+///     Holds Roslyn symbols, and its <see cref="Parent"/> is assigned after construction (see
+///     <see cref="WithParent"/>), so its state is not stable. Do not retain it in an incremental generator
+///     pipeline, and do not use it as a cache key: it has no value equality. Convert the matching result with
+///     <see cref="Snapshots.MatchSelectionSnapshotFactory.Create(MatchSelection)"/> and feed the pipeline with
+///     the resulting snapshot instead.
+/// </para>
+/// </summary>
+public class PropertySelection
 {
     private readonly PropertyDescriptor property;
 
@@ -160,30 +172,6 @@ public class PropertySelection : IEquatable<PropertySelection>
             Parent.WithParent(parent);
     }
 
-    public bool Equals(PropertySelection other)
-    {
-        if (other is null)
-            return false;
-
-        if (ReferenceEquals(this, other))
-            return true;
-
-        return property.Equals(other.property) &&
-            Equals(Parent, other.Parent);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is PropertySelection other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        int hashCode = 1750517797;
-        hashCode = hashCode * -1521134295 + EqualityComparer<PropertyDescriptor>.Default.GetHashCode(property);
-        hashCode = hashCode * -1521134295 + EqualityComparer<PropertySelection?>.Default.GetHashCode(Parent);
-        return hashCode;
-    }
 
 
 }
