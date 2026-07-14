@@ -150,8 +150,18 @@ public static class ExtensionMethods
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<string> GetNamespaces(this ITypeSymbol typeSymbol)
     {
-        var ns = typeSymbol.ContainingNamespace.ToDisplayString();
-        yield return ns;
+        // arrays não têm namespace próprio: o que importa é o namespace do tipo do elemento
+        if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
+        {
+            foreach (var n in arrayTypeSymbol.ElementType.GetNamespaces())
+                yield return n;
+
+            yield break;
+        }
+
+        var ns = typeSymbol.ContainingNamespace?.ToDisplayString();
+        if (ns is not null)
+            yield return ns;
 
         // se for generic, namespace dos tipos genéricos
         if (typeSymbol is not INamedTypeSymbol namedTypeSymbol)
@@ -542,6 +552,21 @@ public static class ExtensionMethods
 
         underlyingType = null;
         return false;
+    }
+
+    /// <summary>
+    /// Determines whether the symbol is the <see cref="IEnumerable{T}"/> interface itself
+    /// (or the non generic <see cref="System.Collections.IEnumerable"/>), and not merely a type implementing it.
+    /// </summary>
+    /// <param name="typeSymbol">The symbol to inspect.</param>
+    /// <returns>Returns <c>true</c> when the symbol is the enumerable interface itself.</returns>
+    public static bool IsEnumerableInterface(this ITypeSymbol typeSymbol)
+    {
+        if (typeSymbol.SpecialType == SpecialType.System_Collections_IEnumerable)
+            return true;
+
+        return typeSymbol is INamedTypeSymbol namedType
+            && namedType.ConstructedFrom.SpecialType == SpecialType.System_Collections_Generic_IEnumerable_T;
     }
 
     private static bool TryGetEnumerableGenericTypeCore(ITypeSymbol symbol, out ITypeSymbol? underlyingType)

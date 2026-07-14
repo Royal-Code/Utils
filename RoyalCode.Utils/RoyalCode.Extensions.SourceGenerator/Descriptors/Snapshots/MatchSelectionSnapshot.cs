@@ -33,7 +33,7 @@ public static class MatchSelectionSnapshotFactory
                     : Array.Empty<PropertySnapshot>();
                 assignment = new AssignmentSnapshot(
                     descriptor.AssignType,
-                    descriptor.RequireToList,
+                    descriptor.Materialization,
                     descriptor.InnerSelection is null
                         ? null
                         : Create(descriptor.InnerSelection, innerParent));
@@ -330,30 +330,32 @@ public sealed class AssignmentSnapshot : IEquatable<AssignmentSnapshot>
 {
     public AssignmentSnapshot(
         AssignType assignType,
-        bool requireToList,
+        CollectionMaterialization materialization,
         MatchSelectionSnapshot? innerSelection)
     {
         AssignType = assignType;
-        RequireToList = requireToList;
+        Materialization = materialization;
         InnerSelection = innerSelection;
     }
 
     public AssignType AssignType { get; }
 
-    public bool RequireToList { get; }
+    public CollectionMaterialization Materialization { get; }
+
+    public bool RequireToList => Materialization == CollectionMaterialization.List;
 
     public MatchSelectionSnapshot? InnerSelection { get; }
 
     public bool Equals(AssignmentSnapshot? other) =>
         other is not null &&
         AssignType == other.AssignType &&
-        RequireToList == other.RequireToList &&
+        Materialization == other.Materialization &&
         Equals(InnerSelection, other.InnerSelection);
 
     public override bool Equals(object? obj) => obj is AssignmentSnapshot other && Equals(other);
 
     public override int GetHashCode() =>
-        (((int)AssignType * 397) ^ RequireToList.GetHashCode()) * 397 ^
+        (((int)AssignType * 397) ^ (int)Materialization) * 397 ^
         (InnerSelection?.GetHashCode() ?? 0);
 }
 

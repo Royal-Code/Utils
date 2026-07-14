@@ -26,7 +26,6 @@ internal class EnumerableAssignDescriptorResolver : IAssignDescriptorResolver
 
         bool requireSelect = false;
         AssignDescriptor? genericAssignment = null;
-        bool requireToList;
 
         // se os tipos genéricos são iguais, não é necessário fazer a conversão
         // cas contrário, é necessário fazer a conversão
@@ -43,40 +42,85 @@ internal class EnumerableAssignDescriptorResolver : IAssignDescriptorResolver
             }
         }
 
-        // se o leftType não for um IEnumerable<T>, deve ser assinável por List<T>.
-        if (leftType.IsEnumerable)
+        // determina como o enumerável deve ser materializado para caber no tipo de destino
+        if (!TryResolveMaterialization(leftType.Symbol, leftGenericSymbol!, model, out var materialization))
         {
-            requireToList = false;
-        }
-        else
-        {
-            requireToList = true;
-
-            // checa se o leftType symbol pode receber um List<T>
-            var listType = model.Compilation.GetTypeByMetadataName("System.Collections.Generic.List`1");
-            if (listType is null)
-            {
-                descriptor = null;
-                return false;
-            }
-
-            var conversion = model.Compilation.ClassifyConversion(
-                listType,
-                leftType.Symbol);
-
-            if (!conversion.Exists)
-            {
-                descriptor = null;
-                return false;
-            }
+            descriptor = null;
+            return false;
         }
 
         descriptor = new AssignDescriptor()
             {
                 AssignType = requireSelect ? AssignType.Select : AssignType.Direct,
-                RequireToList = requireToList,
+                Materialization = materialization,
                 InnerSelection = genericAssignment?.InnerSelection,
             };
         return true;
+    }
+
+    /// <summary>
+    /// Descobre qual materialização (<c>ToList</c>, <c>ToArray</c>, <c>ToHashSet</c> ou nenhuma) produz um valor
+    /// assinável ao tipo de destino, testando a conversão implícita a partir do tipo concreto construído.
+    /// </summary>
+    private static bool TryResolveMaterialization(
+        ITypeSymbol leftSymbol,
+        ITypeSymbol leftGenericSymbol,
+        SemanticModel model,
+        out CollectionMaterialization materialization)
+    {
+        // o destino é o próprio IEnumerable<T>: aceita o enumerável como está.
+        if (leftSymbol.IsEnumerableInterface())
+        {
+            materialization = CollectionMaterialization.None;
+            return true;
+        }
+
+        var compilation = model.Compilation;
+
+        // array de destino (T[]): materializa com ToArray.
+        if (leftSymbol is IArrayTypeSymbol)
+        {
+            var arrayType = compilation.CreateArrayTypeSymbol(leftGenericSymbol);
+            if (compilation.ClassifyConversion(arrayType, leftSymbol).IsImplicit)
+            {
+                materialization = CollectionMaterialization.Array;
+                return true;
+            }
+
+            materialization = default;
+            return false;
+        }
+
+        // demais destinos: o primeiro tipo concreto que converte implicitamente vence.
+        // List<T> cobre List<T>, IList<T>, ICollection<T>, IReadOnlyList<T>, IReadOnlyCollection<T>;
+        // HashSet<T> cobre HashSet<T> e ISet<T>.
+        if (IsAssignableFromConstructed(compilation, "System.Collections.Generic.List`1", leftGenericSymbol, leftSymbol))
+        {
+            materialization = CollectionMaterialization.List;
+            return true;
+        }
+
+        if (IsAssignableFromConstructed(compilation, "System.Collections.Generic.HashSet`1", leftGenericSymbol, leftSymbol))
+        {
+            materialization = CollectionMaterialization.HashSet;
+            return true;
+        }
+
+        materialization = default;
+        return false;
+    }
+
+    private static bool IsAssignableFromConstructed(
+        Compilation compilation,
+        string metadataName,
+        ITypeSymbol genericArgument,
+        ITypeSymbol destination)
+    {
+        var definition = compilation.GetTypeByMetadataName(metadataName);
+        if (definition is null)
+            return false;
+
+        var constructed = definition.Construct(genericArgument);
+        return compilation.ClassifyConversion(constructed, destination).IsImplicit;
     }
 }
