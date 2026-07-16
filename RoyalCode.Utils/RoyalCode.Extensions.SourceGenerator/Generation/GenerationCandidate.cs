@@ -40,7 +40,8 @@ public readonly struct GenerationCandidate<TModel> : IEquatable<GenerationCandid
     /// <returns>A valid generation candidate.</returns>
     public static GenerationCandidate<TModel> Valid(TModel model, EquatableArray<DiagnosticInfo> diagnostics = default)
     {
-        ArgumentNullException.ThrowIfNull(model);
+        if (model is null)
+            throw new ArgumentNullException(nameof(model));
         return new GenerationCandidate<TModel>(model, diagnostics);
     }
 
@@ -58,7 +59,8 @@ public readonly struct GenerationCandidate<TModel> : IEquatable<GenerationCandid
     /// <returns>An invalid generation candidate.</returns>
     public static GenerationCandidate<TModel> Invalid(DiagnosticInfo diagnostic)
     {
-        ArgumentNullException.ThrowIfNull(diagnostic);
+        if (diagnostic is null)
+            throw new ArgumentNullException(nameof(diagnostic));
         return new GenerationCandidate<TModel>(null, new EquatableArray<DiagnosticInfo>(new[] { diagnostic }));
     }
 
