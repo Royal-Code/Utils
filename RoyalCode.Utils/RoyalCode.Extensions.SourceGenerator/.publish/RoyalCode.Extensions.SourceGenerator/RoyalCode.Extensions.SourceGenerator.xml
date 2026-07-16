@@ -4,6 +4,133 @@
         <name>RoyalCode.Extensions.SourceGenerator</name>
     </assembly>
     <members>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1">
+            <summary>
+            <para>
+                An immutable array with value equality by content and order, safe to retain in an incremental
+                generator pipeline (unlike <see cref="T:System.Collections.Immutable.ImmutableArray`1"/>, whose equality is by reference).
+            </para>
+            <para>
+                A <see langword="default"/> value and an empty array represent the same empty sequence: they compare
+                equal and share the same hash code. Absence with domain meaning must be modelled explicitly outside the
+                collection, not as <see langword="default"/> versus empty.
+            </para>
+            </summary>
+            <typeparam name="T">The element type, which must have value equality.</typeparam>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.Empty">
+            <summary>
+            The shared empty instance. Equivalent to <see langword="default"/>.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.#ctor(System.Collections.Immutable.ImmutableArray{`0})">
+            <summary>
+            Creates an <see cref="T:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1"/> from an <see cref="T:System.Collections.Immutable.ImmutableArray`1"/>.
+            A default or empty source becomes the empty sequence.
+            </summary>
+            <param name="items">The items to copy into the immutable sequence.</param>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.#ctor(`0[])">
+            <summary>
+            Creates an <see cref="T:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1"/> from an array. A <see langword="null"/> or empty source
+            becomes the empty sequence.
+            </summary>
+            <param name="items">The items to copy into the immutable sequence.</param>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Creates an <see cref="T:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1"/> from a sequence. A <see langword="null"/> or empty source
+            becomes the empty sequence.
+            </summary>
+            <param name="items">The items to copy into the immutable sequence.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.IsEmpty">
+            <summary>Whether this is the empty sequence.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.Count">
+            <inheritdoc />
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.Item(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.AsImmutableArray">
+            <summary>
+            Returns the content as an <see cref="T:System.Collections.Immutable.ImmutableArray`1"/> (empty when this is the empty sequence).
+            </summary>
+            <returns>An immutable copy of the sequence.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.Equals(RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.op_Equality(RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray{`0},RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray{`0})">
+            <summary>Determines whether two arrays contain the same items in the same order.</summary>
+            <param name="left">The first array.</param>
+            <param name="right">The second array.</param>
+            <returns><see langword="true"/> when both arrays have equal content and order.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1.op_Inequality(RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray{`0},RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray{`0})">
+            <summary>Determines whether two arrays differ by content or order.</summary>
+            <param name="left">The first array.</param>
+            <param name="right">The second array.</param>
+            <returns><see langword="true"/> when content or order differs.</returns>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray">
+            <summary>
+            Helpers to build <see cref="T:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1"/> values.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray.ToEquatableArray``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>Creates an <see cref="T:RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray`1"/> by copying a sequence.</summary>
+            <param name="source">The source sequence; <see langword="null"/> represents an empty sequence.</param>
+            <typeparam name="T">The value-equatable item type.</typeparam>
+            <returns>An immutable sequence with value equality.</returns>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignDescriptor">
+            <summary>
+            <para>
+                Describes how to assign a property, as resolved during matching. Mutable, and part of a tree that
+                holds Roslyn symbols (through <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignDescriptor.InnerSelection"/>).
+            </para>
+            <para>
+                Do not retain it in an incremental generator pipeline, and do not use it as a cache key: it has no
+                value equality. Convert the matching result with
+                <see cref="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection)"/> and
+                feed the pipeline with the resulting snapshot instead.
+            </para>
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignDescriptor.Materialization">
+            <summary>
+            How the enumerable expression must be materialized for the target property.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignDescriptor.RequireToList">
+            <summary>
+            Whether the enumerable expression requires <c>.ToList()</c>.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignDescriptor.ElementAssignment">
+            <summary>
+            <para>
+                For <see cref="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.Select"/>, how each element of the enumerable must be assigned.
+            </para>
+            <para>
+                When the elements are objects to be mapped, this is a <see cref="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.NewInstance"/>
+                carrying the <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignDescriptor.InnerSelection"/>. When they only need a conversion
+                (e.g. <c>List&lt;int&gt;</c> to <c>List&lt;long&gt;</c>), this is the conversion of the element
+                (<see cref="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.SimpleCast"/>, <see cref="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.Direct"/>...) and there is no inner selection.
+            </para>
+            </summary>
+        </member>
         <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.Direct">
             <summary>
             Direct assignment, no conversion needed.
@@ -83,6 +210,51 @@
             </code>
             </remarks>
         </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.CollectionMaterialization">
+            <summary>
+            How an enumerable expression must be materialized to be assignable to the target property.
+            </summary>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.CollectionMaterialization.None">
+            <summary>
+            No materialization required: the target accepts the enumerable as is (e.g. <c>IEnumerable&lt;T&gt;</c>).
+            </summary>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.CollectionMaterialization.List">
+            <summary>
+            Requires <c>.ToList()</c> (e.g. <c>List&lt;T&gt;</c>, <c>IReadOnlyList&lt;T&gt;</c>, <c>ICollection&lt;T&gt;</c>).
+            </summary>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.CollectionMaterialization.Array">
+            <summary>
+            Requires <c>.ToArray()</c> (e.g. <c>T[]</c>).
+            </summary>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.CollectionMaterialization.HashSet">
+            <summary>
+            Requires <c>.ToHashSet()</c> (e.g. <c>HashSet&lt;T&gt;</c>, <c>ISet&lt;T&gt;</c>).
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.EnumerableAssignDescriptorResolver.TryResolveMaterialization(Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.SemanticModel,RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.CollectionMaterialization@)">
+            <summary>
+            Descobre qual materialização (<c>ToList</c>, <c>ToArray</c>, <c>ToHashSet</c> ou nenhuma) produz um valor
+            assinável ao tipo de destino, testando a conversão implícita a partir do tipo concreto construído.
+            </summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertyDescriptor">
+            <summary>
+            <para>
+                Describes a property during matching and code generation.
+            </para>
+            <para>
+                It implements <see cref="T:System.IEquatable`1"/> for the matching logic (comparing name and type, never the
+                symbol), but it holds a <see cref="T:Microsoft.CodeAnalysis.IPropertySymbol"/> and therefore must not be retained by an
+                incremental generator pipeline. Use
+                <see cref="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection)"/> and pass
+                the resulting symbol-free snapshot along instead.
+            </para>
+            </summary>
+        </member>
         <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.IPropertyNameResolver">
             <summary>
             Resolves property names for given property symbols.
@@ -154,6 +326,28 @@
                 The order of resolvers in the array may affect resolution precedence.
             </remarks>
         </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection">
+            <summary>
+            <para>
+                The result of matching the properties of an origin type against a target type.
+            </para>
+            <para>
+                This is the working model of the matching: it holds Roslyn symbols (which would keep the whole
+                <see cref="T:Microsoft.CodeAnalysis.Compilation"/> alive) and mutable state, so it must not cross into an incremental generator
+                pipeline, nor be used as a cache key — it has no value equality.
+            </para>
+            <para>
+                Use it while resolving the match, then convert it with
+                <see cref="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection)"/>. The resulting
+                <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshot"/> is immutable, symbol-free and has value equality, which
+                is what the pipeline needs to cache and compare between builds:
+            </para>
+            <code>
+                var snapshot = MatchSelectionSnapshotFactory.Create(matchSelection);
+                // snapshot pode ser retornado de um provider e comparado entre builds
+            </code>
+            </summary>
+        </member>
         <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchTypeInfo">
             <summary>
             Represent a type and its properties that can be matched to another type.
@@ -210,12 +404,28 @@
         </member>
         <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch">
             <summary>
-            A result of matching a property from the origin type to a property in the target type.
+            <para>
+                A result of matching a property from the origin type to a property in the target type.
+            </para>
+            <para>
+                Holds Roslyn symbols and mutable state. Do not retain it in an incremental generator pipeline, and do
+                not use it as a cache key: it has no value equality. Convert the matching result with
+                <see cref="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection)"/> and feed the pipeline with
+                the resulting snapshot instead.
+            </para>
             </summary>
         </member>
         <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertyDescriptor,RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection,RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignDescriptor)">
             <summary>
-            A result of matching a property from the origin type to a property in the target type.
+            <para>
+                A result of matching a property from the origin type to a property in the target type.
+            </para>
+            <para>
+                Holds Roslyn symbols and mutable state. Do not retain it in an incremental generator pipeline, and do
+                not use it as a cache key: it has no value equality. Convert the matching result with
+                <see cref="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection)"/> and feed the pipeline with
+                the resulting snapshot instead.
+            </para>
             </summary>
         </member>
         <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch.Origin">
@@ -241,6 +451,20 @@
         <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertyMatch.CanAssign">
             <summary>
             Determine if the properties are compatible and has a valid assign descriptor.
+            </summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection">
+            <summary>
+            <para>
+                A property, or a path of properties, selected on the target type.
+            </para>
+            <para>
+                Holds Roslyn symbols, and its <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection.Parent"/> is assigned after construction (see
+                <see cref="M:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection.WithParent(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection)"/>), so its state is not stable. Do not retain it in an incremental generator
+                pipeline, and do not use it as a cache key: it has no value equality. Convert the matching result with
+                <see cref="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection)"/> and feed the pipeline with
+                the resulting snapshot instead.
+            </para>
             </summary>
         </member>
         <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.PropertySelection.PropertyType">
@@ -290,16 +514,537 @@
                 ordered from the root to the current instance.
             </returns>
         </member>
-        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory">
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot">
             <summary>
-            Creates immutable, symbol-free snapshots of property matching results for safe
-            retention by incremental generator pipelines.
+            A symbol-free, value-equatable snapshot of a <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.ParameterDescriptor"/>: the parameter name plus
+            the type <em>as used</em> (structure + contextual roles) via <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot"/>.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot,System.String)">
+            <summary>Creates a parameter snapshot.</summary>
+            <param name="typeUsage">The frozen structural type and contextual roles.</param>
+            <param name="name">The non-empty parameter name.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot.TypeUsage">
+            <summary>The type of the parameter, with its contextual roles frozen.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot.Name">
+            <summary>The parameter name.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot.CreateFromHints(RoyalCode.Extensions.SourceGenerator.Descriptors.ParameterDescriptor)">
+            <summary>Creates a snapshot reading the descriptor's type hints into frozen roles.</summary>
+            <param name="descriptor">The parameter descriptor to snapshot.</param>
+            <returns>An immutable, symbol-free parameter snapshot.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.ParameterDescriptor,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles)">
+            <summary>Creates a snapshot with explicit roles for the parameter's type.</summary>
+            <param name="descriptor">The parameter descriptor to snapshot.</param>
+            <param name="roles">The contextual roles resolved for this parameter.</param>
+            <returns>An immutable, symbol-free parameter snapshot.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot.Equals(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ServiceTypeSnapshot">
+            <summary>
+            A symbol-free, value-equatable snapshot of a <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.ServiceTypeDescriptor"/> (a DI registration pair).
+            A service registration has no contextual role, so both members are structural <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot"/>s.
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ServiceTypeSnapshot.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot)">
+            <summary>Creates a service registration snapshot.</summary>
+            <param name="interfaceType">The registered service type.</param>
+            <param name="handlerType">The service implementation type.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ServiceTypeSnapshot.InterfaceType">
+            <summary>The service interface type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ServiceTypeSnapshot.HandlerType">
+            <summary>The service implementation (handler) type.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ServiceTypeSnapshot.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.ServiceTypeDescriptor)">
+            <summary>Creates a snapshot from a descriptor.</summary>
+            <param name="descriptor">The service registration descriptor to snapshot.</param>
+            <returns>An immutable, symbol-free service registration snapshot.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ServiceTypeSnapshot.Equals(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ServiceTypeSnapshot)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ServiceTypeSnapshot.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ServiceTypeSnapshot.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot">
+            <summary>
+            A symbol-free, value-equatable snapshot of an <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.EditTypeDescriptor"/>: the edited entity type,
+            its id type, and the resolved entity parameter (when already bound during the transform).
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot)">
+            <summary>Creates an edited-entity snapshot.</summary>
+            <param name="entityType">The entity type being edited.</param>
+            <param name="idType">The entity identifier type.</param>
+            <param name="parameter">The bound handler parameter, when resolved.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot.EntityType">
+            <summary>The entity type being edited.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot.IdType">
+            <summary>The id type of the edited entity.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot.Parameter">
+            <summary>The command parameter that receives the loaded entity, when resolved.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.EditTypeDescriptor)">
+            <summary>Creates a snapshot from a descriptor, snapshotting its bound parameter when present.</summary>
+            <param name="descriptor">The edited-entity descriptor to snapshot.</param>
+            <returns>An immutable, symbol-free edited-entity snapshot.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot.Equals(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.EditTypeSnapshot.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.IdPropertyBindingSnapshot">
+            <summary>
+            A symbol-free, value-equatable snapshot of an <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.IdPropertyBoundToEntityParameter"/>: the binding
+            between an entity (or collection-of-entities) parameter and the command property that carries its id(s).
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.IdPropertyBindingSnapshot.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ParameterSnapshot,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertySnapshot)">
+            <summary>Creates an entity-id binding snapshot.</summary>
+            <param name="parameter">The bound entity parameter.</param>
+            <param name="property">The command property carrying the identifier.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.IdPropertyBindingSnapshot.Parameter">
+            <summary>The entity (or collection-of-entities) parameter.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.IdPropertyBindingSnapshot.Property">
+            <summary>The command property holding the id (or ids) used to load the entity.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.IdPropertyBindingSnapshot.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.IdPropertyBoundToEntityParameter)">
+            <summary>Creates a snapshot from a descriptor.</summary>
+            <param name="descriptor">The entity-id binding descriptor to snapshot.</param>
+            <returns>An immutable, symbol-free binding snapshot.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.IdPropertyBindingSnapshot.Equals(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.IdPropertyBindingSnapshot)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.IdPropertyBindingSnapshot.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.IdPropertyBindingSnapshot.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory">
+             <summary>
+             <para>
+                 Creates immutable, symbol-free snapshots of property matching results for safe
+                 retention by incremental generator pipelines.
+             </para>
+             <para>
+                 This is the boundary between the two models. <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection"/> and the descriptors it
+                 carries (<see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor"/>, <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.PropertyDescriptor"/>, <c>AssignDescriptor</c>) are
+                 the working model of the matching: they hold Roslyn symbols and mutable state, so retaining them in a
+                 pipeline keeps the whole <c>Compilation</c> alive and makes caching unreliable. The snapshots are the
+                 pipeline model: immutable, symbol-free, with value equality all the way down.
+             </para>
+             <para>
+                 So resolve the match inside the transform, snapshot it, and let only the snapshot escape:
+             </para>
+             <code>
+                 var provider = context.SyntaxProvider
+                     .ForAttributeWithMetadataName(
+                         "Some.AttributeName",
+                         static (node, _) => node is TypeDeclarationSyntax,
+                         static (ctx, _) =>
+                         {
+                             // modelo de trabalho: símbolos, vivo apenas dentro do transform
+                             var selection = MatchSelection.Create(origin, target, ctx.SemanticModel);
+            
+                             // modelo do pipeline: sem símbolos, comparável entre builds
+                             return MatchSelectionSnapshotFactory.Create(selection);
+                         });
+            
+                 context.RegisterSourceOutput(provider, static (spc, snapshot) => Generate(spc, snapshot));
+             </code>
+             </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection)">
+            <summary>
+            Creates the snapshot of a matching result, to be retained by an incremental generator pipeline.
+            </summary>
+            <param name="selection">The matching result, which holds symbols and must not escape the transform.</param>
+            <returns>An immutable, symbol-free snapshot with value equality.</returns>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot">
+            <summary>An immutable, symbol-free structural description of a type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.Name">
+            <summary>The source-facing type name.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.Namespaces">
+            <summary>The namespaces required to reference the type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.IsNullable">
+            <summary>Whether the descriptor represents a nullable type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.IsNullableReference">
+            <summary>Whether the symbol is an annotated nullable reference type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.IsNonNullableReference">
+            <summary>Whether the symbol is a non-nullable reference type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.IsValueType">
+            <summary>Whether the type is a value type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.IsNullableValueType">
+            <summary>Whether the type is a nullable value type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.Declaration">
+            <summary>The named type declaration, when one was resolved.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.IsVoid">
+            <summary>Whether the type is <c>void</c>.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.IsNamedType">
+            <summary>Whether the type is a named type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.IsArray">
+            <summary>Whether the type is an array (<c>T[]</c>).</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.ArrayRank">
+            <summary>
+            The array rank, or zero when the type is not an array or its shape was not resolved semantically.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.ElementType">
+            <summary>For an array type, the snapshot of its element type; otherwise <see langword="null"/>.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.ContainingType">
+            <summary>
+            The constructed containing type for a nested named type; otherwise <see langword="null"/>. This preserves
+            outer generic arguments, which are not included in the nested symbol's own <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.TypeArguments"/>.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.TypeArguments">
+            <summary>
+            The generic type arguments (empty when the type is not a constructed generic). Nested types are
+            snapshotted recursively so the whole shape has value equality.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.OriginalDefinitionMetadataName">
+            <summary>
+            The metadata name of the original (unbound) definition when the type is a named type
+            (e.g. <c>Task`1</c> for <c>Task&lt;T&gt;</c>), used to classify Task/ValueTask/Result and similar
+            without depending on type arguments. <see langword="null"/> for arrays, type parameters and
+            symbol-less snapshots.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.OriginalDefinitionQualifiedMetadataName">
+            <summary>
+            The namespace- and containing-type-qualified metadata identity of the original named definition
+            (e.g. <c>System.Threading.Tasks.Task`1</c>). Consumers should use this value when classifying known types.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.HasCompleteShape">
+            <summary>
+            Whether all structural facts required for semantic classification were available. Symbol-less descriptors
+            are deliberately marked incomplete instead of having their display names parsed heuristically.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.MetadataName">
+            <summary>
+            The metadata name of the type (e.g. <c>List`1</c>), falling back to <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.Name"/> when there is
+            no named declaration. It is derived from other fields, so it is not part of equality.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.MayBeNull">
+            <summary>Whether values of the type may be null.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.UnderlyingType">
+            <summary>The source-facing type name without a trailing nullable marker.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor)">
+            <summary>Creates an immutable structural snapshot from a descriptor.</summary>
+            <param name="descriptor">The descriptor to snapshot while its Roslyn symbol is available.</param>
+            <returns>A symbol-free structural snapshot.</returns>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot">
+            <summary>An immutable description of a named type declaration and its containing declarations.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot.Name">
+            <summary>The declared source name.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot.MetadataName">
+            <summary>The metadata name, including generic arity.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot.NamespaceName">
+            <summary>The containing namespace.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot.QualifiedName">
+            <summary>The source-qualified name within its containing types.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot.IdentityIdentifier">
+            <summary>A stable identifier suitable for generated member names.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot.Accessibility">
+            <summary>The C# accessibility keyword.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot.DeclarationKeyword">
+            <summary>The C# declaration keyword.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot.IsError">
+            <summary>Whether Roslyn resolved the declaration as an error type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeDeclarationSnapshot.ContainingTypes">
+            <summary>The containing type declarations, from outermost to innermost.</summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ContainingTypeSnapshot">
+            <summary>An immutable description of a containing type declaration.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ContainingTypeSnapshot.Name">
+            <summary>The declared type name.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ContainingTypeSnapshot.Accessibility">
+            <summary>The C# accessibility keyword.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.ContainingTypeSnapshot.DeclarationKeyword">
+            <summary>The C# declaration keyword.</summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertySnapshot">
+            <summary>An immutable, symbol-free property description.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertySnapshot.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot,System.String)">
+            <summary>Creates a property snapshot.</summary>
+            <param name="type">The property type.</param>
+            <param name="name">The non-empty property name.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertySnapshot.Type">
+            <summary>The property type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertySnapshot.Name">
+            <summary>The property name.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertySnapshot.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertyDescriptor)">
+            <summary>Creates a property snapshot from a descriptor.</summary>
+            <param name="descriptor">The property descriptor to snapshot.</param>
+            <returns>An immutable, symbol-free property snapshot.</returns>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyPathSnapshot">
+            <summary>An immutable, non-empty path of properties.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyPathSnapshot.#ctor(System.Collections.Generic.IEnumerable{RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertySnapshot})">
+            <summary>Creates a property path.</summary>
+            <param name="properties">The non-null properties, ordered from root to leaf.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyPathSnapshot.Properties">
+            <summary>The properties ordered from root to leaf.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyPathSnapshot.PropertyType">
+            <summary>The leaf property.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyPathSnapshot.Path">
+            <summary>The dot-separated property path.</summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.AssignmentSnapshot">
+            <summary>An immutable description of an assignment selected during property matching.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.AssignmentSnapshot.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType,RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.CollectionMaterialization,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshot,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.AssignmentSnapshot)">
+            <summary>Creates an assignment snapshot.</summary>
+            <param name="assignType">The assignment strategy.</param>
+            <param name="materialization">The collection materialization strategy.</param>
+            <param name="innerSelection">The nested property selection, when required.</param>
+            <param name="elementAssignment">The element assignment for a select operation, when required.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.AssignmentSnapshot.AssignType">
+            <summary>The assignment strategy.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.AssignmentSnapshot.Materialization">
+            <summary>The collection materialization strategy.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.AssignmentSnapshot.RequireToList">
+            <summary>Whether the generated assignment must materialize a list.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.AssignmentSnapshot.InnerSelection">
+            <summary>The nested property selection, when required.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.AssignmentSnapshot.ElementAssignment">
+            <summary>
+            For <see cref="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignType.Select"/>, how each element must be assigned. See
+            <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Assignments.AssignDescriptor.ElementAssignment"/>.
+            </summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyMatchSnapshot">
+            <summary>An immutable match between an origin property and an optional target path.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyMatchSnapshot.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertySnapshot,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyPathSnapshot,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.AssignmentSnapshot)">
+            <summary>Creates a property match snapshot.</summary>
+            <param name="origin">The non-null origin property.</param>
+            <param name="target">The matched target path, when found.</param>
+            <param name="assignment">The assignment strategy, when required.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyMatchSnapshot.Origin">
+            <summary>The origin property.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyMatchSnapshot.Target">
+            <summary>The matched target path, when found.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyMatchSnapshot.Assignment">
+            <summary>The assignment strategy, when required.</summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshot">
+            <summary>An immutable, symbol-free snapshot of a complete property matching result.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshot.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot,System.Collections.Generic.IEnumerable{RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.PropertyMatchSnapshot})">
+            <summary>Creates a matching result snapshot.</summary>
+            <param name="originType">The origin type.</param>
+            <param name="targetType">The target type.</param>
+            <param name="propertyMatches">The property matches.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshot.OriginType">
+            <summary>The origin type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshot.TargetType">
+            <summary>The target type.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshot.PropertyMatches">
+            <summary>The frozen property matches.</summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles">
+            <summary>
+            The contextual roles a type can play at a particular use site (a parameter, a service, ...).
+            These are usage facts, not structural facts, so they never belong on the structural
+            <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot"/>: the same type may play different roles at different sites.
+            </summary>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles.None">
+            <summary>No contextual role.</summary>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles.Entity">
+            <summary>The type is a domain entity loaded by the handler.</summary>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles.Context">
+            <summary>The type is the unit-of-work / persistence context.</summary>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles.HandlerParameter">
+            <summary>The type is an externally-bound handler parameter (e.g. <c>WithParameter</c>).</summary>
+        </member>
+        <member name="F:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles.CollectionOfEntities">
+            <summary>The type is a collection of domain entities loaded by the handler.</summary>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot">
+            <summary>
+            <para>
+                A symbol-free, value-equatable snapshot of a type <em>as used</em> at a specific site: the structural
+                <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot"/> together with the contextual <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles"/> resolved for that site.
+            </para>
+            <para>
+                The roles are frozen here at transform time and never mutate the structural snapshot, so two uses of the
+                same type that differ only by role produce different <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot"/> values while sharing
+                an equal <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot"/>.
+            </para>
+            </summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.#ctor(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeSnapshot,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles)">
+            <summary>Creates a usage snapshot from a structural snapshot and its roles.</summary>
+            <param name="type">The immutable structural type snapshot.</param>
+            <param name="roles">The contextual roles resolved for this use site.</param>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.Type">
+            <summary>The structural snapshot of the type (never carries the role).</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.Roles">
+            <summary>The contextual roles resolved for this use site.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.IsEntity">
+            <summary>Whether the type is used as a domain entity here.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.IsContext">
+            <summary>Whether the type is used as the persistence context here.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.IsHandlerParameter">
+            <summary>Whether the type is used as an externally-bound handler parameter here.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.IsCollectionOfEntities">
+            <summary>Whether the type is used as a collection of domain entities here.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor,RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles)">
+            <summary>Creates a usage snapshot from a descriptor and explicit roles.</summary>
+            <param name="descriptor">The type descriptor to snapshot.</param>
+            <param name="roles">The contextual roles resolved for this use site.</param>
+            <returns>An immutable, symbol-free usage snapshot.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.CreateFromHints(RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor)">
+            <summary>
+            Creates a usage snapshot from a descriptor, reading its mutable hints
+            (<c>IsEntity</c>, <c>IsContext</c>, <c>IsHandlerParameter</c>, <c>IsCollectionOfEntities</c>) into
+            frozen <see cref="T:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageRoles"/>. Use this to cross the boundary from the working model to the pipeline.
+            </summary>
+            <param name="descriptor">The descriptor whose structural type and mutable role hints will be frozen.</param>
+            <returns>An immutable, symbol-free usage snapshot.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.Equals(RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.TypeUsageSnapshot.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor">
+            <summary>
+            <para>
+                Describes a type during matching and code generation.
+            </para>
+            <para>
+                It implements <see cref="T:System.IEquatable`1"/> because the matching logic compares types structurally
+                (by name, namespaces and nullability — never by symbol). That equality is <em>not</em> a licence to use
+                it in an incremental generator pipeline: it holds a <see cref="T:Microsoft.CodeAnalysis.ISymbol"/> (see <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.Symbol"/>),
+                which keeps the whole <see cref="T:Microsoft.CodeAnalysis.Compilation"/> alive between builds, and its hints
+                (see <see cref="M:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.MarkAsEntity"/> and friends) are mutable and excluded from equality.
+            </para>
+            <para>
+                For anything the pipeline retains, use
+                <see cref="M:RoyalCode.Extensions.SourceGenerator.Descriptors.Snapshots.MatchSelectionSnapshotFactory.Create(RoyalCode.Extensions.SourceGenerator.Descriptors.PropertySelection.MatchSelection)"/>
+                and pass the resulting snapshot along — it is immutable, symbol-free and has value equality.
+            </para>
             </summary>
         </member>
         <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.NullableAnnotation">
             <summary>
             The nullable annotation of the type reference, captured from the symbol when available.
             It is additional data: the <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.Name"/> is not modified by this annotation.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.IsArray">
+            <summary>
+            Whether the type is an array (<c>T[]</c>).
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.IsEnumerable">
+            <summary>
+            Whether the type is the enumerable interface itself (<c>IEnumerable&lt;T&gt;</c> or <c>IEnumerable</c>),
+            and not merely a type implementing it. See <see cref="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.IsCollection"/> for the latter.
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.IsCollection">
+            <summary>
+            Whether the type is a collection, that is, an array or any type implementing <c>IEnumerable&lt;T&gt;</c>
+            (including <c>IEnumerable&lt;T&gt;</c> itself). Strings are not considered collections.
             </summary>
         </member>
         <member name="P:RoyalCode.Extensions.SourceGenerator.Descriptors.TypeDescriptor.GenericType">
@@ -328,6 +1073,67 @@
             <exception cref="T:System.InvalidOperationException"></exception>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo">
+            <summary>
+            <para>
+                An immutable, symbol-free and value-equatable description of a diagnostic, safe to retain in an
+                incremental generator pipeline. It stores the diagnostic id, its arguments as strings and the
+                location decomposed into file path, source span and line span.
+            </para>
+            <para>
+                The pipeline carries this DTO; the <see cref="T:Microsoft.CodeAnalysis.Location"/> and <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/> are reconstructed
+                only at <c>RegisterSourceOutput</c> via <see cref="M:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.ToDiagnostic(System.Func{System.String,Microsoft.CodeAnalysis.DiagnosticDescriptor})"/>, whose resolver maps an id back to its
+                <see cref="T:Microsoft.CodeAnalysis.DiagnosticDescriptor"/>. The catalog of descriptors belongs to the consuming generator, so this
+                type does not reference any specific catalog.
+            </para>
+            </summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.Id">
+            <summary>The diagnostic id (e.g. <c>RCCMD026</c>).</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.Arguments">
+            <summary>The message arguments, already reduced to strings.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.FilePath">
+            <summary>The source file path, or <see langword="null"/> when there is no in-source location.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.SourceSpan">
+            <summary>The source span of the location.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.LineSpan">
+            <summary>The line/character span of the location.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.HasLocation">
+            <summary>Whether an in-source location was captured.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.Create(Microsoft.CodeAnalysis.DiagnosticDescriptor,Microsoft.CodeAnalysis.Location,System.Object[])">
+            <summary>
+            Creates a <see cref="T:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo"/> from a descriptor, an optional location and message arguments.
+            The location is decomposed into equatable parts; when it is not in source it is dropped.
+            </summary>
+            <param name="descriptor">The diagnostic descriptor whose id identifies the diagnostic.</param>
+            <param name="location">The optional source location to decompose.</param>
+            <param name="arguments">The values used to format the diagnostic message.</param>
+            <returns>An immutable, symbol-free diagnostic description.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.ToDiagnostic(System.Func{System.String,Microsoft.CodeAnalysis.DiagnosticDescriptor})">
+            <summary>
+            Reconstructs the <see cref="T:Microsoft.CodeAnalysis.Diagnostic"/>. The <paramref name="descriptorResolver"/> maps this
+            diagnostic's <see cref="P:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.Id"/> back to its <see cref="T:Microsoft.CodeAnalysis.DiagnosticDescriptor"/>; the catalog is owned by
+            the consuming generator, so this type never depends on a specific catalog.
+            </summary>
+            <param name="descriptorResolver">Resolves a diagnostic id to the consuming generator's descriptor.</param>
+            <returns>The reconstructed Roslyn diagnostic.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.Equals(RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo.GetHashCode">
+            <inheritdoc />
+        </member>
         <member name="M:RoyalCode.Extensions.SourceGenerator.ExtensionMethods.SplitUpperCase(System.String)">
             <summary>
             Splits pascal case, so "FooBar" would become [ "Foo", "Bar" ].
@@ -344,6 +1150,14 @@
                 Returns <c>true</c> if the symbol represents or implements <see cref="T:System.Collections.Generic.IEnumerable`1"/>,
                 otherwise <c>false</c>.
             </returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.ExtensionMethods.IsEnumerableInterface(Microsoft.CodeAnalysis.ITypeSymbol)">
+            <summary>
+            Determines whether the symbol is the <see cref="T:System.Collections.Generic.IEnumerable`1"/> interface itself
+            (or the non generic <see cref="T:System.Collections.IEnumerable"/>), and not merely a type implementing it.
+            </summary>
+            <param name="typeSymbol">The symbol to inspect.</param>
+            <returns>Returns <c>true</c> when the symbol is the enumerable interface itself.</returns>
         </member>
         <member name="M:RoyalCode.Extensions.SourceGenerator.ExtensionMethods.TryReadStringValue(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,System.String@)">
             <summary>
@@ -367,6 +1181,70 @@
             <returns>
                 true if a string value was successfully extracted from the expression; otherwise, false.
             </returns>
+        </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1">
+            <summary>
+            <para>
+                A value-equatable transport for the result of a transform: an optional model plus the diagnostics
+                produced while analysing the input. It keeps invalid input from reaching emitters or aggregations.
+            </para>
+            <para>
+                When <see cref="P:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.IsValid"/> is <see langword="false"/> there is no <see cref="P:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.Model"/> to emit. Diagnostics
+                may explain a semantic rejection, but an empty collection is also valid for input that is incomplete or
+                not applicable and should be ignored without noise. This lets a single semantic read validate and collect
+                diagnostics without a second analysis pass and without letting a broken model flow downstream.
+            </para>
+            </summary>
+            <typeparam name="TModel">The immutable, value-equatable pipeline model.</typeparam>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.Model">
+            <summary>The model to emit, or <see langword="null"/> when the input was invalid.</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.Diagnostics">
+            <summary>The diagnostics gathered during analysis; may be present even for a valid model (warnings).</summary>
+        </member>
+        <member name="P:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.IsValid">
+            <summary>Whether a model is present and may drive generation.</summary>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.Valid(`0,RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray{RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo})">
+            <summary>Creates a valid candidate carrying a model and optional diagnostics.</summary>
+            <param name="model">The model that may flow to emitters.</param>
+            <param name="diagnostics">Optional warnings or informational diagnostics associated with the model.</param>
+            <returns>A valid generation candidate.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.Invalid(RoyalCode.Extensions.SourceGenerator.Collections.EquatableArray{RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo})">
+            <summary>
+            Creates a candidate with no model. Diagnostics may explain a rejection; an empty collection represents
+            incomplete or non-applicable input that should not emit a model or diagnostic.
+            </summary>
+            <param name="diagnostics">The diagnostics to report, or an empty collection for a silent rejection.</param>
+            <returns>An invalid generation candidate.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.Invalid(RoyalCode.Extensions.SourceGenerator.Diagnostics.DiagnosticInfo)">
+            <summary>Creates an invalid candidate from a single diagnostic.</summary>
+            <param name="diagnostic">The non-null diagnostic that explains the rejection.</param>
+            <returns>An invalid generation candidate.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.Equals(RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.op_Equality(RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate{`0},RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate{`0})">
+            <summary>Determines whether two candidates carry equal models and diagnostics.</summary>
+            <param name="left">The first candidate.</param>
+            <param name="right">The second candidate.</param>
+            <returns><see langword="true"/> when models and diagnostics are equal.</returns>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1.op_Inequality(RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate{`0},RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate{`0})">
+            <summary>Determines whether two candidates differ by model or diagnostics.</summary>
+            <param name="left">The first candidate.</param>
+            <param name="right">The second candidate.</param>
+            <returns><see langword="true"/> when models or diagnostics differ.</returns>
         </member>
         <member name="T:RoyalCode.Extensions.SourceGenerator.Generators.ClassGenerator">
             <summary>
