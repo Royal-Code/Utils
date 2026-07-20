@@ -1182,6 +1182,39 @@
                 true if a string value was successfully extracted from the expression; otherwise, false.
             </returns>
         </member>
+        <member name="T:RoyalCode.Extensions.SourceGenerator.GeneratedHintName">
+            <summary>
+            Creates deterministic, collision-resistant source hint names with a bounded, readable prefix.
+            </summary>
+            <remarks>
+            <para>
+                The returned name has the format <c>{readable-name}.{hash}.g.cs</c>. The readable portion is
+                sanitized and limited to 32 characters. The hash contains the first 40 bits of the SHA-256 digest of
+                the complete identity, encoded as exactly eight file-name-safe Base32 characters.
+            </para>
+            <para>
+                Callers are responsible for building an identity that contains every component required for
+                uniqueness, such as namespace, containing types, metadata name, generated type and artifact category.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:RoyalCode.Extensions.SourceGenerator.GeneratedHintName.Create(System.String,System.String)">
+            <summary>
+            Creates a deterministic source hint name from a complete identity and a human-readable name.
+            </summary>
+            <param name="identity">
+                The complete, stable identity of the generated artifact. It is used only to compute the hash.
+            </param>
+            <param name="readableName">
+                The readable portion placed at the beginning of the file name. Non-alphanumeric characters other
+                than <c>_</c> and <c>-</c> are replaced with <c>_</c>, and the result is limited to 32 characters.
+            </param>
+            <returns>A deterministic hint name ending in <c>.g.cs</c>.</returns>
+            <exception cref="T:System.ArgumentException">
+                Thrown when <paramref name="identity"/> or <paramref name="readableName"/> is null, empty or
+                whitespace.
+            </exception>
+        </member>
         <member name="T:RoyalCode.Extensions.SourceGenerator.Generation.GenerationCandidate`1">
             <summary>
             <para>
